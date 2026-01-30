@@ -6,7 +6,6 @@ import {
   Sparkles, 
   Camera, 
   Phone,
-  Instagram,
   Star,
   ChevronDown,
   Check
