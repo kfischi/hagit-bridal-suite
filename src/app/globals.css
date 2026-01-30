@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #FAFAF8;
+  --foreground: #1A1A1A;
+}
+
+/* Smooth scrolling for the entire document */
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  -webkit-font-smoothing: antialiased; /* הופך את הפונט לחד יותר במקבוק */
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* יוקרה בפרטים הקטנים: צבע סימון טקסט */
+::selection {
+  background-color: #D4AF37; /* הזהב שלנו */
+  color: #FAFAF8;
+}
+
+/* הסתרת סרגל גלילה אבל שמירה על פונקציונליות - מראה נקי מאוד */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(26, 26, 26, 0.1);
+  border-radius: 20px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(212, 175, 55, 0.6); /* זהב בעת הובר */
+}
+
+/* מחלקות עזר לטיפוגרפיה יוקרתית */
+.text-balance {
+  text-wrap: balance; /* מאזן כותרות בעברית שלא ישברו מוזר */
+}
