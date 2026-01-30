@@ -5,9 +5,10 @@
 :root {
   --background: #FAFAF8;
   --foreground: #1A1A1A;
+  --font-playfair: 'Playfair Display', serif;
+  --font-heebo: 'Heebo', sans-serif;
 }
 
-/* Smooth scrolling for the entire document */
 html {
   scroll-behavior: smooth;
   height: 100%;
@@ -16,17 +17,15 @@ html {
 body {
   color: var(--foreground);
   background: var(--background);
-  -webkit-font-smoothing: antialiased; /* הופך את הפונט לחד יותר במקבוק */
+  -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* יוקרה בפרטים הקטנים: צבע סימון טקסט */
 ::selection {
-  background-color: #D4AF37; /* הזהב שלנו */
+  background-color: #D4AF37;
   color: #FAFAF8;
 }
 
-/* הסתרת סרגל גלילה אבל שמירה על פונקציונליות - מראה נקי מאוד */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -38,10 +37,50 @@ body {
   border-radius: 20px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: rgba(212, 175, 55, 0.6); /* זהב בעת הובר */
+  background-color: rgba(212, 175, 55, 0.6);
 }
 
-/* מחלקות עזר לטיפוגרפיה יוקרתית */
 .text-balance {
-  text-wrap: balance; /* מאזן כותרות בעברית שלא ישברו מוזר */
+  text-wrap: balance;
+}
+
+/* Glass Morphism */
+.glass-soft {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Elegant Divider */
+.divider-elegant {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(218, 187, 153, 0.4),
+    transparent
+  );
+}
+
+/* Soft Shadow */
+.shadow-soft {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Hover Lift */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* Font Classes */
+.font-playfair {
+  font-family: var(--font-playfair);
+}
+
+.font-heebo {
+  font-family: var(--font-heebo);
 }
