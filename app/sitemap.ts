@@ -1,7 +1,10 @@
 import { MetadataRoute } from 'next'
 
+// Required for static export
+export const dynamic = 'force-static'
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://hagit-bridal.com' // Replace with actual domain
+  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://hagit-bridal-suite.netlify.app'
 
   return [
     {
@@ -27,12 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/#testimonials`,
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7,
     },
   ]
 }
