@@ -75,7 +75,7 @@ export default function Home() {
 
         {/* Hero Section - Fullscreen Video with Content Below */}
         <section className="relative min-h-screen flex flex-col overflow-hidden">
-          {/* Video Background - Optimized & Fast */}
+          {/* Video Background - Cloudinary Optimized */}
           <div className="relative h-[70vh] sm:h-[75vh] w-full overflow-hidden">
             <video
               autoPlay
@@ -83,7 +83,6 @@ export default function Home() {
               loop
               playsInline
               preload="auto"
-              crossOrigin="anonymous"
               className="absolute inset-0 w-full h-full object-cover"
               poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%231A1A1A' width='1920' height='1080'/%3E%3C/svg%3E"
               style={{ transform: 'translate3d(0, 0, 0)' }}
@@ -93,7 +92,7 @@ export default function Home() {
               }}
             >
               <source 
-                src="https://Hagit-Bridal-Preperation.b-cdn.net/HERO.mp4" 
+                src="https://res.cloudinary.com/dptyfvwyo/video/upload/q_auto,f_auto/v1769898872/HERO3_d2m9ny.mp4" 
                 type="video/mp4" 
               />
             </video>
@@ -301,7 +300,6 @@ export default function Home() {
                   loop
                   playsInline
                   preload="none"
-                  crossOrigin="anonymous"
                   className="absolute inset-0 w-full h-full object-cover"
                   poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Crect fill='%23F5E6D3' width='400' height='500'/%3E%3C/svg%3E"
                   style={{ transform: 'translate3d(0, 0, 0)' }}
@@ -311,7 +309,7 @@ export default function Home() {
                   }}
                 >
                   <source 
-                    src="https://Hagit-Bridal-Preperation.b-cdn.net/VID-20260129-WA0099.mp4" 
+                    src="https://res.cloudinary.com/dptyfvwyo/video/upload/q_auto,f_auto/v1769895273/VID-20260129-WA0099_ujpg85.mp4" 
                     type="video/mp4" 
                   />
                 </video>
