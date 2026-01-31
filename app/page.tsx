@@ -82,7 +82,8 @@ export default function Home() {
               muted
               loop
               playsInline
-              preload="metadata"
+              preload="auto"
+              crossOrigin="anonymous"
               className="absolute inset-0 w-full h-full object-cover"
               poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%231A1A1A' width='1920' height='1080'/%3E%3C/svg%3E"
               style={{ transform: 'translate3d(0, 0, 0)' }}
@@ -92,7 +93,7 @@ export default function Home() {
               }}
             >
               <source 
-                src="https://Hagit-Bridal-Preperation.b-cdn.net/%D7%94%D7%AA%D7%90%D7%A8%D7%92%D7%A0%D7%95%D7%AA%20%D7%9B%D7%9C%D7%95%D7%AA/HERO.mp4" 
+                src="https://Hagit-Bridal-Preperation.b-cdn.net/HERO.mp4" 
                 type="video/mp4" 
               />
             </video>
@@ -300,6 +301,7 @@ export default function Home() {
                   loop
                   playsInline
                   preload="none"
+                  crossOrigin="anonymous"
                   className="absolute inset-0 w-full h-full object-cover"
                   poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Crect fill='%23F5E6D3' width='400' height='500'/%3E%3C/svg%3E"
                   style={{ transform: 'translate3d(0, 0, 0)' }}
@@ -309,7 +311,7 @@ export default function Home() {
                   }}
                 >
                   <source 
-                    src="https://Hagit-Bridal-Preperation.b-cdn.net/%D7%94%D7%AA%D7%90%D7%A8%D7%92%D7%A0%D7%95%D7%AA%20%D7%9B%D7%9C%D7%95%D7%AA/VID-20260129-WA0099.mp4" 
+                    src="https://Hagit-Bridal-Preperation.b-cdn.net/VID-20260129-WA0099.mp4" 
                     type="video/mp4" 
                   />
                 </video>
