@@ -5,7 +5,6 @@ import {
   Heart, 
   Sparkles, 
   Star,
-  ChevronDown,
   Check,
   Bot,
   Play,
