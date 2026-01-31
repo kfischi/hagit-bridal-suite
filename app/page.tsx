@@ -73,7 +73,7 @@ export default function Home() {
 
         {/* Hero Section - Dark Cinematic */}
         <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#0A0808]">
-          {/* Video Background with Dark Overlay */}
+          {/* Video Background - Bright & Vibrant */}
           <div className="relative h-[70vh] sm:h-[80vh] w-full overflow-hidden">
             <video
               autoPlay
@@ -81,9 +81,12 @@ export default function Home() {
               loop
               playsInline
               preload="auto"
-              className="absolute inset-0 w-full h-full object-cover opacity-60"
+              className="absolute inset-0 w-full h-full object-cover"
               poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%230A0808' width='1920' height='1080'/%3E%3C/svg%3E"
-              style={{ transform: 'translate3d(0, 0, 0)' }}
+              style={{ 
+                transform: 'translate3d(0, 0, 0)', 
+                filter: 'brightness(1.5) contrast(1.15) saturate(1.2)' 
+              }}
               onLoadedData={(e) => {
                 const video = e.target as HTMLVideoElement;
                 video.playbackRate = 1.5;
@@ -95,8 +98,8 @@ export default function Home() {
               />
             </video>
             
-            {/* Dark Cinematic Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-[#0A0808]/60 to-[#0A0808]" />
+            {/* Very Subtle Gradient - Keeps Video Bright */}
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0A0808]/60" />
             
             {/* Floating Particles */}
             <div className="absolute inset-0 opacity-30">
