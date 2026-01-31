@@ -442,13 +442,11 @@ export default function Home() {
                 name="מיכל ר."
                 role="כלה • אוגוסט 2024"
                 quote="החוויה הכי מדהימה! כל רגע היה פשוט מושלם"
-                thumbnail="champagne"
               />
               <VideoTestimonial
                 name="רונית ש."
                 role="כלה • ספטמבר 2024"
                 quote="חגית יצרה לנו אווירה כל כך מיוחדת, כמו בבית"
-                thumbnail="rose"
               />
             </div>
           </div>
