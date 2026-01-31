@@ -73,18 +73,18 @@ export default function Home() {
           </div>
         </motion.header>
 
-        {/* Hero Section - Fullscreen Video with Content Below */}
-        <section className="relative min-h-screen flex flex-col overflow-hidden">
-          {/* Video Background - Cloudinary Optimized */}
-          <div className="relative h-[70vh] sm:h-[75vh] w-full overflow-hidden">
+        {/* Hero Section - Dark Cinematic */}
+        <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#0A0808]">
+          {/* Video Background with Dark Overlay */}
+          <div className="relative h-[70vh] sm:h-[80vh] w-full overflow-hidden">
             <video
               autoPlay
               muted
               loop
               playsInline
               preload="auto"
-              className="absolute inset-0 w-full h-full object-cover"
-              poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%231A1A1A' width='1920' height='1080'/%3E%3C/svg%3E"
+              className="absolute inset-0 w-full h-full object-cover opacity-60"
+              poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%230A0808' width='1920' height='1080'/%3E%3C/svg%3E"
               style={{ transform: 'translate3d(0, 0, 0)' }}
               onLoadedData={(e) => {
                 const video = e.target as HTMLVideoElement;
@@ -97,91 +97,128 @@ export default function Home() {
               />
             </video>
             
-            {/* Gradient Fade to Content */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#FAFAF8]" />
+            {/* Dark Cinematic Gradient */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-[#0A0808]/60 to-[#0A0808]" />
+            
+            {/* Floating Particles */}
+            <div className="absolute inset-0 opacity-30">
+              {[...Array(20)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 100 }}
+                  animate={{ 
+                    opacity: [0.2, 0.5, 0.2],
+                    y: [-100, -500],
+                    x: [0, Math.random() * 100 - 50]
+                  }}
+                  transition={{
+                    duration: Math.random() * 10 + 10,
+                    repeat: Infinity,
+                    delay: Math.random() * 5
+                  }}
+                  className="absolute w-1 h-1 bg-[#D4AF37] rounded-full"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    bottom: 0
+                  }}
+                />
+              ))}
+            </div>
           </div>
 
-          {/* Hero Content - Below Video */}
-          <div className="relative bg-[#FAFAF8] text-center px-6 py-20 -mt-32">
-            <div className="max-w-5xl mx-auto">
+          {/* Hero Content - Dark Luxury */}
+          <div className="relative bg-gradient-to-b from-[#0A0808] via-[#1A1416] to-[#0A0808] text-center px-6 py-24 -mt-32">
+            <div className="max-w-6xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 40 }}
+                initial={{ opacity: 0, y: 60 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.3 }}
-                className="space-y-8"
+                transition={{ duration: 1.2, delay: 0.3 }}
+                className="space-y-10"
               >
-                {/* Subtitle */}
+                {/* Badge */}
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
+                  initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
-                  className="inline-flex items-center gap-3 bg-white px-6 py-3 rounded-full shadow-luxury border border-[#F4E4E1]"
+                  className="inline-flex items-center gap-3 glass-darker px-8 py-4 rounded-full glow-gold"
                 >
                   <Sparkles className="w-5 h-5 text-[#D4AF37]" />
-                  <span className="text-[#666] text-sm font-light tracking-widest uppercase">
-                    Villa in Jerusalem Hills
+                  <span className="text-white/90 text-sm font-light tracking-[0.3em] uppercase">
+                    Luxury Bridal Villa
                   </span>
+                  <Sparkles className="w-5 h-5 text-[#D4AF37]" />
                 </motion.div>
 
-                {/* Main Headline */}
-                <h1 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl text-[#1A1A1A] leading-[1.1] font-light">
+                {/* Main Headline - Dramatic */}
+                <h1 className="font-cormorant text-6xl sm:text-7xl lg:text-8xl text-white leading-[1.05] font-light">
                   הרגע שלפני
                   <br />
-                  <span className="gradient-text font-semibold">הרגע הגדול</span>
+                  <span className="gradient-text font-bold text-glow block mt-4">
+                    הרגע הגדול
+                  </span>
                 </h1>
 
-                {/* Description */}
-                <p className="text-lg sm:text-xl text-[#666] font-light leading-relaxed max-w-3xl mx-auto">
-                  וילה מעוצבת בלב הטבע
-                  <span className="hidden sm:inline"> • </span>
-                  <br className="sm:hidden" />
-                  חוויה של יום שלם
-                  <span className="hidden sm:inline"> • </span>
-                  <br className="sm:hidden" />
-                  עם יין משובח, פינוקים ואווירה של בית
-                </p>
+                {/* Description with Gold Line */}
+                <div className="max-w-3xl mx-auto space-y-6">
+                  <div className="divider-luxury w-24 mx-auto opacity-60" />
+                  <p className="text-xl sm:text-2xl text-white/80 font-light leading-relaxed">
+                    וילה מעוצבת בלב הטבע
+                    <span className="text-[#D4AF37] mx-3">•</span>
+                    חוויה של יום שלם
+                    <br className="hidden sm:block" />
+                    <span className="text-[#D4AF37] mx-3">•</span>
+                    עם יין משובח, פינוקים ואווירה של בית
+                  </p>
+                  <div className="divider-luxury w-24 mx-auto opacity-60" />
+                </div>
 
-                {/* CTA Buttons */}
+                {/* CTA Buttons - Dark Luxury */}
                 <motion.div
-                  initial={{ opacity: 0, y: 30 }}
+                  initial={{ opacity: 0, y: 40 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.7 }}
-                  className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+                  transition={{ duration: 0.8, delay: 0.9 }}
+                  className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-6"
                 >
                   <a
                     href="#pricing"
-                    className="btn-luxury group flex items-center gap-3"
+                    className="btn-luxury group flex items-center gap-3 relative z-10"
                   >
                     <span>גלי את החבילה המושלמת</span>
-                    <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+                    <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-2" />
                   </a>
                   
                   <a
                     href="#gallery"
-                    className="group px-8 py-4 bg-white border-2 border-[#D4AF37] rounded-full text-[#D4AF37] hover:bg-[#D4AF37] hover:text-white transition-all duration-300 flex items-center gap-3 shadow-luxury"
+                    className="group px-8 py-4 glass-darker rounded-full text-white border-2 border-[#D4AF37]/30 hover:border-[#D4AF37] hover:glow-gold transition-all duration-300 flex items-center gap-3"
                   >
-                    <Play className="w-5 h-5" />
-                    <span className="font-medium">צפי בגלריה</span>
+                    <Play className="w-5 h-5 text-[#D4AF37]" />
+                    <span className="font-light">צפי בגלריה</span>
                   </a>
                 </motion.div>
               </motion.div>
             </div>
           </div>
 
-          {/* Scroll Indicator */}
+          {/* Scroll Indicator - Dark */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1 }}
-            className="text-center pb-12"
+            transition={{ duration: 1, delay: 1.2 }}
+            className="text-center pb-16"
           >
             <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              className="flex flex-col items-center gap-2"
+              animate={{ y: [0, 12, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+              className="flex flex-col items-center gap-3"
             >
-              <span className="text-xs text-[#666] font-light tracking-widest uppercase">גלול למטה</span>
-              <ChevronDown className="w-5 h-5 text-[#D4AF37]" />
+              <span className="text-xs text-white/40 font-light tracking-[0.3em] uppercase">גלול למטה</span>
+              <div className="w-6 h-10 border-2 border-[#D4AF37]/40 rounded-full flex items-start justify-center p-2">
+                <motion.div
+                  animate={{ y: [0, 12, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity }}
+                  className="w-1 h-2 bg-[#D4AF37] rounded-full"
+                />
+              </div>
             </motion.div>
           </motion.div>
         </section>
