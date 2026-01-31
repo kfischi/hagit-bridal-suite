@@ -11,7 +11,6 @@ import {
   Check,
   Bot,
   Play,
-  Instagram,
   ArrowLeft
 } from 'lucide-react'
 import { useRef, useState } from 'react'
