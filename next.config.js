@@ -2,11 +2,9 @@
 const nextConfig = {
   images: {
     domains: ['hagit-bridal-preperation.b-cdn.net'],
-    unoptimized: true, // Required for static export
+    unoptimized: true,
   },
-  // Remove 'output: export' - Netlify handles this automatically
   reactStrictMode: true,
-  swcMinify: true,
 }
 
 module.exports = nextConfig
