@@ -4,7 +4,6 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { 
   Heart, 
   Sparkles, 
-  Phone,
   Star,
   ChevronDown,
   Check,
