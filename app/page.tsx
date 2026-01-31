@@ -222,31 +222,32 @@ export default function Home() {
           </motion.div>
         </section>
 
-        {/* About Section - Elegant Cards */}
-        <section className="py-32 px-6 bg-white">
+        {/* About Section - Belle Elegant Style */}
+        <section className="py-32 px-6 bg-gradient-to-b from-[#0A0808] to-[#1A1416]">
           <div className="max-w-6xl mx-auto">
-            <ParallaxSection speed={0.3}>
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                className="text-center mb-20"
-              >
-                <h2 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl mb-6 text-[#1A1A1A] font-light">
-                  יותר מסתם <span className="font-semibold italic">מקום</span>
-                </h2>
-                <div className="divider-luxury w-32 mx-auto my-8" />
-                <p className="text-xl text-[#666] font-light leading-relaxed max-w-2xl mx-auto">
-                  וילה בהרי ירושלים שבה הזמן עומד מלכת
-                  <br />
-                  והרגע שלך הופך לבלתי נשכח
-                </p>
-              </motion.div>
-            </ParallaxSection>
+            {/* Section Header - Belle Style */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1 }}
+              className="section-header"
+            >
+              <div className="section-subtitle">discover</div>
+              <h2 className="section-title">
+                יותר מסתם מקום
+              </h2>
+              <div className="divider-belle">
+                <div className="divider-belle-center">❖</div>
+              </div>
+              <p className="section-description">
+                וילה בהרי ירושלים שבה הזמן עומד מלכת
+                והרגע שלך הופך לבלתי נשכח
+              </p>
+            </motion.div>
 
-            {/* Feature Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Feature Grid - Elegant Borders */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-20">
               {[
                 {
                   icon: '🥂',
@@ -274,16 +275,17 @@ export default function Home() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="group p-8 rounded-2xl border border-[#F4E4E1] hover:border-[#D4AF37] bg-white hover-lift cursor-default"
+                  transition={{ duration: 0.8, delay: index * 0.15 }}
+                  className="elegant-border elegant-hover p-10 bg-gradient-to-b from-[#1A1416] to-[#0F0C0D] rounded-lg group cursor-default"
                 >
-                  <div className="text-6xl mb-6 text-center transition-transform group-hover:scale-110 duration-300">
-                    {feature.icon}
+                  <div className="number-circle mb-6">
+                    {String(index + 1).padStart(2, '0')}
                   </div>
-                  <h3 className="font-cormorant text-2xl mb-3 text-[#1A1A1A] text-center font-semibold">
+                  <h3 className="font-cormorant text-2xl mb-4 text-white text-center font-light tracking-wide">
                     {feature.title}
                   </h3>
-                  <p className="text-[#666] font-light leading-relaxed text-center text-sm">
+                  <div className="w-12 h-px bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto mb-4" />
+                  <p className="text-white/60 text-center leading-relaxed font-light text-sm">
                     {feature.description}
                   </p>
                 </motion.div>
