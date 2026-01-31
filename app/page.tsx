@@ -37,80 +37,57 @@ export default function Home() {
       <FloatingSocialBar />
 
       <main ref={containerRef} className="relative bg-[#FAFAF8]">
-        {/* Minimalist Header */}
+        {/* Ultra-Minimal Floating Header */}
         <motion.header
-          initial={{ y: -100, opacity: 0 }}
+          initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="fixed top-0 right-0 left-0 z-50 px-6 py-4"
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="fixed top-6 right-6 left-6 z-50 pointer-events-none"
         >
-          <div className="max-w-7xl mx-auto">
-            <div className="glass-dark px-8 py-4 rounded-full flex items-center justify-between">
-              {/* Logo */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-                className="flex items-center gap-3"
-              >
-                <Heart className="w-6 h-6 text-[#D4AF37]" fill="#D4AF37" />
-                <span className="font-cormorant text-lg sm:text-xl text-white font-semibold tracking-wide">
-                  התארגנות כלה באווירה של בית
-                </span>
-              </motion.div>
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            {/* Compact Logo - More Transparent */}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="backdrop-blur-sm bg-white/5 px-5 py-2.5 rounded-full flex items-center gap-2 pointer-events-auto shadow-lg border border-white/10"
+            >
+              <Heart className="w-4 h-4 text-[#D4AF37]" fill="#D4AF37" />
+              <span className="font-cormorant text-lg text-white font-semibold drop-shadow-lg">חגית</span>
+            </motion.div>
 
-              {/* Navigation */}
-              <motion.nav
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.5 }}
-                className="hidden lg:flex items-center gap-8"
-              >
-                <a href="#gallery" className="text-sm text-white/80 hover:text-[#D4AF37] transition-colors font-light tracking-wide">
-                  גלריה
-                </a>
-                <a href="#experience" className="text-sm text-white/80 hover:text-[#D4AF37] transition-colors font-light tracking-wide">
-                  החוויה
-                </a>
-                <a href="#testimonials" className="text-sm text-white/80 hover:text-[#D4AF37] transition-colors font-light tracking-wide">
-                  המלצות
-                </a>
-                <a href="#pricing" className="text-sm text-white/80 hover:text-[#D4AF37] transition-colors font-light tracking-wide">
-                  מחירים
-                </a>
-              </motion.nav>
-
-              {/* WhatsApp CTA */}
-              <motion.a
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
-                href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי, אני מעוניינת לשמוע פרטים על התארגנות כלות')}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-[#25D366] hover:bg-[#20BA5A] text-white px-6 py-2.5 rounded-full transition-all duration-300 shadow-lg"
-              >
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
-                </svg>
-                <span className="text-sm font-medium hidden sm:inline">שלחי הודעה</span>
-              </motion.a>
-            </div>
+            {/* Compact CTA */}
+            <motion.a
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי, אני מעוניינת לשמוע פרטים')}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="backdrop-blur-sm bg-[#25D366]/95 hover:bg-[#25D366] px-5 py-2.5 rounded-full flex items-center gap-2 pointer-events-auto shadow-lg transition-all"
+            >
+              <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+              </svg>
+              <span className="text-sm font-medium text-white">צור קשר</span>
+            </motion.a>
           </div>
         </motion.header>
 
         {/* Hero Section - Fullscreen Video */}
         <section className="relative h-screen flex items-end justify-center overflow-hidden">
-          {/* Video Background */}
+          {/* Video Background - Optimized & Fast */}
           <div className="absolute inset-0 z-0">
             <video
               autoPlay
               muted
               loop
               playsInline
-              preload="auto"
+              preload="metadata"
               className="absolute inset-0 w-full h-full object-cover"
               poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%231A1A1A' width='1920' height='1080'/%3E%3C/svg%3E"
+              style={{ transform: 'translate3d(0, 0, 0)' }}
+              onLoadedData={(e) => {
+                const video = e.target as HTMLVideoElement;
+                video.playbackRate = 1.5;
+              }}
             >
               <source 
                 src="https://Hagit-Bridal-Preperation.b-cdn.net/%D7%94%D7%AA%D7%90%D7%A8%D7%92%D7%A0%D7%95%D7%AA%20%D7%9B%D7%9C%D7%95%D7%AA/HERO.mp4" 
@@ -118,8 +95,8 @@ export default function Home() {
               />
             </video>
             
-            {/* Subtle Bottom Gradient */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+            {/* Cinematic Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/60" />
           </div>
 
           {/* Hero Content - Bottom Positioned */}
@@ -321,6 +298,11 @@ export default function Home() {
                   preload="none"
                   className="absolute inset-0 w-full h-full object-cover"
                   poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 500'%3E%3Crect fill='%23F5E6D3' width='400' height='500'/%3E%3C/svg%3E"
+                  style={{ transform: 'translate3d(0, 0, 0)' }}
+                  onLoadedData={(e) => {
+                    const video = e.target as HTMLVideoElement;
+                    video.playbackRate = 1.5;
+                  }}
                 >
                   <source 
                     src="https://Hagit-Bridal-Preperation.b-cdn.net/%D7%94%D7%AA%D7%90%D7%A8%D7%92%D7%A0%D7%95%D7%AA%20%D7%9B%D7%9C%D7%95%D7%AA/VID-20260129-WA0099.mp4" 
@@ -346,8 +328,8 @@ export default function Home() {
                 
                 <p className="text-lg text-[#666] font-light leading-relaxed mb-10">
                   רגע לפני היום הגדול, את מגיעה לוילה עטופה בירוק ושקט,
-                  ומתמסרת לזמן שהוא רק שלך. זמן להיות עם החברות הקרובות,
-                  לצחוק, להתרגש ולרקום יחד את ההכנות ליום המיוחד
+                  ומתמסרת לזמן שהוא רק שלך. להיות עם החברות הקרובות,
+                  לצחוק, להתרגש ולהתכונן ליום בלתי נשכח.
                 </p>
 
                 <div className="space-y-4 mb-10">
