@@ -2,32 +2,61 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Bot, X, Send, Sparkles } from 'lucide-react'
+import { Bot, X, Send, Sparkles, Phone, Mail } from 'lucide-react'
 
 interface Message {
   id: string
   text: string
   sender: 'user' | 'bot'
   timestamp: Date
+  quickReplies?: string[]
 }
 
-// Predefined responses for the chatbot
-const botResponses: Record<string, string> = {
-  'שלום': 'שלום! אני כאן לעזור לך עם כל שאלה על התארגנות הכלות שלנו 💍',
-  'היי': 'היי! שמחה לעזור 😊 יש לך שאלות על הוילה או על החבילה?',
-  'מחיר': 'מחיר השקה מיוחד: 1,500₪ במקום 2,200₪! החבילה כוללת יום שלם בוילה, יין משובח, פינוקים והכל. רוצה פרטים נוספים?',
-  'זמינות': 'בואי נבדוק יחד! מה התאריך המשוער של החתונה שלך? 📅 אפשר גם לשלוח וואטסאפ ל-052-267-6718',
-  'מיקום': 'הווילה שלנו נמצאת בהרי ירושלים, במיקום שקט ומבודד עטוף בטבע. רוצה לתאם ביקור?',
-  'כלול': 'בחבילה כלול: יום שלם בוילה, יין מיקב הרי ירושלים, פירות ומאפים, שתייה חמה וקרה, עמדות מוארות לאיפור, ליווי אישי ואווירה מפנקת 💝',
-  'שעות': 'אפשר להגיע משעות הבוקר ועד היציאה לצילומים - בדרך כלל 5-8 שעות. אפשר להתאים לפי הצורך שלך!',
-  'תאורה': 'יש לנו תאורת LED מקצועית מושלמת לאיפור! המאפרת שלך תאהב 💄',
-  'אנשים': 'הווילה מתאימה לכלה ועד 10 חברות בנוחות מלאה. יש מספיק מקום לכולן!',
-  'חניה': 'יש חניה פרטית נוחה ליד הווילה. אין בעיה של חניה!',
-  'כשר': 'כל המזון והיין כשרים בהשגחה. היין מיקב הרי ירושלים בכשרות מהדרין.',
-  'ביטול': 'אפשר לבטל עד 14 יום לפני התאריך. אין עמלות נסתרות ואנחנו גמישים!',
-  'הזמנה': 'מעולה! הדרך הכי מהירה זה לשלוח לי וואטסאפ: 052-267-6718 או להתקשר ישירות. אשמח לשמור לך תאריך! 🎉',
-  'תודה': 'בשמחה! אם יש עוד שאלות אני כאן 💕',
-  'default': 'תודה על השאלה! אפשר לשלוח לי הודעת וואטסאפ או להתקשר ישירות ל-052-267-6718 📞'
+const predefinedResponses: Record<string, { text: string; quickReplies?: string[] }> = {
+  'היי': {
+    text: 'שלום! 👋 אני כאן לעזור לך עם כל שאלה על ההתארגנות שלך ביום החתונה. במה אוכל לעזור?',
+    quickReplies: ['מחיר', 'זמינות', 'מה כלול?', 'איפה זה?']
+  },
+  'שלום': {
+    text: 'היי! 😊 נעים מאוד. אני הצ\'אטבוט של חגית. יש לי תשובות לכל השאלות שלך!',
+    quickReplies: ['מחיר', 'זמינות', 'מה כלול?', 'איפה זה?']
+  },
+  'מחיר': {
+    text: '💰 המחיר המיוחד שלנו:\n\n✨ 1,500₪ במקום 2,200₪\n\n✅ כולל:\n• שתייה חמה וקרה כל היום\n• פינת יין ושמפניה\n• תאורה מקצועית\n• צילום 360\n• מוזיקה ורמקולים\n• חניה פרטית',
+    quickReplies: ['איך מזמינים?', 'זמינות', 'ביטול?']
+  },
+  'זמינות': {
+    text: '📅 הזמינות שלנו מתעדכנת בזמן אמת!\n\nאשמח לבדוק עבורך תאריך ספציפי. איזה תאריך מעניין אותך?',
+    quickReplies: ['צור קשר', 'מחיר', 'מיקום']
+  },
+  'מה כלול?': {
+    text: '🎉 החבילה שלנו כוללת:\n\n✅ שתייה חמה וקרה ללא הגבלה\n✅ פינת יין ושמפניה\n✅ תאורה מקצועית לצילומים\n✅ צילום 360 מהנה\n✅ מערכת קול ומוזיקה\n✅ חניה פרטית\n✅ נוף הררי מדהים\n\nרוצה לשמוע עוד?',
+    quickReplies: ['מחיר', 'איך מזמינים?', 'כמה שעות?']
+  },
+  'איפה זה?': {
+    text: '📍 מיקום:\nוילה בהרי ירושלים, אזור שקט ומרהיב עם נוף לא פחות ממושלם!\n\nרוצה הוראות הגעה מדויקות?',
+    quickReplies: ['צור קשר', 'מחיר', 'כמה שעות?']
+  },
+  'כמה שעות?': {
+    text: '⏰ הזמנה ליום שלם!\n\nהוילה שלך מהבוקר ועד הערב. זמן להתארגן בנחת, לצלם, ליהנות.',
+    quickReplies: ['מחיר', 'איך מזמינים?']
+  },
+  'איך מזמינים?': {
+    text: '📲 סופר פשוט!\n\n1️⃣ לחץ על "צור קשר" למטה\n2️⃣ שלח לנו את התאריך המבוקש\n3️⃣ נחזור אליך תוך שעה\n\nאפשר גם דרך המייל או טלפון!',
+    quickReplies: ['צור קשר', 'מחיר']
+  },
+  'ביטול?': {
+    text: '🔄 מדיניות ביטול:\n\n✅ ביטול חינם עד 14 יום לפני\n✅ אחרי זה - החזר חלקי\n✅ בעיות בריאות? נמצא פתרון!\n\nרוצה לדבר עם חגית?',
+    quickReplies: ['צור קשר', 'מחיר']
+  },
+  'צור קשר': {
+    text: '📞 דרכי יצירת קשר:\n\n💚 וואטסאפ - הכי מהיר!\n📧 מייל - נחזור תוך 24 שעות\n☎️ טלפון - זמינים בשעות היום\n\nאיך נוח לך?',
+    quickReplies: ['וואטסאפ', 'מייל', 'טלפון']
+  },
+  'default': {
+    text: 'אני לא בטוח שהבנתי 🤔\n\nאולי תרצה לשאול על אחד מהנושאים האלה?',
+    quickReplies: ['מחיר', 'זמינות', 'מה כלול?', 'איפה זה?']
+  }
 }
 
 export default function AIChatbot() {
@@ -35,14 +64,16 @@ export default function AIChatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: 'שלום! 👋 אני עוזרת וירטואלית של חגית. איך אפשר לעזור לך היום?',
+      text: 'היי! 👋 אני הצ\'אטבוט של חגית. שמחה לעזור! במה תרצי להתחיל?',
       sender: 'bot',
-      timestamp: new Date()
+      timestamp: new Date(),
+      quickReplies: ['מחיר', 'זמינות', 'מה כלול?', 'איפה זה?']
     }
   ])
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -52,25 +83,47 @@ export default function AIChatbot() {
     scrollToBottom()
   }, [messages])
 
-  const getBotResponse = (userMessage: string): string => {
-    const lowerMessage = userMessage.toLowerCase()
+  useEffect(() => {
+    if (isOpen && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [isOpen])
+
+  const findBestResponse = (userInput: string): { text: string; quickReplies?: string[] } => {
+    const lowerInput = userInput.toLowerCase().trim()
     
-    for (const [keyword, response] of Object.entries(botResponses)) {
-      if (lowerMessage.includes(keyword.toLowerCase())) {
-        return response
+    // מילות מפתח
+    const keywords: Record<string, string[]> = {
+      'מחיר': ['מחיר', 'כמה עולה', 'עלות', 'כסף', 'תשלום'],
+      'זמינות': ['זמינות', 'פנוי', 'תאריך', 'תורים', 'להזמין'],
+      'מה כלול?': ['כלול', 'מה יש', 'שירותים', 'מתקנים', 'מוצע'],
+      'איפה זה?': ['איפה', 'מיקום', 'כתובת', 'הגעה', 'נגישות'],
+      'כמה שעות?': ['שעות', 'זמן', 'כמה זמן', 'משך'],
+      'איך מזמינים?': ['איך', 'הזמנה', 'לשריין', 'לקבוע'],
+      'ביטול?': ['ביטול', 'לבטל', 'החזר', 'ביטולים'],
+      'צור קשר': ['קשר', 'דבר', 'חגית', 'פרטים', 'טלפון', 'מייל']
+    }
+
+    for (const [key, terms] of Object.entries(keywords)) {
+      if (terms.some(term => lowerInput.includes(term))) {
+        return predefinedResponses[key]
       }
     }
-    
-    return botResponses.default
+
+    // ברכות
+    if (['היי', 'שלום', 'הי', 'hello', 'שלום לך'].some(term => lowerInput.includes(term))) {
+      return predefinedResponses['היי']
+    }
+
+    return predefinedResponses['default']
   }
 
-  const handleSendMessage = () => {
-    if (!inputValue.trim()) return
+  const handleSendMessage = (text: string = inputValue) => {
+    if (!text.trim()) return
 
-    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputValue,
+      text: text.trim(),
       sender: 'user',
       timestamp: new Date()
     }
@@ -79,17 +132,37 @@ export default function AIChatbot() {
     setInputValue('')
     setIsTyping(true)
 
-    // Simulate bot thinking
+    // Simulate bot typing
     setTimeout(() => {
-      const botResponse: Message = {
+      const response = findBestResponse(text)
+      const botMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: getBotResponse(inputValue),
+        text: response.text,
         sender: 'bot',
-        timestamp: new Date()
+        timestamp: new Date(),
+        quickReplies: response.quickReplies
       }
-      setMessages(prev => [...prev, botResponse])
+      setMessages(prev => [...prev, botMessage])
       setIsTyping(false)
-    }, 1000)
+    }, 800 + Math.random() * 400)
+  }
+
+  const handleQuickReply = (reply: string) => {
+    // פעולות מיוחדות
+    if (reply === 'וואטסאפ') {
+      window.open(`https://wa.me/972522676718?text=${encodeURIComponent('היי, אני מעוניינת לשמוע פרטים')}`, '_blank')
+      return
+    }
+    if (reply === 'מייל') {
+      window.location.href = 'mailto:hagit@example.com?subject=פניה מהאתר'
+      return
+    }
+    if (reply === 'טלפון') {
+      window.location.href = 'tel:+972522676718'
+      return
+    }
+
+    handleSendMessage(reply)
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -101,7 +174,7 @@ export default function AIChatbot() {
 
   return (
     <>
-      {/* Floating Chat Button */}
+      {/* Floating Button */}
       <motion.button
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -112,39 +185,26 @@ export default function AIChatbot() {
         className="fixed bottom-6 right-6 z-50 group"
         aria-label="פתח צ'אט AI"
       >
-        {/* Notification Badge */}
         {!isOpen && (
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
-            className="absolute -top-1 -right-1 w-5 h-5 bg-[#DABB99] rounded-full flex items-center justify-center"
+            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg"
           >
-            <Sparkles className="w-3 h-3 text-white" />
+            <Sparkles className="w-3 h-3" />
           </motion.div>
         )}
-
-        {/* Pulse Ring Effect */}
-        <div className="absolute inset-0 rounded-full bg-[#DABB99] animate-ping opacity-20" />
         
-        {/* Main Button */}
-        <div className="relative w-16 h-16 bg-gradient-to-br from-[#DABB99] to-[#C9A87C] rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
+        <div className="absolute inset-0 rounded-full bg-[#D4AF37] animate-ping opacity-20" />
+        
+        <div className="relative w-16 h-16 bg-gradient-to-br from-[#D4AF37] to-[#C9A87C] rounded-full shadow-gold hover:shadow-xl transition-all duration-300 flex items-center justify-center">
           <AnimatePresence mode="wait">
             {isOpen ? (
-              <motion.div
-                key="close"
-                initial={{ rotate: -90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: 90, opacity: 0 }}
-              >
+              <motion.div key="close" initial={{ rotate: -90 }} animate={{ rotate: 0 }}>
                 <X className="w-8 h-8 text-white" strokeWidth={2} />
               </motion.div>
             ) : (
-              <motion.div
-                key="bot"
-                initial={{ rotate: 90, opacity: 0 }}
-                animate={{ rotate: 0, opacity: 1 }}
-                exit={{ rotate: -90, opacity: 0 }}
-              >
+              <motion.div key="bot" initial={{ rotate: 90 }} animate={{ rotate: 0 }}>
                 <Bot className="w-8 h-8 text-white" strokeWidth={2} />
               </motion.div>
             )}
@@ -159,22 +219,24 @@ export default function AIChatbot() {
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            transition={{ duration: 0.3 }}
-            className="fixed bottom-28 right-6 w-[380px] h-[500px] z-50 glass-soft rounded-3xl shadow-2xl overflow-hidden flex flex-col"
+            transition={{ type: "spring", damping: 25 }}
+            className="fixed bottom-28 right-6 w-[400px] h-[600px] z-50 bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-[#F4E4E1]"
           >
             {/* Header */}
-            <div className="bg-gradient-to-r from-[#DABB99] to-[#C9A87C] p-4 flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                <Bot className="w-6 h-6 text-white" />
-              </div>
-              <div>
-                <h3 className="font-playfair text-white text-lg">עוזרת חגית</h3>
-                <p className="text-white/80 text-xs">מקוון עכשיו</p>
+            <div className="bg-gradient-to-r from-[#D4AF37] to-[#C9A87C] p-6 text-white">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                  <Bot className="w-7 h-7" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-cormorant text-xl font-semibold">צ'אט עם חגית</h3>
+                  <p className="text-white/80 text-sm font-light">מגיבה מיד ✨</p>
+                </div>
               </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white/40">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#FAFAF8]">
               {messages.map((message) => (
                 <motion.div
                   key={message.id}
@@ -182,18 +244,37 @@ export default function AIChatbot() {
                   animate={{ opacity: 1, y: 0 }}
                   className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div
-                    className={`max-w-[75%] rounded-2xl px-4 py-3 ${
-                      message.sender === 'user'
-                        ? 'bg-[#DABB99] text-white rounded-br-none'
-                        : 'bg-white text-[#2D2D2D] rounded-bl-none shadow-sm'
-                    }`}
-                  >
-                    <p className="text-sm leading-relaxed">{message.text}</p>
+                  <div className={`max-w-[75%] ${message.sender === 'user' ? 'order-2' : 'order-1'}`}>
+                    <div
+                      className={`rounded-2xl px-4 py-3 ${
+                        message.sender === 'user'
+                          ? 'bg-[#D4AF37] text-white rounded-br-none'
+                          : 'bg-white text-[#1A1A1A] rounded-bl-none shadow-sm border border-[#F4E4E1]'
+                      }`}
+                    >
+                      <p className="text-sm leading-relaxed whitespace-pre-line">{message.text}</p>
+                    </div>
+                    
+                    {/* Quick Replies */}
+                    {message.sender === 'bot' && message.quickReplies && (
+                      <div className="flex flex-wrap gap-2 mt-3">
+                        {message.quickReplies.map((reply) => (
+                          <motion.button
+                            key={reply}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => handleQuickReply(reply)}
+                            className="px-3 py-1.5 bg-white border-2 border-[#D4AF37] text-[#D4AF37] rounded-full text-xs font-medium hover:bg-[#D4AF37] hover:text-white transition-all"
+                          >
+                            {reply}
+                          </motion.button>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               ))}
-
+              
               {/* Typing Indicator */}
               {isTyping && (
                 <motion.div
@@ -201,49 +282,72 @@ export default function AIChatbot() {
                   animate={{ opacity: 1 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-white rounded-2xl rounded-bl-none px-4 py-3 shadow-sm">
+                  <div className="bg-white rounded-2xl rounded-bl-none px-4 py-3 shadow-sm border border-[#F4E4E1]">
                     <div className="flex gap-1">
                       <motion.div
                         animate={{ y: [0, -5, 0] }}
                         transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
-                        className="w-2 h-2 bg-[#DABB99] rounded-full"
+                        className="w-2 h-2 bg-[#D4AF37] rounded-full"
                       />
                       <motion.div
                         animate={{ y: [0, -5, 0] }}
                         transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
-                        className="w-2 h-2 bg-[#DABB99] rounded-full"
+                        className="w-2 h-2 bg-[#D4AF37] rounded-full"
                       />
                       <motion.div
                         animate={{ y: [0, -5, 0] }}
                         transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
-                        className="w-2 h-2 bg-[#DABB99] rounded-full"
+                        className="w-2 h-2 bg-[#D4AF37] rounded-full"
                       />
                     </div>
                   </div>
                 </motion.div>
               )}
-
+              
               <div ref={messagesEndRef} />
             </div>
 
             {/* Input */}
-            <div className="p-4 bg-white/60 border-t border-rose-100">
+            <div className="p-4 bg-white border-t border-[#F4E4E1]">
               <div className="flex gap-2">
                 <input
+                  ref={inputRef}
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="כתבי הודעה..."
-                  className="flex-1 px-4 py-3 rounded-full bg-white border border-rose-100 focus:border-[#DABB99] focus:outline-none focus:ring-2 focus:ring-[#DABB99]/20 text-sm transition-all"
+                  placeholder="שאלי אותי משהו..."
+                  className="flex-1 px-4 py-3 bg-[#FAFAF8] border border-[#F4E4E1] rounded-full text-sm focus:outline-none focus:border-[#D4AF37] transition-all"
                 />
-                <button
-                  onClick={handleSendMessage}
-                  className="w-12 h-12 bg-[#DABB99] hover:bg-[#C9A87C] rounded-full flex items-center justify-center transition-colors shadow-soft"
-                  aria-label="שלח הודעה"
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => handleSendMessage()}
+                  disabled={!inputValue.trim()}
+                  className="w-12 h-12 bg-gradient-to-br from-[#D4AF37] to-[#C9A87C] rounded-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all"
                 >
                   <Send className="w-5 h-5 text-white" />
-                </button>
+                </motion.button>
+              </div>
+              
+              {/* Quick Actions */}
+              <div className="flex gap-2 mt-3 justify-center">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  onClick={() => window.open(`https://wa.me/972522676718`, '_blank')}
+                  className="flex items-center gap-1 px-3 py-1.5 bg-[#25D366] text-white rounded-full text-xs hover:bg-[#20BA5A] transition-all"
+                >
+                  <Phone className="w-3 h-3" />
+                  <span>וואטסאפ</span>
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  onClick={() => window.location.href = 'mailto:hagit@example.com'}
+                  className="flex items-center gap-1 px-3 py-1.5 bg-[#D4AF37] text-white rounded-full text-xs hover:bg-[#C9A87C] transition-all"
+                >
+                  <Mail className="w-3 h-3" />
+                  <span>מייל</span>
+                </motion.button>
               </div>
             </div>
           </motion.div>
