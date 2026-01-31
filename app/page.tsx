@@ -13,7 +13,7 @@ import {
   Play,
   ArrowLeft
 } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import AIChatbot from '@/components/AIChatbot'
 import SocialMediaLinks, { FloatingSocialBar } from '@/components/SocialMediaLinks'
