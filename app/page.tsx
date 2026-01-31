@@ -8,9 +8,13 @@ import {
   Phone,
   Star,
   ChevronDown,
-  Check
+  Check,
+  Bot,
+  Play,
+  Instagram,
+  ArrowLeft
 } from 'lucide-react'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import AIChatbot from '@/components/AIChatbot'
 import SocialMediaLinks, { FloatingSocialBar } from '@/components/SocialMediaLinks'
@@ -22,10 +26,10 @@ export default function Home() {
     offset: ["start start", "end start"]
   })
 
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
-  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.05])
-
-  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '972501234567'
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0])
+  const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 1.1])
+  
+  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '972522676718'
 
   return (
     <>
@@ -34,47 +38,70 @@ export default function Home() {
       <AIChatbot />
       <FloatingSocialBar />
 
-      <main ref={containerRef} className="relative">
-        {/* Floating Header */}
+      <main ref={containerRef} className="relative bg-[#FAFAF8]">
+        {/* Minimalist Header */}
         <motion.header
-          initial={{ y: -100 }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="fixed top-0 right-0 left-0 z-50 px-6 py-6"
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="fixed top-0 right-0 left-0 z-50 px-6 py-4"
         >
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="glass-soft px-6 py-3 rounded-full"
-            >
-              <div className="flex items-center gap-3">
-                <Heart className="w-5 h-5 text-[#DABB99]" fill="#DABB99" />
-                <span className="font-playfair text-xl text-[#2D2D2D]">חגית</span>
-              </div>
-            </motion.div>
-            
-            <motion.a
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              href={`tel:${process.env.NEXT_PUBLIC_PHONE_NUMBER || '+972501234567'}`}
-              className="glass-soft px-6 py-3 rounded-full hover:bg-[#DABB99]/20 transition-all duration-300 flex items-center gap-2"
-            >
-              <Phone className="w-4 h-4 text-[#DABB99]" />
-              <span className="text-sm font-medium hidden sm:inline">050-123-4567</span>
-            </motion.a>
+          <div className="max-w-7xl mx-auto">
+            <div className="glass-dark px-8 py-4 rounded-full flex items-center justify-between">
+              {/* Logo */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="flex items-center gap-3"
+              >
+                <Heart className="w-6 h-6 text-[#D4AF37]" fill="#D4AF37" />
+                <span className="font-cormorant text-2xl text-white font-semibold tracking-wide">חגית</span>
+              </motion.div>
+
+              {/* Navigation */}
+              <motion.nav
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+                className="hidden md:flex items-center gap-8"
+              >
+                <a href="#gallery" className="text-sm text-white/80 hover:text-[#D4AF37] transition-colors font-light tracking-wide">
+                  גלריה
+                </a>
+                <a href="#experience" className="text-sm text-white/80 hover:text-[#D4AF37] transition-colors font-light tracking-wide">
+                  החוויה
+                </a>
+                <a href="#testimonials" className="text-sm text-white/80 hover:text-[#D4AF37] transition-colors font-light tracking-wide">
+                  המלצות
+                </a>
+                <a href="#pricing" className="text-sm text-white/80 hover:text-[#D4AF37] transition-colors font-light tracking-wide">
+                  מחירים
+                </a>
+              </motion.nav>
+
+              {/* CTA */}
+              <motion.a
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                href={`tel:${process.env.NEXT_PUBLIC_PHONE_NUMBER || '+972522676718'}`}
+                className="flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C9A87C] text-white px-6 py-2.5 rounded-full transition-all duration-300 shadow-gold"
+              >
+                <Phone className="w-4 h-4" />
+                <span className="text-sm font-medium hidden sm:inline">052-267-6718</span>
+              </motion.a>
+            </div>
           </div>
         </motion.header>
 
-        {/* Hero Section */}
+        {/* Hero Section - Fullscreen Video */}
         <section className="relative h-screen flex items-center justify-center overflow-hidden">
+          {/* Video Background */}
           <motion.div 
             style={{ opacity: heroOpacity, scale: heroScale }}
             className="absolute inset-0 z-0"
           >
-            {/* Video Background */}
             <video
               autoPlay
               muted
@@ -83,89 +110,77 @@ export default function Home() {
               className="absolute inset-0 w-full h-full object-cover"
             >
               <source 
-                src="https://Hagit-Bridal-Preperation.b-cdn.net/%D7%94%D7%AA%D7%90%D7%A8%D7%92%D7%A0%D7%95%D7%AA%20%D7%9B%D7%9C%D7%95%D7%AA/VID-20260129-WA0099.mp4" 
+                src="https://Hagit-Bridal-Preperation.b-cdn.net/%D7%94%D7%AA%D7%90%D7%A8%D7%92%D7%A0%D7%95%D7%AA%20%D7%9B%D7%9C%D7%95%D7%AA/HERO.mp4" 
                 type="video/mp4" 
               />
             </video>
             
-            {/* Dark Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50" />
-            
-            {/* Decorative Glow */}
-            <div className="absolute top-20 left-10 w-64 h-64 bg-[#DABB99]/10 rounded-full blur-3xl" />
-            <div className="absolute bottom-20 right-10 w-96 h-96 bg-rose-200/15 rounded-full blur-3xl" />
+            {/* Cinematic Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70" />
           </motion.div>
 
-          <div className="relative z-10 text-center px-6 max-w-6xl mx-auto">
+          {/* Hero Content */}
+          <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
             <motion.div
-              initial={{ opacity: 0, y: 40 }}
+              initial={{ opacity: 0, y: 60 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 }}
-              className="inline-flex items-center gap-2 mb-6 glass-soft px-5 py-2 rounded-full border border-white/20"
+              transition={{ duration: 1, delay: 0.5 }}
+              className="space-y-8"
             >
-              <Sparkles className="w-4 h-4 text-[#DABB99]" />
-              <span className="text-sm text-white/90 font-light">וילה בהרי ירושלים</span>
-            </motion.div>
-
-            <motion.h1
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, delay: 0.5 }}
-              className="font-playfair text-5xl sm:text-6xl lg:text-7xl mb-6 text-white leading-[1.15]"
-              style={{ textShadow: '0 2px 20px rgba(0,0,0,0.3)' }}
-            >
-              להתעורר מול הרי ירושלים.
-              <br />
-              <span className="text-[#DABB99]">לנשום. לחגוג.</span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="text-lg sm:text-xl text-white/95 font-light mb-12 max-w-3xl mx-auto leading-relaxed"
-              style={{ textShadow: '0 1px 10px rgba(0,0,0,0.3)' }}
-            >
-              וילה מעוצבת בלב הטבע, עטופה בשקט ובירוק.
-              <br className="hidden sm:inline" />
-              המקום המושלם לך ולחברות לרקום יחד את הרגעים שלפני החופה,
-              <br className="hidden sm:inline" />
-              עם יין מקומי, פינוקים ואווירה של בית.
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.9 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            >
-              <a
-                href="#availability"
-                className="group px-10 py-5 bg-white/95 text-[#2D2D2D] rounded-full hover:bg-white transition-all duration-300 shadow-2xl hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] flex items-center gap-3"
+              {/* Subtitle */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.7 }}
+                className="inline-flex items-center gap-3 glass-dark px-6 py-3 rounded-full"
               >
-                <span className="font-medium text-lg">לפרטים ובדיקת זמינות</span>
-                <ChevronDown className="w-5 h-5 transition-transform group-hover:translate-y-1" />
-              </a>
-              
-              <a
-                href="#gallery"
-                className="group px-10 py-5 bg-transparent border-2 border-white/60 text-white rounded-full hover:bg-white/10 hover:border-white transition-all duration-300 flex items-center gap-3"
+                <Sparkles className="w-5 h-5 text-[#D4AF37]" />
+                <span className="text-white/90 text-sm font-light tracking-widest uppercase">
+                  Villa in Jerusalem Hills
+                </span>
+              </motion.div>
+
+              {/* Main Headline */}
+              <h1 className="font-cormorant text-6xl sm:text-7xl lg:text-8xl text-white leading-[1.1] font-light">
+                הרגע שלפני
+                <br />
+                <span className="gradient-text font-semibold">הרגע הגדול</span>
+              </h1>
+
+              {/* Description */}
+              <p className="text-xl sm:text-2xl text-white/90 font-light leading-relaxed max-w-3xl mx-auto">
+                וילה מעוצבת בלב הטבע • חוויה של יום שלם
+                <br className="hidden sm:inline" />
+                עם יין משובח, פינוקים ואווירה של בית
+              </p>
+
+              {/* CTA Buttons */}
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 1 }}
+                className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
               >
-                <Camera className="w-5 h-5" />
-                <span className="font-medium text-lg">הווילה שלנו</span>
-              </a>
+                <a
+                  href="#pricing"
+                  className="btn-luxury group flex items-center gap-3"
+                >
+                  <span>גלי את החבילה המושלמת</span>
+                  <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-1" />
+                </a>
+                
+                <a
+                  href="#gallery"
+                  className="group px-8 py-4 glass-dark rounded-full text-white hover:bg-white/20 transition-all duration-300 flex items-center gap-3"
+                >
+                  <Play className="w-5 h-5" />
+                  <span className="font-light">צפי בגלריה</span>
+                </a>
+              </motion.div>
             </motion.div>
-            
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.1 }}
-              className="mt-8 text-sm text-white/80 font-light"
-            >
-              מחירי השקה מיוחדים לתקופה הקרובה
-            </motion.p>
           </div>
 
+          {/* Scroll Indicator */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -173,119 +188,121 @@ export default function Home() {
             className="absolute bottom-12 left-1/2 -translate-x-1/2"
           >
             <motion.div
-              animate={{ y: [0, 10, 0] }}
+              animate={{ y: [0, 12, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               className="flex flex-col items-center gap-2"
             >
-              <span className="text-xs text-[#737373] font-light">גללי למטה</span>
-              <div className="w-[1px] h-12 bg-gradient-to-b from-[#DABB99]/50 to-transparent" />
+              <span className="text-xs text-white/60 font-light tracking-widest uppercase">Scroll</span>
+              <ChevronDown className="w-5 h-5 text-white/40" />
             </motion.div>
           </motion.div>
         </section>
 
-        {/* About Section */}
-        <section className="py-24 px-6 bg-white/40">
-          <div className="max-w-5xl mx-auto text-center">
+        {/* About Section - Elegant Cards */}
+        <section className="py-32 px-6 bg-white">
+          <div className="max-w-6xl mx-auto">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
+              className="text-center mb-20"
             >
-              <h2 className="font-playfair text-4xl sm:text-5xl lg:text-6xl mb-6 text-[#2D2D2D]">
-                יותר מסתם מקום להתארגן בו
+              <h2 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl mb-6 text-[#1A1A1A] font-light">
+                יותר מסתם <span className="font-semibold italic">מקום</span>
               </h2>
-              <div className="divider-elegant my-8 max-w-xs mx-auto" />
-              <p className="text-lg sm:text-xl text-[#737373] font-light leading-relaxed mb-16 max-w-3xl mx-auto">
-                בלב הרי ירושלים, בתוך וילה שעטופה בירוק, מחכה לך אי של שקט.
-                <br className="hidden sm:inline" />
-                המקום לנשום עמוק, להתנתק מהרעש ולהתחבר לרגע שלפני החופה.
+              <div className="divider-luxury w-32 mx-auto my-8" />
+              <p className="text-xl text-[#666] font-light leading-relaxed max-w-2xl mx-auto">
+                וילה בהרי ירושלים שבה הזמן עומד מלכת
+                <br />
+                והרגע שלך הופך לבלתי נשכח
               </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-16">
-                {[
-                  {
-                    icon: '🥂',
-                    title: 'יין ופינוקים',
-                    description: 'בר פתוח של פירות טריים, מאפים מתוקים ויין בוטיק מיקב הרי ירושלים'
-                  },
-                  {
-                    icon: '🌿',
-                    title: 'השקט של ההרים',
-                    description: 'וילה מבודדת ושקטה המאפשרת ניתוק מוחלט מהלחץ וחיבור לרגע'
-                  },
-                  {
-                    icon: '💄',
-                    title: 'מרחב ביוטי',
-                    description: 'עמדות מוארות ומרווחות למאפרת ומעצבת השיער שלך'
-                  },
-                  {
-                    icon: '✨',
-                    title: 'זמן איכות',
-                    description: 'סלון רחב ופינות ישיבה מושלמות לצחוק ולהתרגש עם החברות'
-                  }
-                ].map((feature, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.6, delay: index * 0.15 }}
-                    className="glass-soft p-8 rounded-2xl hover-lift shadow-soft"
-                  >
-                    <div className="text-5xl mb-4 flex justify-center">
-                      {feature.icon}
-                    </div>
-                    <h3 className="font-playfair text-xl mb-3 text-[#2D2D2D]">
-                      {feature.title}
-                    </h3>
-                    <p className="text-[#737373] font-light leading-relaxed text-sm">
-                      {feature.description}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
             </motion.div>
+
+            {/* Feature Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                {
+                  icon: '🥂',
+                  title: 'יין ופינוקים',
+                  description: 'יין בוטיק מיקב הרי ירושלים, פירות העונה ומאפים ביתיים'
+                },
+                {
+                  icon: '🌿',
+                  title: 'השקט של ההרים',
+                  description: 'וילה מבודדת המאפשרת ניתוק מוחלט מהלחץ'
+                },
+                {
+                  icon: '💄',
+                  title: 'מרחב ביוטי',
+                  description: 'עמדות מוארות ומקצועיות למאפרת ומעצבת השיער'
+                },
+                {
+                  icon: '✨',
+                  title: 'זמן איכות',
+                  description: 'מרחבים רחבים לך ולחברות להתרגש ביחד'
+                }
+              ].map((feature, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="group p-8 rounded-2xl border border-[#F4E4E1] hover:border-[#D4AF37] bg-white hover-lift cursor-default"
+                >
+                  <div className="text-6xl mb-6 text-center transition-transform group-hover:scale-110 duration-300">
+                    {feature.icon}
+                  </div>
+                  <h3 className="font-cormorant text-2xl mb-3 text-[#1A1A1A] text-center font-semibold">
+                    {feature.title}
+                  </h3>
+                  <p className="text-[#666] font-light leading-relaxed text-center text-sm">
+                    {feature.description}
+                  </p>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Gallery Preview */}
-        <section id="gallery" className="py-24 px-6">
+        {/* Gallery Section - Masonry Style */}
+        <section id="gallery" className="py-32 px-6 bg-gradient-to-b from-white to-[#F4E4E1]/30">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <motion.h2
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="font-playfair text-4xl sm:text-5xl lg:text-6xl mb-4 text-[#2D2D2D]"
-              >
-                רגעים אמיתיים
-              </motion.h2>
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.2 }}
-                className="text-[#737373] text-lg font-light"
-              >
-                כלות שהתארגנו אצלי והרגישו את הקסם
-              </motion.p>
-            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-20"
+            >
+              <h2 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl mb-6 text-[#1A1A1A] font-light">
+                רגעים <span className="gradient-text font-semibold italic">אמיתיים</span>
+              </h2>
+              <div className="divider-luxury w-32 mx-auto my-8" />
+              <p className="text-xl text-[#666] font-light">
+                כלות שהתארגנו אצלנו והרגישו את הקסם
+              </p>
+            </motion.div>
 
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {[1, 2, 3, 4, 5, 6].map((item, index) => (
+            {/* Gallery Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {[1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => (
                 <motion.div
                   key={item}
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="relative aspect-[3/4] bg-gradient-to-br from-rose-100 to-amber-50 rounded-2xl overflow-hidden shadow-soft hover-lift cursor-pointer group"
+                  transition={{ duration: 0.5, delay: index * 0.08 }}
+                  className={`image-overlay rounded-xl overflow-hidden cursor-pointer ${
+                    index === 0 ? 'md:col-span-2 md:row-span-2' : 
+                    index === 4 ? 'md:col-span-2' : ''
+                  }`}
                 >
-                  <div className="absolute inset-0 bg-[#2D2D2D]/0 group-hover:bg-[#2D2D2D]/10 transition-all duration-500" />
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <div className="glass-soft px-4 py-2 rounded-full">
-                      <span className="text-sm text-[#2D2D2D]">לחצי להגדלה</span>
+                  <div className={`relative bg-gradient-to-br from-rose-100 to-amber-50 ${
+                    index === 0 ? 'aspect-square' : 'aspect-[3/4]'
+                  }`}>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <Camera className="w-12 h-12 text-white/30" />
                     </div>
                   </div>
                 </motion.div>
@@ -294,32 +311,48 @@ export default function Home() {
           </div>
         </section>
 
-        {/* The Villa Experience */}
-        <section className="py-24 px-6 bg-gradient-to-b from-white/40 to-rose-50/30">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
+        {/* Experience Section - Split Layout */}
+        <section id="experience" className="py-32 px-6 bg-white">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+              {/* Left - Image */}
               <motion.div
-                initial={{ opacity: 0, x: -30 }}
+                initial={{ opacity: 0, x: -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="relative aspect-[4/5] rounded-2xl overflow-hidden shadow-luxury"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-rose-100 flex items-center justify-center">
+                  <Camera className="w-20 h-20 text-white/30" />
+                </div>
+              </motion.div>
+
+              {/* Right - Content */}
+              <motion.div
+                initial={{ opacity: 0, x: 40 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <h2 className="font-playfair text-4xl sm:text-5xl mb-6 text-[#2D2D2D]">
-                  החוויה שלך בוילה
+                <h2 className="font-cormorant text-5xl sm:text-6xl mb-8 text-[#1A1A1A] font-light">
+                  החוויה שלך
+                  <br />
+                  <span className="gradient-text font-semibold italic">בוילה</span>
                 </h2>
-                <p className="text-lg text-[#737373] font-light leading-relaxed mb-8">
-                  רגע לפני היום הגדול, כלה מגיעה לוילה עטופה בירוק, שקט ואור,
-                  ומתמסרת לזמן שהוא רק שלה. זמן להיות יחד עם החברות הקרובות,
-                  לצחוק, להתרגש, לנשום ולרקום יחד את ההכנות ליום המיוחד.
+                
+                <p className="text-lg text-[#666] font-light leading-relaxed mb-10">
+                  רגע לפני היום הגדול, אתמשיכה לוילה עטופה בירוק ושקט,
+                  ומתמסרת לזמן שהוא רק שלך. זמן להיות עם החברות הקרובות,
+                  לצחוק, להתרגש ולרקום יחד את ההכנות.
                 </p>
 
-                <div className="space-y-4">
+                <div className="space-y-4 mb-10">
                   {[
                     'שתייה חמה וקרה לאורך כל היום',
                     'פינוקים מתוקים ופירות טריים',
                     'יין מקומי משובח מיקב הרי ירושלים',
-                    'מרחב שמאפשר חיבור, רוגע ונוכחות מלאה',
-                    'ליווי מעצבת שיער (אופציונלי)',
+                    'מרחב המאפשר חיבור ונוכחות מלאה',
                     'אווירה רגועה, אישית ומפנקת'
                   ].map((feature, index) => (
                     <motion.div
@@ -328,60 +361,39 @@ export default function Home() {
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.5, delay: index * 0.1 }}
-                      className="flex items-center gap-3"
+                      className="flex items-center gap-4"
                     >
-                      <div className="w-6 h-6 rounded-full bg-[#DABB99]/20 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-4 h-4 text-[#DABB99]" />
-                      </div>
-                      <span className="text-[#2D2D2D]">{feature}</span>
+                      <div className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+                      <span className="text-[#1A1A1A] font-light">{feature}</span>
                     </motion.div>
                   ))}
                 </div>
 
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.6 }}
-                  className="mt-8 p-6 glass-soft rounded-2xl border-r-4 border-[#DABB99]"
-                >
-                  <p className="text-[#2D2D2D] font-playfair text-lg italic leading-relaxed">
-                    "יום התארגנות שהוא חוויה, זיכרון, והתחלה רכה ליום בלתי נשכח"
+                <blockquote className="border-r-2 border-[#D4AF37] pr-6 py-4">
+                  <p className="text-[#1A1A1A] font-cormorant text-2xl italic font-light leading-relaxed">
+                    "יום התארגנות שהוא חוויה, זיכרון,
+                    <br />
+                    והתחלה רכה ליום בלתי נשכח"
                   </p>
-                </motion.div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-                className="relative aspect-[4/5] bg-gradient-to-br from-amber-100 to-rose-100 rounded-3xl overflow-hidden shadow-soft"
-              >
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="text-center p-8">
-                    <Camera className="w-16 h-16 text-white/40 mx-auto mb-4" />
-                    <p className="text-white/60 font-light">תמונת הוילה תתווסף בקרוב</p>
-                  </div>
-                </div>
+                </blockquote>
               </motion.div>
             </div>
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section className="py-24 px-6">
+        {/* Testimonials Section */}
+        <section id="testimonials" className="py-32 px-6 bg-gradient-to-b from-white to-[#F4E4E1]/30">
           <div className="max-w-6xl mx-auto">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-20"
             >
-              <h2 className="font-playfair text-4xl sm:text-5xl mb-4 text-[#2D2D2D]">
-                מה הכלות אומרות
+              <h2 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl mb-6 text-[#1A1A1A] font-light">
+                מה <span className="gradient-text font-semibold italic">הכלות</span> אומרות
               </h2>
-              <div className="divider-elegant my-8 max-w-xs mx-auto" />
+              <div className="divider-luxury w-32 mx-auto my-8" />
             </motion.div>
 
             <div className="grid md:grid-cols-2 gap-8">
@@ -399,23 +411,23 @@ export default function Home() {
               ].map((testimonial, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.2 }}
-                  className="glass-soft p-8 rounded-2xl shadow-soft"
+                  className="bg-white p-10 rounded-2xl shadow-luxury hover-lift"
                 >
-                  <div className="flex gap-1 mb-4">
+                  <div className="flex gap-1 mb-6">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="w-5 h-5 text-[#DABB99] fill-[#DABB99]" />
+                      <Star key={i} className="w-5 h-5 text-[#D4AF37] fill-[#D4AF37]" />
                     ))}
                   </div>
-                  <p className="text-[#2D2D2D] mb-6 leading-relaxed italic">
+                  <p className="text-[#1A1A1A] mb-8 leading-relaxed font-light text-lg italic">
                     "{testimonial.text}"
                   </p>
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium text-[#2D2D2D]">{testimonial.name}</span>
-                    <span className="text-sm text-[#737373]">{testimonial.date}</span>
+                  <div className="flex items-center justify-between border-t border-[#F4E4E1] pt-6">
+                    <span className="font-medium text-[#1A1A1A]">{testimonial.name}</span>
+                    <span className="text-sm text-[#666] font-light">{testimonial.date}</span>
                   </div>
                 </motion.div>
               ))}
@@ -423,20 +435,20 @@ export default function Home() {
           </div>
         </section>
 
-        {/* CTA - Pricing & Availability */}
-        <section id="availability" className="py-24 px-6 bg-gradient-to-br from-rose-50 via-amber-50/50 to-rose-100/40">
-          <div className="max-w-5xl mx-auto">
+        {/* Pricing Section - Chatbot CTA */}
+        <section id="pricing" className="py-32 px-6 bg-white">
+          <div className="max-w-4xl mx-auto">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="font-playfair text-4xl sm:text-5xl lg:text-6xl mb-6 text-[#2D2D2D]">
-                חבילת התארגנות פרימיום
+              <h2 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl mb-6 text-[#1A1A1A] font-light">
+                חבילת <span className="gradient-text font-semibold italic">פרימיום</span>
               </h2>
-              <p className="text-xl text-[#737373] font-light mb-4">
+              <div className="divider-luxury w-32 mx-auto my-8" />
+              <p className="text-xl text-[#666] font-light">
                 יום שלם בוילה מהבוקר ועד היציאה לצילומים
               </p>
             </motion.div>
@@ -446,21 +458,20 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="glass-soft p-10 sm:p-12 rounded-3xl shadow-2xl max-w-3xl mx-auto mb-12"
+              className="bg-gradient-to-br from-white to-[#F4E4E1]/20 p-12 rounded-3xl shadow-luxury border border-[#D4AF37]/20"
             >
               {/* What's Included */}
-              <div className="mb-8">
-                <h3 className="font-playfair text-2xl mb-6 text-[#2D2D2D] text-center">
+              <div className="mb-10">
+                <h3 className="font-cormorant text-3xl mb-8 text-[#1A1A1A] text-center font-semibold">
                   מה כלול בחבילה?
                 </h3>
                 <div className="grid sm:grid-cols-2 gap-4">
                   {[
-                    'שהייה בווילה משעות הבוקר ועד היציאה',
-                    'כיבוד עשיר: פירות העונה, שתייה חמה וקרה',
+                    'שהייה בווילה משעות הבוקר',
+                    'פירות העונה ושתייה',
                     'יין משובח מיקב הרי ירושלים',
                     'שימוש מלא במתקני הווילה',
-                    'ליווי צמוד ודאגה לכל הפרטים',
+                    'ליווי צמוד ודאגה לכל פרט',
                     'אווירה רגועה ואינטימית'
                   ].map((item, index) => (
                     <motion.div
@@ -468,112 +479,122 @@ export default function Home() {
                       initial={{ opacity: 0, x: -10 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
-                      transition={{ delay: index * 0.1 }}
+                      transition={{ delay: index * 0.08 }}
                       className="flex items-start gap-3"
                     >
-                      <Check className="w-5 h-5 text-[#DABB99] flex-shrink-0 mt-0.5" />
-                      <span className="text-[#2D2D2D] text-sm">{item}</span>
+                      <Check className="w-5 h-5 text-[#D4AF37] flex-shrink-0 mt-0.5" />
+                      <span className="text-[#1A1A1A] font-light">{item}</span>
                     </motion.div>
                   ))}
                 </div>
               </div>
 
-              <div className="divider-elegant my-8" />
+              <div className="divider-luxury my-10" />
 
               {/* Pricing */}
-              <div className="text-center mb-8">
-                <p className="text-[#737373] mb-3 line-through text-lg">2,200 ₪</p>
-                <div className="flex items-baseline justify-center gap-2 mb-3">
-                  <span className="font-playfair text-6xl text-[#DABB99]">1,500</span>
-                  <span className="text-2xl text-[#737373]">₪</span>
+              <div className="text-center mb-10">
+                <p className="text-[#999] mb-2 line-through text-lg font-light">2,200 ₪</p>
+                <div className="flex items-baseline justify-center gap-3 mb-4">
+                  <span className="font-cormorant text-7xl gradient-text font-semibold">1,500</span>
+                  <span className="text-3xl text-[#666] font-light">₪</span>
                 </div>
-                <div className="inline-block bg-[#DABB99]/10 px-6 py-2 rounded-full">
-                  <p className="text-[#DABB99] font-medium text-sm">
-                    מחיר השקה מיוחד - חיסכון של 700 ₪
+                <div className="inline-block bg-[#D4AF37]/10 px-8 py-3 rounded-full">
+                  <p className="text-[#D4AF37] font-medium">
+                    מחיר השקה • חיסכון של 700 ₪
                   </p>
                 </div>
               </div>
 
-              {/* Contact Form */}
-              <form className="space-y-4">
-                <div>
-                  <input
-                    type="text"
-                    placeholder="השם שלך"
-                    required
-                    className="w-full px-6 py-4 rounded-full bg-white/70 border border-rose-100 focus:border-[#DABB99] focus:outline-none focus:ring-2 focus:ring-[#DABB99]/20 transition-all"
-                  />
+              {/* Chatbot CTA */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-center space-y-8"
+              >
+                <div className="bg-gradient-to-br from-[#D4AF37]/5 to-[#F4E4E1]/30 rounded-2xl p-8 border border-[#D4AF37]/20">
+                  <div className="flex items-center justify-center gap-3 mb-4">
+                    <Bot className="w-10 h-10 text-[#D4AF37]" />
+                    <h3 className="font-cormorant text-3xl text-[#1A1A1A] font-semibold">
+                      דברי עם העוזרת החכמה
+                    </h3>
+                  </div>
+                  <p className="text-[#666] mb-6 font-light leading-relaxed">
+                    העוזרת הוירטואלית זמינה 24/7 לענות על כל שאלה:
+                    <br />
+                    מחירים • זמינות • פרטים על החבילה
+                  </p>
+                  <button
+                    onClick={() => {
+                      const chatbotButton = document.querySelector('[aria-label="פתח צ\'אט AI"]') as HTMLButtonElement
+                      if (chatbotButton) chatbotButton.click()
+                    }}
+                    className="btn-luxury group flex items-center justify-center gap-3 mx-auto"
+                  >
+                    <Bot className="w-6 h-6" />
+                    <span>פתחי שיחה עכשיו</span>
+                    <motion.div
+                      animate={{ x: [0, -5, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity }}
+                    >
+                      →
+                    </motion.div>
+                  </button>
                 </div>
-                <div>
-                  <input
-                    type="tel"
-                    placeholder="טלפון (לחזרה אליך)"
-                    required
-                    className="w-full px-6 py-4 rounded-full bg-white/70 border border-rose-100 focus:border-[#DABB99] focus:outline-none focus:ring-2 focus:ring-[#DABB99]/20 transition-all"
-                  />
-                </div>
-                <div>
-                  <input
-                    type="date"
-                    placeholder="תאריך החתונה"
-                    className="w-full px-6 py-4 rounded-full bg-white/70 border border-rose-100 focus:border-[#DABB99] focus:outline-none focus:ring-2 focus:ring-[#DABB99]/20 transition-all"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full px-8 py-5 bg-[#DABB99] text-white rounded-full hover:bg-[#C9A87C] transition-all duration-300 shadow-soft hover:shadow-xl font-medium text-lg"
-                >
-                  שרייני את התאריך שלי עכשיו
-                </button>
-              </form>
 
-              <div className="mt-8 pt-8 border-t border-rose-100/50">
-                <p className="text-sm text-[#737373] mb-4 text-center">או צרי קשר ישירות:</p>
-                <SocialMediaLinks className="justify-center" />
-              </div>
+                <div className="divider-luxury my-8" />
+
+                <div>
+                  <p className="text-sm text-[#666] mb-4 font-light">או צרי קשר ישירות:</p>
+                  <SocialMediaLinks className="justify-center" />
+                </div>
+              </motion.div>
             </motion.div>
 
             {/* Trust Elements */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4 }}
-              className="text-center"
+              className="text-center mt-12 space-y-2"
             >
-              <p className="text-sm text-[#737373] mb-2">✨ ללא עמלות נסתרות</p>
-              <p className="text-sm text-[#737373]">💝 ניתן לבטל עד 14 יום לפני המועד</p>
+              <p className="text-sm text-[#999] font-light">✨ ללא עמלות נסתרות</p>
+              <p className="text-sm text-[#999] font-light">💝 ניתן לבטל עד 14 יום לפני</p>
             </motion.div>
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="py-12 px-6 bg-white/60 border-t border-rose-100">
-          <div className="max-w-6xl mx-auto text-center">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <Heart className="w-6 h-6 text-[#DABB99]" fill="#DABB99" />
-              <span className="font-playfair text-2xl text-[#2D2D2D]">חגית</span>
+        <footer className="py-16 px-6 bg-gradient-to-b from-white to-[#F4E4E1]/20 border-t border-[#F4E4E1]">
+          <div className="max-w-6xl mx-auto text-center space-y-8">
+            <div className="flex items-center justify-center gap-3">
+              <Heart className="w-8 h-8 text-[#D4AF37]" fill="#D4AF37" />
+              <span className="font-cormorant text-4xl text-[#1A1A1A] font-semibold">חגית</span>
             </div>
-            <p className="text-[#737373] font-light mb-6">
-              התארגנות כלות | הרגע שלפני הרגע הגדול
+            
+            <p className="text-[#666] font-light text-lg">
+              התארגנות כלות • הרגע שלפני הרגע הגדול
             </p>
             
-            <div className="mb-6">
+            <div className="flex justify-center">
               <SocialMediaLinks className="justify-center" />
             </div>
 
-            <div className="flex items-center justify-center gap-6 text-sm text-[#737373] mb-6">
-              <a href="tel:+972501234567" className="hover:text-[#DABB99] transition-colors">
-                050-123-4567
+            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-[#999]">
+              <a href="tel:+972522676718" className="hover:text-[#D4AF37] transition-colors font-light">
+                052-267-6718
               </a>
-              <span>|</span>
-              <a href="mailto:hagit@example.com" className="hover:text-[#DABB99] transition-colors">
+              <span>•</span>
+              <a href="mailto:hagit@example.com" className="hover:text-[#D4AF37] transition-colors font-light">
                 hagit@example.com
               </a>
             </div>
 
-            <div className="mt-8 text-xs text-[#737373]">
-              © 2025 חגית התארגנות כלות. כל הזכויות שמורות.
+            <div className="divider-luxury w-48 mx-auto" />
+
+            <div className="text-xs text-[#999] font-light">
+              © 2025 חגית התארגנות כלות • כל הזכויות שמורות
             </div>
           </div>
         </footer>
