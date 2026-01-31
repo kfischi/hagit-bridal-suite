@@ -1,6 +1,6 @@
 'use client'
 
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Heart, 
   Sparkles, 
@@ -23,13 +23,6 @@ import VideoTestimonial from '@/components/VideoTestimonial'
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"]
-  })
-
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.3], [1, 0])
-  const heroScale = useTransform(scrollYProgress, [0, 0.3], [1, 1.1])
   
   const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '972522676718'
 
