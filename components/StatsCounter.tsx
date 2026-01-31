@@ -55,10 +55,10 @@ export default function StatsCounter() {
     <section className="py-24 bg-gradient-to-b from-white to-[#F4E4E1]/20">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-          <StatItem value={500} label="כלות מאושרות" suffix="+" />
+          <StatItem value={50} label="כלות מאושרות" suffix="+" />
           <StatItem value={100} label="אחוז שביעות רצון" suffix="%" />
-          <StatItem value={5} label="שנות ניסיון" suffix="+" />
-          <StatItem value={15} label="דירוג ממוצע" prefix="4." />
+          <StatItem value={3} label="שנות ניסיון" suffix="+" />
+          <StatItem value={48} label="דירוג ממוצע" prefix="4." />
         </div>
       </div>
     </section>
