@@ -1,17 +1,53 @@
-const botResponses: Record<string, string> = {
-  'שלום': 'שלום! אני כאן לעזור לך עם כל שאלה על התארגנות הכלות שלנו 💍',
-  'היי': 'היי! שמחה לעזור 😊 יש לך שאלות על הוילה או על החבילה?',
-  'מחיר': 'מחיר השקה מיוחד: 1,500₪ במקום 2,200₪! החבילה כוללת יום שלם בוילה, יין משובח, פינוקים והכל. רוצה פרטים נוספים?',
-  'זמינות': 'בואי נבדוק יחד! מה התאריך המשוער של החתונה שלך? 📅 אפשר גם לשלוח וואטסאפ ל-052-267-6718',
-  'מיקום': 'הווילה שלנו נמצאת בהרי ירושלים, במיקום שקט ומבודד עטוף בטבע. רוצה לתאם ביקור?',
-  'כלול': 'בחבילה כלול: יום שלם בוילה, יין מיקב הרי ירושלים, פירות ומאפים, שתייה חמה וקרה, עמדות מוארות לאיפור, ליווי אישי ואווירה מפנקת 💝',
-  'שעות': 'אפשר להגיע משעות הבוקר ועד היציאה לצילומים - בדרך כלל 5-8 שעות. אפשר להתאים לפי הצורך שלך!',
-  'תאורה': 'יש לנו תאורת LED מקצועית מושלמת לאיפור! המאפרת שלך תאהב 💄',
-  'אנשים': 'הווילה מתאימה לכלה ועד 10 חברות בנוחות מלאה. יש מספיק מקום לכולן!',
-  'חניה': 'יש חניה פרטית נוחה ליד הווילה. אין בעיה של חניה!',
-  'כשר': 'כל המזון והיין כשרים בהשגחה. היין מיקב הרי ירושלים בכשרות מהדרין.',
-  'ביטול': 'אפשר לבטל עד 14 יום לפני התאריך. אין עמלות נסתרות ואנחנו גמישים!',
-  'הזמנה': 'מעולה! הדרך הכי מהירה זה לשלוח לי וואטסאפ: 052-267-6718 או להתקשר ישירות. אשמח לשמור לך תאריך! 🎉',
-  'תודה': 'בשמחה! אם יש עוד שאלות אני כאן 💕',
-  'default': 'תודה על השאלה! אפשר לשלוח לי הודעת וואטסאפ או להתקשר ישירות ל-052-267-6718 📞'
+'use client'
+
+import { MessageCircle } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+
+interface WhatsAppButtonProps {
+  phoneNumber: string
+  message?: string
+}
+
+export default function WhatsAppButton({ 
+  phoneNumber, 
+  message = "היי, אני מעוניינת לשמוע פרטים על התארגנות כלות" 
+}: WhatsAppButtonProps) {
+  const [isHovered, setIsHovered] = useState(false)
+
+  const handleClick = () => {
+    const formattedPhone = phoneNumber.replace(/\D/g, '')
+    const encodedMessage = encodeURIComponent(message)
+    const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodedMessage}`
+    window.open(whatsappUrl, '_blank')
+  }
+
+  return (
+    <motion.button
+      initial={{ scale: 0, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ duration: 0.5, delay: 1 }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.95 }}
+      onClick={handleClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="fixed bottom-6 left-6 z-50 group"
+      aria-label="פתח צ'אט בוואטסאפ"
+    >
+      <div className="absolute inset-0 rounded-full bg-[#25D366] animate-ping opacity-20" />
+      
+      <div className="relative w-16 h-16 bg-[#25D366] rounded-full shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center">
+        <MessageCircle className="w-8 h-8 text-white" strokeWidth={2} />
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: isHovered ? 1 : 0, x: isHovered ? 0 : -10 }}
+        className="absolute left-20 top-1/2 -translate-y-1/2 glass-soft px-4 py-2 rounded-full whitespace-nowrap pointer-events-none"
+      >
+        <span className="text-sm font-medium text-[#2D2D2D]">שלחי הודעה בוואטסאפ</span>
+      </motion.div>
+    </motion.button>
+  )
 }
