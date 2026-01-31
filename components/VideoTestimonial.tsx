@@ -8,15 +8,12 @@ interface VideoTestimonialProps {
   name: string
   role: string
   quote: string
-  videoUrl?: string
-  thumbnail: string
 }
 
 export default function VideoTestimonial({ 
   name, 
   role, 
-  quote,
-  thumbnail 
+  quote
 }: VideoTestimonialProps) {
   const [isPlaying, setIsPlaying] = useState(false)
 
