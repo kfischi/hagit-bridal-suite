@@ -2,7 +2,6 @@
 
 import { motion } from 'framer-motion'
 import { Play, Quote } from 'lucide-react'
-import { useState } from 'react'
 
 interface VideoTestimonialProps {
   name: string
@@ -15,8 +14,6 @@ export default function VideoTestimonial({
   role, 
   quote
 }: VideoTestimonialProps) {
-  const [isPlaying, setIsPlaying] = useState(false)
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -26,15 +23,13 @@ export default function VideoTestimonial({
     >
       {/* Video/Thumbnail */}
       <div className="relative aspect-video bg-gradient-to-br from-rose-100 to-amber-50 flex items-center justify-center group cursor-pointer">
-        {!isPlaying && (
-          <motion.div
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
-            className="w-20 h-20 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-gold"
-          >
-            <Play className="w-10 h-10 text-[#D4AF37] mr-1" fill="#D4AF37" />
-          </motion.div>
-        )}
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          className="w-20 h-20 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-gold"
+        >
+          <Play className="w-10 h-10 text-[#D4AF37] mr-1" fill="#D4AF37" />
+        </motion.div>
       </div>
 
       {/* Content */}
