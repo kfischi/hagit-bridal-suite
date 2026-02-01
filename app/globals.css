@@ -3,680 +3,160 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    /* Dark Luxury Colors */
-    --background: 10 8 8; /* #0A0808 - Almost Black */
-    --foreground: 250 250 248; /* #FAFAF8 - Off White */
-    --gold: 212 175 55; /* #D4AF37 */
-    --gold-light: 229 207 130; /* #E5CF82 */
-    --rose: 217 185 175; /* #D9B9AF - Dusty Rose */
-    --champagne: 245 230 211; /* #F5E6D3 */
-    --dark-surface: 26 20 22; /* #1A1416 - Dark Brown */
-    --darker: 15 12 13; /* #0F0C0D */
-    
-    /* Gradient Stops */
-    --gradient-gold: linear-gradient(135deg, #D4AF37 0%, #E5CF82 100%);
-    --gradient-dark: linear-gradient(180deg, #0A0808 0%, #1A1416 100%);
-  }
-}
-
-@layer base {
   * {
     box-sizing: border-box;
   }
+  
   body {
-    background-color: #0A0808;
-    color: #FAFAF8;
+    background: linear-gradient(180deg, #FFFBF5 0%, #FAF6EE 100%);
+    color: #2C241A;
     font-smoothing: antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
 
-/* Dark Luxury Utilities */
 @layer utilities {
-  /* Glass Morphism - Dark */
-  .glass-dark {
-    background: rgba(26, 20, 22, 0.4);
+  /* Glass Cream */
+  .glass-cream {
+    background: rgba(250, 246, 238, 0.85);
     backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(212, 175, 55, 0.1);
+    border: 1px solid rgba(201, 168, 106, 0.2);
+    box-shadow: 0 8px 32px rgba(201, 168, 106, 0.1);
   }
 
-  .glass-darker {
-    background: rgba(10, 8, 8, 0.8);
-    backdrop-filter: blur(30px);
-    -webkit-backdrop-filter: blur(30px);
-    border: 1px solid rgba(212, 175, 55, 0.2);
+  /* Warm Shadows */
+  .shadow-warm {
+    box-shadow: 0 10px 40px rgba(201, 168, 106, 0.15),
+                0 5px 20px rgba(89, 73, 55, 0.08);
   }
 
-  /* Glow Effects */
-  .glow-gold {
-    box-shadow: 0 0 40px rgba(212, 175, 55, 0.3),
-                0 0 80px rgba(212, 175, 55, 0.1);
-  }
-
-  .glow-gold-strong {
-    box-shadow: 0 0 60px rgba(212, 175, 55, 0.5),
-                0 0 120px rgba(212, 175, 55, 0.2),
-                inset 0 0 40px rgba(212, 175, 55, 0.1);
-  }
-
-  /* Text Glow */
-  .text-glow {
-    text-shadow: 0 0 30px rgba(212, 175, 55, 0.5),
-                 0 0 60px rgba(212, 175, 55, 0.3);
-  }
-
-  .text-glow-white {
-    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3),
-                 0 0 40px rgba(255, 255, 255, 0.1);
-  }
-
-  /* Gradient Text - Enhanced */
-  .gradient-text {
-    background: linear-gradient(135deg, #D4AF37 0%, #E5CF82 50%, #D4AF37 100%);
-    background-size: 200% auto;
+  /* Gradient Text Warm */
+  .gradient-text-warm {
+    background: linear-gradient(135deg, #C9A86A 0%, #DABC8A 50%, #9F8658 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    animation: shimmer 3s linear infinite;
   }
 
-  @keyframes shimmer {
-    0% { background-position: 0% center; }
-    100% { background-position: 200% center; }
-  }
-
-  /* Divider - Dark Luxury */
-  .divider-luxury {
+  /* Warm Divider */
+  .divider-warm {
     height: 1px;
-    background: linear-gradient(90deg, 
-      transparent 0%, 
-      rgba(212, 175, 55, 0.5) 50%, 
-      transparent 100%);
-    position: relative;
+    background: linear-gradient(90deg, transparent 0%, rgba(201, 168, 106, 0.4) 50%, transparent 100%);
   }
 
-  .divider-luxury::before,
-  .divider-luxury::after {
-    content: '◆';
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #D4AF37;
-    font-size: 8px;
+  .divider-belle-warm {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
   }
 
-  .divider-luxury::before {
-    left: 0;
-  }
-
-  .divider-luxury::after {
-    right: 0;
-  }
-
-  /* Shadows - Dark Theme */
-  .shadow-luxury {
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5),
-                0 0 20px rgba(212, 175, 55, 0.1);
-  }
-
-  .shadow-gold {
-    box-shadow: 0 20px 60px rgba(212, 175, 55, 0.2),
-                0 10px 30px rgba(0, 0, 0, 0.6);
-  }
-
-  /* Hover Effects */
-  .hover-lift {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .hover-lift:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3),
-                0 10px 40px rgba(0, 0, 0, 0.8);
-  }
-
-  .hover-glow:hover {
-    box-shadow: 0 0 50px rgba(212, 175, 55, 0.4),
-                0 0 100px rgba(212, 175, 55, 0.2);
-  }
-
-  /* Image Overlay */
-  .image-overlay {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .image-overlay::before {
+  .divider-belle-warm::before,
+  .divider-belle-warm::after {
     content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, 
-      rgba(0, 0, 0, 0.3) 0%, 
-      rgba(212, 175, 55, 0.2) 100%);
-    opacity: 0;
-    transition: opacity 0.5s ease;
-    z-index: 1;
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(201, 168, 106, 0.3) 50%, transparent 100%);
   }
 
-  .image-overlay:hover::before {
-    opacity: 1;
+  .divider-belle-center {
+    color: #C9A86A;
+    font-size: 1.25rem;
+    font-family: 'Cormorant Garamond', serif;
   }
 
-  .image-overlay > * {
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Button Warm */
+  .btn-warm {
+    background: linear-gradient(135deg, #C9A86A 0%, #DABC8A 100%);
+    color: #2C241A;
+    box-shadow: 0 8px 25px rgba(201, 168, 106, 0.3);
+    transition: all 0.3s ease;
   }
 
-  .image-overlay:hover > * {
-    transform: scale(1.1);
-  }
-
-  /* Button - Dark Luxury */
-  .btn-luxury {
-    background: linear-gradient(135deg, #D4AF37 0%, #E5CF82 100%);
-    color: #0A0808;
-    padding: 1rem 2.5rem;
-    border-radius: 9999px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3),
-                0 0 20px rgba(212, 175, 55, 0.2);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .btn-luxury::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, #E5CF82 0%, #D4AF37 100%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-  }
-
-  .btn-luxury:hover::before {
-    opacity: 1;
-  }
-
-  .btn-luxury:hover {
+  .btn-warm:hover {
     transform: translateY(-2px);
-    box-shadow: 0 15px 50px rgba(212, 175, 55, 0.5),
-                0 0 40px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 12px 35px rgba(201, 168, 106, 0.4);
   }
 
-  .btn-luxury > * {
+  /* Card Warm */
+  .card-warm {
+    background: linear-gradient(135deg, rgba(255, 251, 245, 0.95) 0%, rgba(250, 246, 238, 0.98) 100%);
+    border: 1px solid rgba(201, 168, 106, 0.2);
+  }
+
+  .card-warm:hover {
+    border-color: rgba(201, 168, 106, 0.4);
+  }
+
+  /* Hover Warm */
+  .hover-warm:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(201, 168, 106, 0.25);
+  }
+
+  /* Number Circle */
+  .number-circle-warm {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(201, 168, 106, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.75rem;
+    color: #C9A86A;
+    background: rgba(255, 251, 245, 0.8);
+    margin: 0 auto 1.5rem;
+  }
+
+  /* Elegant Border */
+  .elegant-border-warm {
+    border: 1px solid rgba(201, 168, 106, 0.25);
     position: relative;
-    z-index: 1;
   }
 
-  /* Belle-Inspired Elegant Borders */
-  .elegant-border {
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    position: relative;
-  }
-
-  .elegant-border::before,
-  .elegant-border::after {
+  .elegant-border-warm::before,
+  .elegant-border-warm::after {
     content: '';
     position: absolute;
-    width: 20px;
-    height: 20px;
-    border: 1px solid rgba(212, 175, 55, 0.5);
+    width: 24px;
+    height: 24px;
+    border: 1px solid rgba(201, 168, 106, 0.4);
   }
 
-  .elegant-border::before {
+  .elegant-border-warm::before {
     top: -1px;
     left: -1px;
     border-right: none;
     border-bottom: none;
   }
 
-  .elegant-border::after {
+  .elegant-border-warm::after {
     bottom: -1px;
     right: -1px;
     border-left: none;
     border-top: none;
   }
-
-  /* Decorative Divider - Belle Style */
-  .divider-belle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    margin: 2rem 0;
-  }
-
-  .divider-belle::before,
-  .divider-belle::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, 
-      transparent 0%, 
-      rgba(212, 175, 55, 0.3) 50%, 
-      transparent 100%);
-  }
-
-  .divider-belle-center {
-    color: #D4AF37;
-    font-size: 1.5rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 300;
-  }
-
-  /* Elegant Section Headers */
-  .section-header {
-    text-align: center;
-    margin-bottom: 4rem;
-  }
-
-  .section-subtitle {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: #D4AF37;
-    margin-bottom: 1rem;
-    font-weight: 400;
-  }
-
-  .section-title {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 3.5rem;
-    font-weight: 300;
-    color: #FAFAF8;
-    line-height: 1.2;
-    margin-bottom: 1.5rem;
-  }
-
-  .section-description {
-    font-size: 1.125rem;
-    color: rgba(250, 250, 248, 0.7);
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.8;
-    font-weight: 300;
-  }
-
-  /* Timeline - Belle Style */
-  .timeline-item {
-    position: relative;
-    padding-left: 3rem;
-  }
-
-  .timeline-item::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0.5rem;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    border: 2px solid #D4AF37;
-    background: #0A0808;
-  }
-
-  .timeline-item::after {
-    content: '';
-    position: absolute;
-    left: 5px;
-    top: 1.5rem;
-    width: 2px;
-    height: calc(100% + 2rem);
-    background: linear-gradient(180deg, 
-      rgba(212, 175, 55, 0.5) 0%, 
-      transparent 100%);
-  }
-
-  .timeline-item:last-child::after {
-    display: none;
-  }
-
-  /* Elegant Quote */
-  .elegant-quote {
-    position: relative;
-    padding: 3rem 2rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
-    font-style: italic;
-    font-weight: 300;
-    line-height: 1.8;
-    color: #FAFAF8;
-  }
-
-  .elegant-quote::before {
-    content: '"';
-    position: absolute;
-    top: 0;
-    left: 0;
-    font-size: 6rem;
-    color: rgba(212, 175, 55, 0.2);
-    font-family: 'Cormorant Garamond', serif;
-    line-height: 1;
-  }
-
-  /* Ornament Decorations */
-  .ornament {
-    display: inline-block;
-    width: 60px;
-    height: 60px;
-    background: radial-gradient(circle, 
-      rgba(212, 175, 55, 0.1) 0%, 
-      transparent 70%);
-    position: relative;
-  }
-
-  .ornament::before,
-  .ornament::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(45deg);
-    width: 30px;
-    height: 30px;
-    border: 1px solid rgba(212, 175, 55, 0.3);
-  }
-
-  .ornament::after {
-    transform: translate(-50%, -50%) rotate(0deg);
-  }
-
-  /* Elegant Hover Effects */
-  .elegant-hover {
-    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .elegant-hover:hover {
-    transform: translateY(-4px);
-    border-color: rgba(212, 175, 55, 0.6);
-  }
-
-  /* Soft Fade In Animation */
-  @keyframes softFadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .soft-fade-in {
-    animation: softFadeIn 1s ease-out forwards;
-  }
-
-  /* Elegant Number Circle */
-  .number-circle {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    border: 1px solid rgba(212, 175, 55, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.5rem;
-    color: #D4AF37;
-    font-weight: 300;
-    margin: 0 auto 1rem;
-  }
-  .card-dark {
-    background: linear-gradient(135deg, 
-      rgba(26, 20, 22, 0.6) 0%, 
-      rgba(15, 12, 13, 0.8) 100%);
-    border: 1px solid rgba(212, 175, 55, 0.15);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-  }
-
-  .card-dark:hover {
-    border-color: rgba(212, 175, 55, 0.4);
-    background: linear-gradient(135deg, 
-      rgba(26, 20, 22, 0.8) 0%, 
-      rgba(15, 12, 13, 0.9) 100%);
-  }
 }
 
-/* Scrollbar - Dark Theme */
+/* Scrollbar */
 ::-webkit-scrollbar {
   width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0A0808;
+  background: #FAF6EE;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #D4AF37 0%, #E5CF82 100%);
+  background: linear-gradient(180deg, #C9A86A 0%, #DABC8A 100%);
   border-radius: 6px;
-  border: 2px solid #0A0808;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #E5CF82 0%, #D4AF37 100%);
+  border: 2px solid #FAF6EE;
 }
 
 /* Selection */
 ::selection {
-  background: rgba(212, 175, 55, 0.3);
-  color: #FAFAF8;
-}
-
-/* Focus Visible */
-*:focus-visible {
-  outline: 2px solid #D4AF37;
-  outline-offset: 4px;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Raleway:wght@200;300;400;500;600;700&display=swap');
-
-@layer base {
-  :root {
-    --background: #FAFAF8;
-    --foreground: #1A1A1A;
-    --gold: #D4AF37;
-    --rose: #F4E4E1;
-    --champagne: #F5E6D3;
-  }
-
-  html {
-    scroll-behavior: smooth;
-    overflow-x: hidden;
-  }
-
-  body {
-    @apply bg-[--background] text-[--foreground];
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-family: 'Raleway', sans-serif;
-    overflow-x: hidden;
-  }
-}
-
-@layer components {
-  /* Selection */
-  ::selection {
-    background-color: var(--gold);
-    color: #fff;
-  }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar {
-    width: 6px;
-  }
-  ::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  ::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, var(--gold), var(--champagne));
-    border-radius: 10px;
-  }
-
-  /* Typography */
-  .font-cormorant {
-    font-family: 'Cormorant Garamond', serif;
-  }
-
-  .font-raleway {
-    font-family: 'Raleway', sans-serif;
-  }
-
-  /* Glass Effects */
-  .glass {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .glass-dark {
-    background: rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-  }
-
-  /* Shadows */
-  .shadow-luxury {
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 0 60px rgba(212, 175, 55, 0.1);
-  }
-
-  .shadow-gold {
-    box-shadow: 0 10px 40px rgba(212, 175, 55, 0.2), 0 0 80px rgba(212, 175, 55, 0.15);
-  }
-
-  /* Divider */
-  .divider-luxury {
-    position: relative;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold) 50%, transparent);
-  }
-
-  /* Hover Effects */
-  .hover-lift {
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .hover-lift:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-  }
-
-  .hover-scale {
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .hover-scale:hover {
-    transform: scale(1.05);
-  }
-
-  /* Image Overlay */
-  .image-overlay {
-    position: relative;
-    overflow: hidden;
-  }
-
-  .image-overlay::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.3) 100%);
-    opacity: 0;
-    transition: opacity 0.4s ease;
-    z-index: 1;
-  }
-
-  .image-overlay:hover::before {
-    opacity: 1;
-  }
-
-  .image-overlay img {
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .image-overlay:hover img {
-    transform: scale(1.1);
-  }
-
-  /* Gradient Text */
-  .gradient-text {
-    background: linear-gradient(135deg, #D4AF37 0%, #F5E6D3 50%, #D4AF37 100%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-
-  /* Luxury Button */
-  .btn-luxury {
-    position: relative;
-    padding: 1rem 2.5rem;
-    background: linear-gradient(135deg, var(--gold) 0%, #C9A87C 100%);
-    color: white;
-    border: none;
-    border-radius: 50px;
-    font-weight: 500;
-    letter-spacing: 1px;
-    overflow: hidden;
-    transition: all 0.4s ease;
-    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.3);
-  }
-
-  .btn-luxury::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s ease;
-  }
-
-  .btn-luxury:hover::before {
-    left: 100%;
-  }
-
-  .btn-luxury:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(212, 175, 55, 0.4);
-  }
-}
-
-@layer utilities {
-  /* Animations */
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(30px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes shimmer {
-    0% { background-position: -1000px 0; }
-    100% { background-position: 1000px 0; }
-  }
-
-  .animate-shimmer {
-    animation: shimmer 3s linear infinite;
-  }
-}
-
-/* Focus Styles */
-:focus-visible {
-  outline: 2px solid var(--gold);
-  outline-offset: 4px;
-  border-radius: 4px;
+  background: rgba(201, 168, 106, 0.3);
+  color: #2C241A;
 }
