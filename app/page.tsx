@@ -43,25 +43,25 @@ export default function Home() {
           className="fixed top-6 right-6 left-6 z-50 pointer-events-none"
         >
           <div className="max-w-7xl mx-auto flex items-center justify-between">
-            {/* Tagline Logo */}
+            {/* Warm Cream Logo */}
             <motion.div
               whileHover={{ scale: 1.02 }}
-              className="backdrop-blur-sm bg-white/5 px-6 py-2.5 rounded-full flex items-center gap-2 pointer-events-auto shadow-lg border border-white/10"
+              className="glass-cream px-6 py-2.5 rounded-full flex items-center gap-2 pointer-events-auto shadow-warm"
             >
-              <Heart className="w-4 h-4 text-[#D4AF37]" fill="#D4AF37" />
-              <span className="font-cormorant text-base sm:text-lg text-white font-semibold drop-shadow-lg whitespace-nowrap">
+              <Heart className="w-4 h-4 text-[#C9A86A]" fill="#C9A86A" />
+              <span className="font-cormorant text-base sm:text-lg text-[#2C241A] font-semibold whitespace-nowrap">
                 התארגנות כלה באווירה ביתית
               </span>
             </motion.div>
 
-            {/* Compact CTA */}
+            {/* WhatsApp CTA */}
             <motion.a
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי, אני מעוניינת לשמוע פרטים')}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="backdrop-blur-sm bg-[#25D366]/95 hover:bg-[#25D366] px-5 py-2.5 rounded-full flex items-center gap-2 pointer-events-auto shadow-lg transition-all"
+              className="bg-[#25D366] hover:bg-[#20BA5A] px-5 py-2.5 rounded-full flex items-center gap-2 pointer-events-auto shadow-warm transition-all"
             >
               <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
@@ -71,8 +71,8 @@ export default function Home() {
           </div>
         </motion.header>
 
-        {/* Hero Section - Dark Cinematic */}
-        <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#0A0808]">
+        {/* Hero Section - Warm & Inviting */}
+        <section className="relative min-h-screen flex flex-col overflow-hidden bg-gradient-to-b from-[#FFFBF5] to-[#FAF6EE]">
           {/* Video Background - Bright & Vibrant */}
           <div className="relative h-[70vh] sm:h-[80vh] w-full overflow-hidden">
             <video
@@ -82,10 +82,10 @@ export default function Home() {
               playsInline
               preload="auto"
               className="absolute inset-0 w-full h-full object-cover"
-              poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%230A0808' width='1920' height='1080'/%3E%3C/svg%3E"
+              poster="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1920 1080'%3E%3Crect fill='%23FAF6EE' width='1920' height='1080'/%3E%3C/svg%3E"
               style={{ 
                 transform: 'translate3d(0, 0, 0)', 
-                filter: 'brightness(1.5) contrast(1.15) saturate(1.2)' 
+                filter: 'brightness(1.1) contrast(1.05) saturate(1.15)' 
               }}
               onLoadedData={(e) => {
                 const video = e.target as HTMLVideoElement;
@@ -98,91 +98,68 @@ export default function Home() {
               />
             </video>
             
-            {/* Very Subtle Gradient - Keeps Video Bright */}
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#0A0808]/60" />
-            
-            {/* Floating Particles */}
-            <div className="absolute inset-0 opacity-30">
-              {[...Array(20)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 100 }}
-                  animate={{ 
-                    opacity: [0.2, 0.5, 0.2],
-                    y: [-100, -500],
-                    x: [0, Math.random() * 100 - 50]
-                  }}
-                  transition={{
-                    duration: Math.random() * 10 + 10,
-                    repeat: Infinity,
-                    delay: Math.random() * 5
-                  }}
-                  className="absolute w-1 h-1 bg-[#D4AF37] rounded-full"
-                  style={{
-                    left: `${Math.random() * 100}%`,
-                    bottom: 0
-                  }}
-                />
-              ))}
-            </div>
+            {/* Light Cream Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-b from-[#FFFBF5]/30 via-transparent to-[#FAF6EE]/80" />
           </div>
 
-          {/* Hero Content - Dark Luxury */}
-          <div className="relative bg-gradient-to-b from-[#0A0808] via-[#1A1416] to-[#0A0808] text-center px-6 py-24 -mt-32">
+          {/* Hero Content - Warm Cream Luxury */}
+          <div className="relative bg-gradient-to-b from-[#FAF6EE] via-[#FFFBF5] to-[#FAF6EE] text-center px-6 py-24 -mt-24">
             <div className="max-w-6xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 60 }}
+                initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.3 }}
                 className="space-y-10"
               >
-                {/* Badge */}
+                {/* Elegant Badge - Warm Cream */}
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.8 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.8, delay: 0.5 }}
-                  className="inline-flex items-center gap-3 glass-darker px-8 py-4 rounded-full glow-gold"
+                  className="inline-flex items-center gap-3 glass-cream px-8 py-4 rounded-full shadow-warm"
                 >
-                  <Sparkles className="w-5 h-5 text-[#D4AF37]" />
-                  <span className="text-white/90 text-sm font-light tracking-[0.3em] uppercase">
+                  <Sparkles className="w-5 h-5 text-[#C9A86A]" />
+                  <span className="text-[#594937] text-sm font-light tracking-[0.25em] uppercase">
                     Luxury Bridal Villa
                   </span>
-                  <Sparkles className="w-5 h-5 text-[#D4AF37]" />
+                  <Sparkles className="w-5 h-5 text-[#C9A86A]" />
                 </motion.div>
 
-                {/* Main Headline - Dramatic */}
-                <h1 className="font-cormorant text-6xl sm:text-7xl lg:text-8xl text-white leading-[1.05] font-light">
+                {/* Main Headline - Warm Brown */}
+                <h1 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl text-[#2C241A] leading-[1.1] font-light">
                   הרגע שלפני
                   <br />
-                  <span className="gradient-text font-bold text-glow block mt-4">
+                  <span className="gradient-text-warm font-semibold block mt-3">
                     הרגע הגדול
                   </span>
                 </h1>
 
-                {/* Description with Gold Line */}
+                {/* Description with Warm Divider */}
                 <div className="max-w-3xl mx-auto space-y-6">
-                  <div className="divider-luxury w-24 mx-auto opacity-60" />
-                  <p className="text-xl sm:text-2xl text-white/80 font-light leading-relaxed">
+                  <div className="divider-belle-warm justify-center">
+                    <div className="divider-belle-center">✦</div>
+                  </div>
+                  <p className="text-xl sm:text-2xl text-[#594937] font-light leading-relaxed">
                     וילה מעוצבת בלב הטבע
-                    <span className="text-[#D4AF37] mx-3">•</span>
+                    <span className="text-[#C9A86A] mx-3">•</span>
                     חוויה של יום שלם
                     <br className="hidden sm:block" />
-                    <span className="text-[#D4AF37] mx-3">•</span>
+                    <span className="text-[#C9A86A] mx-3">•</span>
                     עם יין משובח, פינוקים ואווירה של בית
                   </p>
-                  <div className="divider-luxury w-24 mx-auto opacity-60" />
+                  <div className="divider-warm w-32 mx-auto" />
                 </div>
 
-                {/* CTA Buttons - Dark Luxury */}
+                {/* CTA Buttons - Warm Gold */}
                 <motion.div
-                  initial={{ opacity: 0, y: 40 }}
+                  initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.9 }}
-                  className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-6"
+                  transition={{ duration: 0.8, delay: 0.7 }}
+                  className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-4"
                 >
                   <a
                     href="#pricing"
-                    className="btn-luxury group flex items-center gap-3 relative z-10"
+                    className="btn-warm group flex items-center gap-3 px-10 py-4 rounded-full font-semibold relative z-10"
                   >
                     <span>גלי את החבילה המושלמת</span>
                     <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-2" />
@@ -190,9 +167,9 @@ export default function Home() {
                   
                   <a
                     href="#gallery"
-                    className="group px-8 py-4 glass-darker rounded-full text-white border-2 border-[#D4AF37]/30 hover:border-[#D4AF37] hover:glow-gold transition-all duration-300 flex items-center gap-3"
+                    className="group px-8 py-4 glass-cream rounded-full text-[#594937] border-2 border-[#C9A86A]/30 hover:border-[#C9A86A] hover:shadow-warm transition-all duration-300 flex items-center gap-3"
                   >
-                    <Play className="w-5 h-5 text-[#D4AF37]" />
+                    <Play className="w-5 h-5 text-[#C9A86A]" />
                     <span className="font-light">צפי בגלריה</span>
                   </a>
                 </motion.div>
@@ -200,11 +177,11 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Scroll Indicator - Dark */}
+          {/* Scroll Indicator - Warm */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.2 }}
+            transition={{ duration: 1, delay: 1 }}
             className="text-center pb-16"
           >
             <motion.div
@@ -212,43 +189,43 @@ export default function Home() {
               transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
               className="flex flex-col items-center gap-3"
             >
-              <span className="text-xs text-white/40 font-light tracking-[0.3em] uppercase">גלול למטה</span>
-              <div className="w-6 h-10 border-2 border-[#D4AF37]/40 rounded-full flex items-start justify-center p-2">
+              <span className="text-xs text-[#8B7355] font-light tracking-[0.25em] uppercase">גלול למטה</span>
+              <div className="w-6 h-10 border-2 border-[#C9A86A]/40 rounded-full flex items-start justify-center p-2">
                 <motion.div
                   animate={{ y: [0, 12, 0] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
-                  className="w-1 h-2 bg-[#D4AF37] rounded-full"
+                  className="w-1 h-2 bg-[#C9A86A] rounded-full"
                 />
               </div>
             </motion.div>
           </motion.div>
         </section>
 
-        {/* About Section - Belle Elegant Style */}
-        <section className="py-32 px-6 bg-gradient-to-b from-[#0A0808] to-[#1A1416]">
+        {/* About Section - Warm Cream Elegant */}
+        <section className="py-32 px-6 bg-gradient-to-b from-[#FAF6EE] to-[#FFFBF5]">
           <div className="max-w-6xl mx-auto">
-            {/* Section Header - Belle Style */}
+            {/* Section Header - Warm */}
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 1 }}
-              className="section-header"
+              className="text-center mb-20"
             >
-              <div className="section-subtitle">discover</div>
-              <h2 className="section-title">
+              <div className="text-sm text-[#C9A86A] font-light tracking-[0.3em] uppercase mb-4">discover</div>
+              <h2 className="font-cormorant text-5xl sm:text-6xl text-[#2C241A] font-light mb-6">
                 יותר מסתם מקום
               </h2>
-              <div className="divider-belle">
-                <div className="divider-belle-center">❖</div>
+              <div className="divider-belle-warm justify-center mb-6">
+                <div className="divider-belle-center">✦</div>
               </div>
-              <p className="section-description">
+              <p className="text-xl text-[#594937] font-light leading-relaxed max-w-2xl mx-auto">
                 וילה בהרי ירושלים שבה הזמן עומד מלכת
                 והרגע שלך הופך לבלתי נשכח
               </p>
             </motion.div>
 
-            {/* Feature Grid - Elegant Borders */}
+            {/* Feature Grid - Warm Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-20">
               {[
                 {
@@ -278,16 +255,16 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: index * 0.15 }}
-                  className="elegant-border elegant-hover p-10 bg-gradient-to-b from-[#1A1416] to-[#0F0C0D] rounded-lg group cursor-default"
+                  className="elegant-border-warm hover-warm p-10 card-warm rounded-lg group cursor-default transition-all duration-500"
                 >
-                  <div className="number-circle mb-6">
+                  <div className="number-circle-warm">
                     {String(index + 1).padStart(2, '0')}
                   </div>
-                  <h3 className="font-cormorant text-2xl mb-4 text-white text-center font-light tracking-wide">
+                  <h3 className="font-cormorant text-2xl mb-4 text-[#2C241A] text-center font-light tracking-wide">
                     {feature.title}
                   </h3>
-                  <div className="w-12 h-px bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent mx-auto mb-4" />
-                  <p className="text-white/60 text-center leading-relaxed font-light text-sm">
+                  <div className="divider-warm mx-auto mb-4" style={{ width: '3rem' }} />
+                  <p className="text-[#594937] text-center leading-relaxed font-light text-sm">
                     {feature.description}
                   </p>
                 </motion.div>
@@ -296,8 +273,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Gallery Section - Masonry Style */}
-        <section id="gallery" className="py-32 px-6 bg-gradient-to-b from-white to-[#F4E4E1]/30">
+        {/* Gallery Section - Warm Elegant */}
+        <section id="gallery" className="py-32 px-6 bg-gradient-to-b from-[#FFFBF5] to-[#FAF6EE]">
           <div className="max-w-7xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -305,11 +282,14 @@ export default function Home() {
               viewport={{ once: true }}
               className="text-center mb-20"
             >
-              <h2 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl mb-6 text-[#1A1A1A] font-light">
-                רגעים <span className="gradient-text font-semibold italic">אמיתיים</span>
+              <div className="text-sm text-[#C9A86A] font-light tracking-[0.3em] uppercase mb-4">gallery</div>
+              <h2 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl mb-6 text-[#2C241A] font-light">
+                רגעים <span className="gradient-text-warm font-semibold italic">אמיתיים</span>
               </h2>
-              <div className="divider-luxury w-32 mx-auto my-8" />
-              <p className="text-xl text-[#666] font-light">
+              <div className="divider-belle-warm justify-center mb-8">
+                <div className="divider-belle-center">✦</div>
+              </div>
+              <p className="text-xl text-[#594937] font-light">
                 כלות שהתארגנו אצלנו והרגישו את הקסם
               </p>
             </motion.div>
@@ -322,8 +302,8 @@ export default function Home() {
         {/* Stats Counter */}
         <StatsCounter />
 
-        {/* Experience Section - Split Layout */}
-        <section id="experience" className="py-32 px-6 bg-white">
+        {/* Experience Section - Warm Split Layout */}
+        <section id="experience" className="py-32 px-6 bg-gradient-to-b from-[#FAF6EE] to-[#FFFBF5]">
           <div className="max-w-7xl mx-auto">
             <div className="grid md:grid-cols-2 gap-16 items-center">
               {/* Left - Optimized Video */}
@@ -364,13 +344,14 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <h2 className="font-cormorant text-5xl sm:text-6xl mb-8 text-[#1A1A1A] font-light">
+                <div className="text-sm text-[#C9A86A] font-light tracking-[0.3em] uppercase mb-4">experience</div>
+                <h2 className="font-cormorant text-5xl sm:text-6xl mb-8 text-[#2C241A] font-light">
                   החוויה שלך
                   <br />
-                  <span className="gradient-text font-semibold italic">בוילה</span>
+                  <span className="gradient-text-warm font-semibold italic">בוילה</span>
                 </h2>
                 
-                <p className="text-lg text-[#666] font-light leading-relaxed mb-10">
+                <p className="text-lg text-[#594937] font-light leading-relaxed mb-10">
                   רגע לפני היום הגדול, את מגיעה לוילה עטופה בירוק ושקט,
                   ומתמסרת לזמן שהוא רק שלך. להיות עם החברות הקרובות,
                   לצחוק, להתרגש ולהתכונן ליום בלתי נשכח.
@@ -392,14 +373,14 @@ export default function Home() {
                       transition={{ duration: 0.5, delay: index * 0.1 }}
                       className="flex items-center gap-4"
                     >
-                      <div className="w-2 h-2 rounded-full bg-[#D4AF37]" />
-                      <span className="text-[#1A1A1A] font-light">{feature}</span>
+                      <div className="w-2 h-2 rounded-full bg-[#C9A86A]" />
+                      <span className="text-[#2C241A] font-light">{feature}</span>
                     </motion.div>
                   ))}
                 </div>
 
-                <blockquote className="border-r-2 border-[#D4AF37] pr-6 py-4">
-                  <p className="text-[#1A1A1A] font-cormorant text-2xl italic font-light leading-relaxed">
+                <blockquote className="border-r-2 border-[#C9A86A] pr-6 py-4">
+                  <p className="text-[#2C241A] font-cormorant text-2xl italic font-light leading-relaxed">
                     "יום התארגנות שהוא חוויה, זיכרון,
                     <br />
                     והתחלה רכה ליום בלתי נשכח"
