@@ -119,7 +119,7 @@ export default function Home() {
                   className="inline-flex items-center gap-3 glass-cream px-8 py-4 rounded-full shadow-warm"
                 >
                   <Sparkles className="w-5 h-5 text-[#C9A86A]" />
-                  <span className="text-[#594937] text-sm font-light tracking-[0.25em] uppercase">
+                  <span className="text-[#594937] text-sm font-medium tracking-[0.25em] uppercase">
                     Luxury Bridal Villa
                   </span>
                   <Sparkles className="w-5 h-5 text-[#C9A86A]" />
@@ -139,12 +139,12 @@ export default function Home() {
                   <div className="divider-belle-warm justify-center">
                     <div className="divider-belle-center">✦</div>
                   </div>
-                  <p className="text-xl sm:text-2xl text-[#594937] font-light leading-relaxed">
+                  <p className="text-xl sm:text-2xl text-[#2C241A] font-normal leading-relaxed">
                     וילה מעוצבת בלב הטבע
-                    <span className="text-[#C9A86A] mx-3">•</span>
+                    <span className="text-[#C9A86A] mx-3 font-semibold">•</span>
                     חוויה של יום שלם
                     <br className="hidden sm:block" />
-                    <span className="text-[#C9A86A] mx-3">•</span>
+                    <span className="text-[#C9A86A] mx-3 font-semibold">•</span>
                     עם יין משובח, פינוקים ואווירה של בית
                   </p>
                   <div className="divider-warm w-32 mx-auto" />
@@ -212,14 +212,14 @@ export default function Home() {
               transition={{ duration: 1 }}
               className="text-center mb-20"
             >
-              <div className="text-sm text-[#C9A86A] font-light tracking-[0.3em] uppercase mb-4">discover</div>
+              <div className="text-sm text-[#8B7355] font-semibold tracking-[0.3em] uppercase mb-4">discover</div>
               <h2 className="font-cormorant text-5xl sm:text-6xl text-[#2C241A] font-light mb-6">
                 יותר מסתם מקום
               </h2>
               <div className="divider-belle-warm justify-center mb-6">
                 <div className="divider-belle-center">✦</div>
               </div>
-              <p className="text-xl text-[#594937] font-light leading-relaxed max-w-2xl mx-auto">
+              <p className="text-xl text-[#2C241A] font-normal leading-relaxed max-w-2xl mx-auto">
                 וילה בהרי ירושלים שבה הזמן עומד מלכת
                 והרגע שלך הופך לבלתי נשכח
               </p>
@@ -264,7 +264,7 @@ export default function Home() {
                     {feature.title}
                   </h3>
                   <div className="divider-warm mx-auto mb-4" style={{ width: '3rem' }} />
-                  <p className="text-[#594937] text-center leading-relaxed font-light text-sm">
+                  <p className="text-[#2C241A] text-center leading-relaxed font-normal text-base">
                     {feature.description}
                   </p>
                 </motion.div>
