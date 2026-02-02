@@ -102,14 +102,14 @@ export default function Home() {
             <div className="absolute inset-0 bg-gradient-to-b from-[#FFFBF5]/30 via-transparent to-[#FAF6EE]/80" />
           </div>
 
-          {/* Hero Content - Warm Cream Luxury */}
-          <div className="relative bg-gradient-to-b from-[#FAF6EE] via-[#FFFBF5] to-[#FAF6EE] text-center px-6 py-24 -mt-24">
+          {/* Hero Content - Closer to Video */}
+          <div className="relative bg-gradient-to-b from-[#FAF6EE] via-[#FFFBF5] to-[#FAF6EE] text-center px-6 py-16 -mt-32">
             <div className="max-w-6xl mx-auto">
               <motion.div
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 1.2, delay: 0.3 }}
-                className="space-y-10"
+                className="space-y-7"
               >
                 {/* Elegant Badge - Warm Cream */}
                 <motion.div
@@ -272,59 +272,6 @@ export default function Home() {
             </div>
           </div>
         </section>
-
-        {/* Stats Section - רגעים אמיתיים */}
-        <section className="py-32 px-6 bg-gradient-to-b from-[#FFFBF5] via-[#FAF6EE] to-[#FFFBF5]">
-          <div className="max-w-6xl mx-auto">
-            {/* Header */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-20"
-            >
-              <div className="text-sm text-[#8B7355] font-semibold tracking-[0.3em] uppercase mb-4">real moments</div>
-              <h2 className="font-cormorant text-5xl sm:text-6xl text-[#2C241A] font-light mb-6">
-                רגעים אמיתיים
-              </h2>
-              <div className="divider-belle-warm justify-center mb-6">
-                <div className="divider-belle-center">✦</div>
-              </div>
-            </motion.div>
-
-            {/* Stats Counter */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              <StatsCounter />
-            </div>
-          </div>
-        </section>
-
-        {/* Gallery Section - Warm Elegant */}
-        <section id="gallery" className="py-32 px-6 bg-gradient-to-b from-[#FFFBF5] to-[#FAF6EE]">
-          <div className="max-w-7xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-20"
-            >
-              <div className="text-sm text-[#8B7355] font-semibold tracking-[0.3em] uppercase mb-4">gallery</div>
-              <h2 className="font-cormorant text-5xl sm:text-6xl text-[#2C241A] font-light mb-6">
-                הגלריה שלנו
-              </h2>
-              <div className="divider-belle-warm justify-center mb-8">
-                <div className="divider-belle-center">✦</div>
-              </div>
-              <p className="text-xl text-[#2C241A] font-normal">
-                כלות שהתארגנו אצלנו והרגישו את הקסם
-              </p>
-            </motion.div>
-
-            {/* Gallery Grid with Lightbox */}
-            <LuxuryGallery />
-          </div>
-        </section>
-
         {/* Experience Section - Warm Split Layout */}
         <section id="experience" className="py-32 px-6 bg-gradient-to-b from-[#FAF6EE] to-[#FFFBF5]">
           <div className="max-w-7xl mx-auto">
@@ -413,6 +360,58 @@ export default function Home() {
             </div>
           </div>
         </section>
+        {/* Stats Section - רגעים אמיתיים */}
+        <section className="py-32 px-6 bg-gradient-to-b from-[#FFFBF5] via-[#FAF6EE] to-[#FFFBF5]">
+          <div className="max-w-6xl mx-auto">
+            {/* Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-20"
+            >
+              <div className="text-sm text-[#8B7355] font-semibold tracking-[0.3em] uppercase mb-4">real moments</div>
+              <h2 className="font-cormorant text-5xl sm:text-6xl text-[#2C241A] font-light mb-6">
+                רגעים אמיתיים
+              </h2>
+              <div className="divider-belle-warm justify-center mb-6">
+                <div className="divider-belle-center">✦</div>
+              </div>
+            </motion.div>
+
+            {/* Stats Counter */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+              <StatsCounter />
+            </div>
+          </div>
+        </section>
+
+        {/* Gallery Section - Warm Elegant */}
+        <section id="gallery" className="py-32 px-6 bg-gradient-to-b from-[#FFFBF5] to-[#FAF6EE]">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-20"
+            >
+              <div className="text-sm text-[#8B7355] font-semibold tracking-[0.3em] uppercase mb-4">gallery</div>
+              <h2 className="font-cormorant text-5xl sm:text-6xl text-[#2C241A] font-light mb-6">
+                הגלריה שלנו
+              </h2>
+              <div className="divider-belle-warm justify-center mb-8">
+                <div className="divider-belle-center">✦</div>
+              </div>
+              <p className="text-xl text-[#2C241A] font-normal">
+                כלות שהתארגנו אצלנו והרגישו את הקסם
+              </p>
+            </motion.div>
+
+            {/* Gallery Grid with Lightbox */}
+            <LuxuryGallery />
+          </div>
+        </section>
+
 
         {/* Testimonials Section - מה הכלות אומרות */}
         <section id="testimonials" className="py-32 px-6 bg-gradient-to-b from-[#FAF6EE] to-[#FFFBF5]">
