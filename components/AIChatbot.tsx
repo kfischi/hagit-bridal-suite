@@ -197,7 +197,7 @@ export default function AIChatbot() {
         
         <div className="absolute inset-0 rounded-full bg-[#D4AF37] animate-ping opacity-20" />
         
-        <div className="relative w-16 h-16 rounded-full shadow-gold hover:shadow-xl transition-all duration-300 flex items-center justify-center overflow-hidden border-2 border-[#D4AF37]">
+        <div className="relative w-20 h-20 rounded-full shadow-gold hover:shadow-xl transition-all duration-300 flex items-center justify-center overflow-hidden border-3 border-[#D4AF37]">
           <AnimatePresence mode="wait">
             {isOpen ? (
               <motion.div 
@@ -206,7 +206,7 @@ export default function AIChatbot() {
                 animate={{ rotate: 0 }}
                 className="absolute inset-0 bg-gradient-to-br from-[#D4AF37] to-[#C9A87C] flex items-center justify-center"
               >
-                <X className="w-8 h-8 text-white" strokeWidth={2} />
+                <X className="w-10 h-10 text-white" strokeWidth={2} />
               </motion.div>
             ) : (
               <motion.div 
@@ -218,7 +218,7 @@ export default function AIChatbot() {
                 <img 
                   src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770072332/image_vr8xxb.png"
                   alt="חגית - התארגנות כלה"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover scale-125"
                 />
               </motion.div>
             )}
@@ -236,14 +236,14 @@ export default function AIChatbot() {
             transition={{ type: "spring", damping: 25 }}
             className="fixed bottom-28 right-6 w-[400px] h-[600px] z-50 bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-[#F4E4E1]"
           >
-            {/* Header with Hagit's Photo */}
+            {/* Header with Hagit's Photo - Larger */}
             <div className="bg-gradient-to-r from-[#C9A86A] to-[#DABC8A] p-6 text-white">
               <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-white/30 shadow-lg">
+                <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-white/40 shadow-lg">
                   <img 
                     src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770072332/image_vr8xxb.png"
                     alt="חגית"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover scale-125"
                   />
                 </div>
                 <div className="flex-1">
