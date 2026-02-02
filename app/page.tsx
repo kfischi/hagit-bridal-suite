@@ -273,6 +273,32 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Stats Section - רגעים אמיתיים */}
+        <section className="py-32 px-6 bg-gradient-to-b from-[#FFFBF5] via-[#FAF6EE] to-[#FFFBF5]">
+          <div className="max-w-6xl mx-auto">
+            {/* Header */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-20"
+            >
+              <div className="text-sm text-[#8B7355] font-semibold tracking-[0.3em] uppercase mb-4">real moments</div>
+              <h2 className="font-cormorant text-5xl sm:text-6xl text-[#2C241A] font-light mb-6">
+                רגעים אמיתיים
+              </h2>
+              <div className="divider-belle-warm justify-center mb-6">
+                <div className="divider-belle-center">✦</div>
+              </div>
+            </motion.div>
+
+            {/* Stats Counter */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+              <StatsCounter />
+            </div>
+          </div>
+        </section>
+
         {/* Gallery Section - Warm Elegant */}
         <section id="gallery" className="py-32 px-6 bg-gradient-to-b from-[#FFFBF5] to-[#FAF6EE]">
           <div className="max-w-7xl mx-auto">
@@ -282,14 +308,14 @@ export default function Home() {
               viewport={{ once: true }}
               className="text-center mb-20"
             >
-              <div className="text-sm text-[#C9A86A] font-light tracking-[0.3em] uppercase mb-4">gallery</div>
-              <h2 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl mb-6 text-[#2C241A] font-light">
-                רגעים <span className="gradient-text-warm font-semibold italic">אמיתיים</span>
+              <div className="text-sm text-[#8B7355] font-semibold tracking-[0.3em] uppercase mb-4">gallery</div>
+              <h2 className="font-cormorant text-5xl sm:text-6xl text-[#2C241A] font-light mb-6">
+                הגלריה שלנו
               </h2>
               <div className="divider-belle-warm justify-center mb-8">
                 <div className="divider-belle-center">✦</div>
               </div>
-              <p className="text-xl text-[#594937] font-light">
+              <p className="text-xl text-[#2C241A] font-normal">
                 כלות שהתארגנו אצלנו והרגישו את הקסם
               </p>
             </motion.div>
@@ -298,9 +324,6 @@ export default function Home() {
             <LuxuryGallery />
           </div>
         </section>
-
-        {/* Stats Counter */}
-        <StatsCounter />
 
         {/* Experience Section - Warm Split Layout */}
         <section id="experience" className="py-32 px-6 bg-gradient-to-b from-[#FAF6EE] to-[#FFFBF5]">
@@ -344,7 +367,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <div className="text-sm text-[#C9A86A] font-light tracking-[0.3em] uppercase mb-4">experience</div>
+                <div className="text-sm text-[#8B7355] font-semibold tracking-[0.3em] uppercase mb-4">החוויה שלך</div>
                 <h2 className="font-cormorant text-5xl sm:text-6xl mb-8 text-[#2C241A] font-light">
                   החוויה שלך
                   <br />
@@ -391,8 +414,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonials Section */}
-        <section id="testimonials" className="py-32 px-6 bg-gradient-to-b from-white to-[#F4E4E1]/30">
+        {/* Testimonials Section - מה הכלות אומרות */}
+        <section id="testimonials" className="py-32 px-6 bg-gradient-to-b from-[#FAF6EE] to-[#FFFBF5]">
           <div className="max-w-6xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -400,10 +423,13 @@ export default function Home() {
               viewport={{ once: true }}
               className="text-center mb-20"
             >
-              <h2 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl mb-6 text-[#1A1A1A] font-light">
-                מה <span className="gradient-text font-semibold italic">הכלות</span> אומרות
+              <div className="text-sm text-[#8B7355] font-semibold tracking-[0.3em] uppercase mb-4">testimonials</div>
+              <h2 className="font-cormorant text-5xl sm:text-6xl text-[#2C241A] font-light mb-6">
+                מה הכלות אומרות
               </h2>
-              <div className="divider-luxury w-32 mx-auto my-8" />
+              <div className="divider-belle-warm justify-center mb-6">
+                <div className="divider-belle-center">✦</div>
+              </div>
             </motion.div>
 
             <div className="grid md:grid-cols-2 gap-8 mb-16">
