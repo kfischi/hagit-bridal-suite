@@ -138,6 +138,23 @@
     border-left: none;
     border-top: none;
   }
+
+  /* Enhanced Text Visibility */
+  .text-warm-body {
+    color: #2C241A;
+    font-weight: 400;
+  }
+
+  .text-warm-medium {
+    color: #594937;
+    font-weight: 500;
+  }
+
+  .text-warm-subtitle {
+    color: #8B7355;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
 }
 
 /* Scrollbar */
