@@ -1,559 +1,306 @@
-'use client'
+// components/ClaudeChatbot.tsx
+"use client";
 
-import { useState, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { X, Send, Sparkles, Phone, Mail } from 'lucide-react'
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MessageCircle, X, Send, Loader2, Sparkles, Phone } from "lucide-react";
 
 interface Message {
-  id: string
-  text: string
-  sender: 'user' | 'bot'
-  timestamp: Date
-  quickReplies?: string[]
+  role: "user" | "assistant";
+  content: string;
+  timestamp: Date;
 }
 
-const predefinedResponses: Record<string, { text: string; quickReplies?: string[] }> = {
-  // ברכות ופתיחה
-  'היי': {
-    text: 'שלום! 👋 אני חגית, שמחה מאוד שפנית! איך אפשר לעזור לך היום?',
-    quickReplies: ['מחיר', 'זמינות', 'מה כלול?', 'מיקום']
-  },
-  'שלום': {
-    text: 'היי יקרה! 😊 ברוכה הבאה לוילה שלנו. במה אוכל לעזור?',
-    quickReplies: ['מחיר', 'זמינות', 'מה כלול?', 'מיקום']
-  },
-  'בוקר טוב': {
-    text: 'בוקר טוב ומבורך! ☀️ תכננת כבר את יום ההתארגנות שלך?',
-    quickReplies: ['מחיר', 'זמינות', 'מה כלול?']
-  },
-  'ערב טוב': {
-    text: 'ערב טוב! 🌙 איזה כיף שפנית. מה מעניין אותך?',
-    quickReplies: ['מחיר', 'זמינות', 'מה כלול?']
-  },
-  
-  // מחיר ותשלום
-  'מחיר': {
-    text: '💰 המחיר המיוחד שלנו:\n\n✨ 1,500₪ במקום 2,200₪\n\n✅ כולל הכל:\n• שתייה חמה וקרה כל היום\n• פינת יין ושמפניה מקומית\n• תאורה מקצועית לצילומים\n• צילום 360 מהנה\n• מערכת קול ומוזיקה\n• חניה פרטית\n• שירותים נקיים',
-    quickReplies: ['איך מזמינים?', 'זמינות', 'הנחות?']
-  },
-  'כמה עולה': {
-    text: '💰 1,500₪ במקום 2,200₪!\n\nמחיר מיוחד שכולל את הכל - וילה ליום שלם, יין משובח, תאורה, צילום 360, חניה ועוד!',
-    quickReplies: ['מה כלול?', 'הנחות?', 'איך משלמים?']
-  },
-  'מחיר מיוחד': {
-    text: '🎉 המחיר המבצע שלנו: 1,500₪!\n\nזה כולל את כל השירותים. חוסך לך 700₪!',
-    quickReplies: ['איך מזמינים?', 'מה כלול?']
-  },
-  'הנחות': {
-    text: '🎁 המבצע כבר כולל הנחה של 700₪!\n\nלתאריכים באמצע השבוע יש מחיר עוד יותר מיוחד. רוצה לבדוק?',
-    quickReplies: ['צור קשר', 'זמינות', 'מחיר']
-  },
-  'הנחה': {
-    text: '💝 יש לנו מחיר מיוחד לתאריכים באמצע השבוע!\n\nצרי קשר איתי ונבדוק ביחד את האופציות.',
-    quickReplies: ['צור קשר', 'זמינות']
-  },
-  'איך משלמים': {
-    text: '💳 תשלום נוח ופשוט:\n\n1️⃣ מקדמה להזמנה\n2️⃣ יתרה שבועיים לפני\n3️⃣ העברה בנקאית / ביט\n\nהכל מאובטח ועם קבלה!',
-    quickReplies: ['איך מזמינים?', 'ביטול?', 'מחיר']
-  },
-  'תשלום': {
-    text: '💰 התשלום:\n• מקדמה להזמנה\n• יתרה לפני שבועיים\n• העברה בנקאית או ביט\n\nפשוט ובטוח!',
-    quickReplies: ['איך מזמינים?', 'מחיר']
-  },
-  
-  // זמינות ותאריכים
-  'זמינות': {
-    text: '📅 הזמינות שלנו מתעדכנת בזמן אמת!\n\nאיזה תאריך מעניין אותך? שלחי לי ואבדוק מיד!',
-    quickReplies: ['צור קשר', 'מחיר', 'מיקום']
-  },
-  'תאריכים': {
-    text: '📆 יש לנו עדיין תאריכים פנויים!\n\nמה התאריך המשוער שלך? אבדוק עבורך מיד.',
-    quickReplies: ['צור קשר', 'מחיר']
-  },
-  'תאריך': {
-    text: '📅 אשמח לבדוק זמינות עבורך!\n\nשלחי לי את התאריך המדויק דרך הוואטסאפ ואחזור תוך דקות.',
-    quickReplies: ['צור קשר', 'מחיר']
-  },
-  
-  // מה כלול ופרטים
-  'מה כלול': {
-    text: '🎉 החבילה המלאה שלנו:\n\n✅ וילה ליום שלם (בוקר-ערב)\n✅ שתייה חמה וקרה ללא הגבלה\n✅ פינת יין ושמפניה מקומית\n✅ תאורה מקצועית לצילומים\n✅ צילום 360 מהנה\n✅ מערכת קול ומוזיקה\n✅ חניה פרטית\n✅ שירותים נקיים\n✅ נוף הררי עוצר נשימה\n\nהכל כלול במחיר!',
-    quickReplies: ['מחיר', 'איך מזמינים?', 'כמה שעות?']
-  },
-  'מה יש': {
-    text: '✨ בוילה שלנו יש הכל:\n\n• יין משובח מקומי\n• פינוקים מתוקים\n• תאורה מקצועית\n• צילום 360\n• מוזיקה\n• נוף מדהים\n• אווירה ביתית וחמה\n\nרוצה לשמוע עוד?',
-    quickReplies: ['מחיר', 'מיקום', 'איך מזמינים?']
-  },
-  'שירותים': {
-    text: '🏠 השירותים שלנו:\n\n✅ מטבח מאובזר\n✅ שירותים נקיים\n✅ מראות מוארות\n✅ חדרי הלבשה\n✅ אזור צילום\n✅ חניה פרטית\n\nהכל במצב מושלם!',
-    quickReplies: ['מחיר', 'מה כלול?']
-  },
-  
-  // זמן ושעות
-  'כמה שעות': {
-    text: '⏰ הוילה שלך ליום שלם!\n\nמהבוקר ועד הערב - כל הזמן שצריך. בדרך כלל 8-10 שעות.\n\nזמן להתארגן בנחת, לצלם, ליהנות עם החברות!',
-    quickReplies: ['מחיר', 'איך מזמינים?', 'מה כלול?']
-  },
-  'כמה זמן': {
-    text: '⏰ יום שלם! בערך 8-10 שעות.\n\nאת מגיעה בבוקר ונהנית עד לפני החתונה. ללא לחץ, ללא מגבלות.',
-    quickReplies: ['מחיר', 'מה כלול?']
-  },
-  'שעות': {
-    text: '🕐 השעות גמישות!\n\nבדרך כלל 10:00-18:00, אבל אפשר להתאים לצרכים שלך.',
-    quickReplies: ['מחיר', 'איך מזמינים?']
-  },
-  
-  // מיקום והגעה
-  'מיקום': {
-    text: '📍 וילה בהרי ירושלים!\n\nאזור שקט ומרהיב עם נוף פנורמי. נגישה, קרובה, ומושלמת לצילומים.\n\nרוצה קישור למפה?',
-    quickReplies: ['צור קשר', 'הוראות הגעה', 'מחיר']
-  },
-  'איפה זה': {
-    text: '🗺️ הרי ירושלים!\n\n20 דקות מהעיר, באזור שקט עם נוף מדהים. חניה פרטית במקום.',
-    quickReplies: ['הוראות הגעה', 'מחיר', 'צור קשר']
-  },
-  'הוראות הגעה': {
-    text: '🚗 נגישות מעולה!\n\nשולחת לך קישור למפה בוואטסאפ. קל להגיע, יש חניה במקום.',
-    quickReplies: ['צור קשר', 'מחיר']
-  },
-  'איך מגיעים': {
-    text: '🛣️ הגעה נוחה:\n\n• 20 דקות מירושלים\n• חניה פרטית\n• כביש סלול\n• קל למצוא\n\nשולחת קישור למפות בוואטסאפ!',
-    quickReplies: ['צור קשר', 'מחיר']
-  },
-  'חניה': {
-    text: '🅿️ חניה פרטית במקום!\n\nיש מקום לכל האורחים שלך, בחינם, ממש ליד הכניסה.',
-    quickReplies: ['מיקום', 'מה כלול?']
-  },
-  
-  // הזמנה וביטול
-  'איך מזמינים': {
-    text: '📲 ההזמנה סופר פשוטה!\n\n1️⃣ תשלחי לי תאריך בוואטסאפ\n2️⃣ אאשר זמינות תוך דקות\n3️⃣ תשלום מקדמה להזמנה\n4️⃣ זהו! התאריך שלך מוזמן 🎉\n\nמוכנה? לחצי "צור קשר"!',
-    quickReplies: ['צור קשר', 'מחיר', 'ביטול?']
-  },
-  'להזמין': {
-    text: '✅ בואי נזמין!\n\nשלחי לי את התאריך בוואטסאפ ואדאג לשמור אותו בשבילך.',
-    quickReplies: ['צור קשר', 'מחיר']
-  },
-  'לקבוע': {
-    text: '📅 בואי נקבע!\n\nרק צריך את התאריך שלך ואת מזמינה מיד.',
-    quickReplies: ['צור קשר', 'זמינות']
-  },
-  'ביטול': {
-    text: '🔄 מדיניות ביטול הוגנת:\n\n✅ ביטול חינם עד 14 יום לפני\n✅ 14-7 ימים - החזר 50%\n✅ פחות משבוע - ללא החזר\n\n*במקרה של בעיה רפואית - נמצא פתרון!',
-    quickReplies: ['צור קשר', 'מחיר', 'איך מזמינים?']
-  },
-  'ביטול הזמנה': {
-    text: '📋 מדיניות ביטול:\n\nביטול חופשי עד 14 יום לפני. אחרי זה - לפי תנאים.\n\nרוצה לדבר איתי על זה?',
-    quickReplies: ['צור קשר', 'מחיר']
-  },
-  
-  // יין ושתייה
-  'יין': {
-    text: '🍷 יין בוטיק מקומי!\n\nמיקב הרי ירושלים - יין משובח, לבן ואדום. בחינם וללא הגבלה!',
-    quickReplies: ['מה כלול?', 'מחיר']
-  },
-  'שתייה': {
-    text: '🥤 שתייה ללא הגבלה!\n\n• קפה ותה כל היום\n• מיצים טבעיים\n• מים ומשקאות קלים\n• יין ושמפניה\n\nהכל כלול!',
-    quickReplies: ['מה עוד כלול?', 'מחיר']
-  },
-  'קפה': {
-    text: '☕ קפה טעים כל היום!\n\nמכונת אספרסו מקצועית, תה, חלב - מה שרוצים!',
-    quickReplies: ['מה כלול?', 'מחיר']
-  },
-  
-  // אוכל
-  'אוכל': {
-    text: '🍰 אין אוכל כבד במחיר, אבל:\n\n✅ מאפים קלים\n✅ פירות העונה\n✅ ממתקים\n✅ נשנושים\n\nאפשר להביא אוכל משלכם!',
-    quickReplies: ['מחיר', 'מה כלול?']
-  },
-  'ארוחה': {
-    text: '🥗 אין ארוחה מלאה במחיר.\n\nאבל יש פינוקים, פירות וממתקים. ואפשר להביא מה שרוצים!',
-    quickReplies: ['מחיר', 'מה כלול?']
-  },
-  
-  // צילום ותאורה
-  'צילום': {
-    text: '📸 מושלם לצילומים!\n\n✅ תאורה מקצועית\n✅ צילום 360 כיפי\n✅ נוף מדהים\n✅ פינות צילום מעוצבות\n\nהצלם שלך יאהב!',
-    quickReplies: ['תאורה', 'מה כלול?', 'מחיר']
-  },
-  'תאורה': {
-    text: '💡 תאורה מקצועית!\n\nמאור חם ומשלים - התמונות שלך יצאו מדהימות!',
-    quickReplies: ['צילום', 'מחיר']
-  },
-  '360': {
-    text: '🎥 צילום 360 מהנה!\n\nהחברות שלך יאהבו - זה כיף והתוצאה מדהימה!',
-    quickReplies: ['מה כלול?', 'מחיר']
-  },
-  
-  // אווירה וחוויה
-  'אווירה': {
-    text: '✨ אווירה ביתית וחמה!\n\nלא סטרילי, לא מלאכותי. כמו להתארגן בבית, רק יותר יפה!',
-    quickReplies: ['מחיר', 'איך מזמינים?']
-  },
-  'נוף': {
-    text: '🏔️ נוף הררי עוצר נשימה!\n\nהרי ירושלים בכל פאר. מושלם לצילומים ולרגע של שקט.',
-    quickReplies: ['מיקום', 'מחיר']
-  },
-  
-  // קבוצה וחברות
-  'כמה אנשים': {
-    text: '👯‍♀️ מספר אנשים:\n\nמתאים לעד 15-20 איש בנוחות. הכלה + החברות הקרובות!',
-    quickReplies: ['מחיר', 'מה כלול?']
-  },
-  'חברות': {
-    text: '💕 בואו עם כל החברות!\n\nיש מקום לכולן. הוילה מתאימה ל-15-20 איש.',
-    quickReplies: ['מחיר', 'מה כלול?']
-  },
-  
-  // המלצות
-  'המלצות': {
-    text: '⭐ הכלות שלנו מאושרות!\n\n"המקום הכי מושלם"\n"האווירה הייתה קסומה"\n"התמונות יצאו מדהימות"\n\nרוצה לדבר עם כלה שהייתה?',
-    quickReplies: ['צור קשר', 'מחיר']
-  },
-  'ביקורות': {
-    text: '💬 100% שביעות רצון!\n\nכל הכלות שלנו יוצאות מאושרות. רוצה לשמוע עוד?',
-    quickReplies: ['המלצות', 'מחיר']
-  },
-  
-  // צור קשר
-  'צור קשר': {
-    text: '📞 בואי נדבר!\n\n💚 וואטסאפ - מגיבה תוך דקות\n📧 מייל - תוך 24 שעות\n☎️ טלפון - זמינה ביום\n\nאיך נוח לך?',
-    quickReplies: ['וואטסאפ', 'מייל', 'טלפון']
-  },
-  'לדבר': {
-    text: '💬 אשמח לדבר איתך!\n\nשלחי הודעה בוואטסאפ ונסדר הכל.',
-    quickReplies: ['צור קשר']
-  },
-  'טלפון': {
-    text: '☎️ הנה הטלפון:\n\n052-267-6718\n\nמוזמנת להתקשר בשעות היום!',
-    quickReplies: ['וואטסאפ', 'מייל']
-  },
-  
-  // Default
-  'default': {
-    text: 'לא בטוחה שהבנתי... 🤔\n\nבואי ננסה אחרת - מה מעניין אותך?',
-    quickReplies: ['מחיר', 'זמינות', 'מה כלול?', 'מיקום', 'איך מזמינים?']
-  }
-}
-
-export default function AIChatbot() {
-  const [isOpen, setIsOpen] = useState(false)
+export default function ClaudeChatbot() {
+  const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
-      id: '1',
-      text: 'היי! 👋 אני הצ\'אטבוט של חגית. שמחה לעזור! במה תרצי להתחיל?',
-      sender: 'bot',
+      role: "assistant",
+      content: "שלום! 👋 אני העוזרת הוירטואלית של חגית.\n\nאני כאן לעזור לך עם כל שאלה על הסוויטה, המחירים, או ההזמנה.\n\nמה תרצי לדעת? 💕",
       timestamp: new Date(),
-      quickReplies: ['מחיר', 'זמינות', 'מה כלול?', 'איפה זה?']
-    }
-  ])
-  const [inputValue, setInputValue] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef = useRef<HTMLInputElement>(null)
+    },
+  ]);
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages])
+    scrollToBottom();
+  }, [messages]);
 
   useEffect(() => {
-    if (isOpen && inputRef.current) {
-      inputRef.current.focus()
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 100);
     }
-  }, [isOpen])
+  }, [isOpen]);
 
-  const findBestResponse = (userInput: string): { text: string; quickReplies?: string[] } => {
-    const lowerInput = userInput.toLowerCase().trim()
-    
-    // מילות מפתח מורחבות
-    const keywords: Record<string, string[]> = {
-      // ברכות
-      'היי': ['היי', 'הי', 'hello'],
-      'שלום': ['שלום', 'שלום לך', 'ערב טוב', 'בוקר טוב'],
-      'בוקר טוב': ['בוקר טוב', 'בוקר'],
-      'ערב טוב': ['ערב טוב', 'ערב'],
-      
-      // מחיר ותשלום
-      'מחיר': ['מחיר', 'כמה עולה', 'עלות', 'מחיר מיוחד'],
-      'כמה עולה': ['כמה עולה', 'כמה זה עולה'],
-      'הנחות': ['הנחה', 'הנחות', 'מבצע', 'הנחה?'],
-      'הנחה': ['הנחה'],
-      'איך משלמים': ['איך משלמים', 'תשלום', 'אמצעי תשלום'],
-      'תשלום': ['תשלום', 'לשלם'],
-      
-      // זמינות
-      'זמינות': ['זמינות', 'פנוי', 'תורים'],
-      'תאריכים': ['תאריכים', 'מתי פנוי'],
-      'תאריך': ['תאריך', 'תאריך ספציפי'],
-      
-      // מה כלול
-      'מה כלול': ['מה כלול', 'מה כולל'],
-      'מה יש': ['מה יש', 'מה מקבלים'],
-      'שירותים': ['שירותים', 'מתקנים'],
-      
-      // זמן
-      'כמה שעות': ['כמה שעות', 'כמה זמן'],
-      'כמה זמן': ['כמה זמן'],
-      'שעות': ['שעות', 'משך זמן'],
-      
-      // מיקום
-      'מיקום': ['מיקום', 'איפה', 'איפה זה'],
-      'איפה זה': ['איפה זה', 'איפה נמצא'],
-      'הוראות הגעה': ['הוראות הגעה', 'איך מגיעים', 'כיוון'],
-      'איך מגיעים': ['איך מגיעים'],
-      'חניה': ['חניה', 'חנייה', 'פרקינג'],
-      
-      // הזמנה
-      'איך מזמינים': ['איך מזמינים', 'איך להזמין'],
-      'להזמין': ['להזמין', 'לשריין'],
-      'לקבוע': ['לקבוע', 'לתאם'],
-      'ביטול': ['ביטול', 'לבטל', 'החזר כספי'],
-      'ביטול הזמנה': ['ביטול הזמנה'],
-      
-      // יין ושתייה
-      'יין': ['יין', 'אלכוהול'],
-      'שתייה': ['שתייה', 'משקאות'],
-      'קפה': ['קפה', 'תה'],
-      
-      // אוכל
-      'אוכל': ['אוכל', 'לאכול'],
-      'ארוחה': ['ארוחה', 'אוכל כבד'],
-      
-      // צילום
-      'צילום': ['צילום', 'צלם', 'תמונות'],
-      'תאורה': ['תאורה', 'אור', 'תאורת צילום'],
-      '360': ['360', 'סלופי'],
-      
-      // אווירה
-      'אווירה': ['אווירה', 'איך זה'],
-      'נוף': ['נוף', 'נופים', 'נוף יפה'],
-      
-      // קבוצה
-      'כמה אנשים': ['כמה אנשים', 'מספר אנשים'],
-      'חברות': ['חברות', 'קבוצה'],
-      
-      // המלצות
-      'המלצות': ['המלצות', 'חוות דעת'],
-      'ביקורות': ['ביקורות', 'מה אומרים'],
-      
-      // צור קשר
-      'צור קשר': ['צור קשר', 'ליצור קשר', 'פרטים'],
-      'לדבר': ['לדבר', 'לדבר איתך'],
-      'טלפון': ['טלפון', 'פלאפון', 'מספר טלפון']
-    }
-
-    // חיפוש מדויק
-    for (const [key, terms] of Object.entries(keywords)) {
-      if (terms.some(term => lowerInput.includes(term))) {
-        return predefinedResponses[key] || predefinedResponses['default']
-      }
-    }
-
-    return predefinedResponses['default']
-  }
-
-  const handleSendMessage = (text: string = inputValue) => {
-    if (!text.trim()) return
+  const sendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
 
     const userMessage: Message = {
-      id: Date.now().toString(),
-      text: text.trim(),
-      sender: 'user',
-      timestamp: new Date()
-    }
+      role: "user",
+      content: input.trim(),
+      timestamp: new Date(),
+    };
 
-    setMessages(prev => [...prev, userMessage])
-    setInputValue('')
-    setIsTyping(true)
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsLoading(true);
 
-    // Simulate bot typing
-    setTimeout(() => {
-      const response = findBestResponse(text)
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: response.text,
-        sender: 'bot',
-        timestamp: new Date(),
-        quickReplies: response.quickReplies
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [...messages, userMessage].map(m => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        const assistantMessage: Message = {
+          role: "assistant",
+          content: data.message,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+      } else {
+        throw new Error(data.message || 'Unknown error');
       }
-      setMessages(prev => [...prev, botMessage])
-      setIsTyping(false)
-    }, 800 + Math.random() * 400)
-  }
+    } catch (error: any) {
+      console.error("Error:", error);
+      const errorMessage: Message = {
+        role: "assistant",
+        content: error.message || "אופס! משהו השתבש. אפשר לנסות שוב או לכתוב בוואטסאפ 🙏",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const handleQuickReply = (reply: string) => {
-    // פעולות מיוחדות
-    if (reply === 'וואטסאפ') {
-      window.open(`https://wa.me/972522676718?text=${encodeURIComponent('היי, אני מעוניינת לשמוע פרטים')}`, '_blank')
-      return
-    }
-    if (reply === 'מייל') {
-      window.location.href = 'mailto:hagit@example.com?subject=פניה מהאתר'
-      return
-    }
-    if (reply === 'טלפון') {
-      window.location.href = 'tel:+972522676718'
-      return
-    }
+  const quickQuestions = [
+    { text: "מה המחיר? 💰", query: "כמה עולה להזמין את הסוויטה?" },
+    { text: "איך מזמינים? 📅", query: "איך מזמינים את הסוויטה?" },
+    { text: "מה כלול? ✨", query: "מה כלול בחבילה?" },
+    { text: "יש זמינות? 🗓️", query: "מה הזמינות שלכם?" },
+  ];
 
-    handleSendMessage(reply)
-  }
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault()
-      handleSendMessage()
-    }
-  }
+  const handleQuickQuestion = (query: string) => {
+    setInput(query);
+    setTimeout(() => {
+      const submitEvent = new Event('submit', { cancelable: true, bubbles: true });
+      document.querySelector('form')?.dispatchEvent(submitEvent);
+    }, 100);
+  };
 
   return (
     <>
       {/* Floating Button */}
-      <motion.button
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 1.2 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 group"
-        aria-label="פתח צ'אט AI"
-      >
+      <AnimatePresence>
         {!isOpen && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg"
+          <motion.button
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0, opacity: 0 }}
+            transition={{ type: "spring", damping: 15 }}
+            onClick={() => setIsOpen(true)}
+            className="fixed bottom-6 left-6 z-50 group"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
           >
-            <Sparkles className="w-3 h-3" />
-          </motion.div>
+            <motion.div
+              className="absolute inset-0 rounded-full bg-gold-400"
+              animate={{ 
+                scale: [1, 1.4, 1],
+                opacity: [0.5, 0, 0.5],
+              }}
+              transition={{ 
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+            
+            <div className="relative bg-gradient-to-r from-gold-400 to-gold-600 
+                          text-white rounded-full p-4 shadow-2xl">
+              <MessageCircle className="w-7 h-7" />
+              
+              <motion.div
+                className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 
+                           rounded-full flex items-center justify-center text-xs font-bold"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 1, repeat: Infinity }}
+              >
+                AI
+              </motion.div>
+
+              <motion.div
+                className="absolute -top-2 -left-2"
+                animate={{ 
+                  rotate: [0, 360],
+                  scale: [1, 1.2, 1],
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+              >
+                <Sparkles className="w-4 h-4 text-yellow-300" />
+              </motion.div>
+            </div>
+
+            <div className="absolute bottom-full right-0 mb-2 opacity-0 
+                          group-hover:opacity-100 transition-opacity pointer-events-none">
+              <div className="bg-charcoal-900 text-white text-sm px-3 py-2 
+                            rounded-lg shadow-lg whitespace-nowrap">
+                יש לך שאלה? דברי איתי! 💬
+                <div className="absolute top-full right-4 w-0 h-0 
+                              border-l-8 border-r-8 border-t-8 
+                              border-transparent border-t-charcoal-900" />
+              </div>
+            </div>
+          </motion.button>
         )}
-        
-        <div className="absolute inset-0 rounded-full bg-[#D4AF37] animate-ping opacity-20" />
-        
-        <div className="relative w-20 h-20 rounded-full shadow-gold hover:shadow-xl transition-all duration-300 flex items-center justify-center overflow-hidden border-3 border-[#D4AF37]">
-          <AnimatePresence mode="wait">
-            {isOpen ? (
-              <motion.div 
-                key="close" 
-                initial={{ rotate: -90 }} 
-                animate={{ rotate: 0 }}
-                className="absolute inset-0 bg-gradient-to-br from-[#D4AF37] to-[#C9A87C] flex items-center justify-center"
-              >
-                <X className="w-10 h-10 text-white" strokeWidth={2} />
-              </motion.div>
-            ) : (
-              <motion.div 
-                key="hagit" 
-                initial={{ scale: 0.8 }} 
-                animate={{ scale: 1 }}
-                className="absolute inset-0"
-              >
-                <img 
-                  src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770072332/image_vr8xxb.png"
-                  alt="חגית - התארגנות כלה"
-                  className="w-full h-full object-cover scale-125"
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
-      </motion.button>
+      </AnimatePresence>
 
       {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.8, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.8, y: 20 }}
-            transition={{ type: "spring", damping: 25 }}
-            className="fixed bottom-28 right-6 w-[400px] h-[600px] z-50 bg-white rounded-3xl shadow-2xl flex flex-col overflow-hidden border border-[#F4E4E1]"
+            initial={{ opacity: 0, y: 100, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 100, scale: 0.8 }}
+            transition={{ type: "spring", damping: 20 }}
+            className="fixed bottom-6 left-6 z-50 w-[400px] max-w-[calc(100vw-3rem)] 
+                     h-[650px] max-h-[calc(100vh-3rem)] bg-white rounded-3xl 
+                     shadow-2xl overflow-hidden flex flex-col border-2 border-gold-200"
           >
-            {/* Header with Hagit's Photo - Larger */}
-            <div className="bg-gradient-to-r from-[#C9A86A] to-[#DABC8A] p-6 text-white">
-              <div className="flex items-center gap-3">
-                <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-white/40 shadow-lg">
-                  <img 
-                    src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770072332/image_vr8xxb.png"
-                    alt="חגית"
-                    className="w-full h-full object-cover scale-125"
-                  />
+            {/* Header */}
+            <div className="relative bg-gradient-to-r from-gold-400 to-gold-600 p-5 text-white">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-0 right-0 w-32 h-32 
+                              bg-white rounded-full -translate-y-1/2 translate-x-1/2" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 
+                              bg-white rounded-full translate-y-1/2 -translate-x-1/2" />
+              </div>
+
+              <div className="relative flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="relative">
+                    <div className="w-12 h-12 bg-white/20 backdrop-blur-sm 
+                                  rounded-full flex items-center justify-center 
+                                  border-2 border-white/30">
+                      <Sparkles className="w-6 h-6" />
+                    </div>
+                    <div className="absolute bottom-0 right-0 w-3 h-3 
+                                  bg-green-400 rounded-full border-2 border-white" />
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-bold text-lg">העוזרת של חגית</h3>
+                    <p className="text-sm text-white/90 flex items-center gap-1">
+                      <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                      מחוברת עכשיו
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <h3 className="font-cormorant text-xl font-semibold">צ'אט עם חגית</h3>
-                  <p className="text-white/80 text-sm font-light">מגיבה מיד ✨</p>
-                </div>
+                
+                <motion.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsOpen(false)}
+                  className="hover:bg-white/20 rounded-full p-2 transition-colors"
+                >
+                  <X className="w-5 h-5" />
+                </motion.button>
+              </div>
+
+              <div className="relative mt-3 flex gap-2">
+                <button
+                  onClick={() => window.open(`https://wa.me/${process.env.NEXT_PUBLIC_WHATSAPP_NUMBER}`, '_blank')}
+                  className="flex-1 bg-white/20 backdrop-blur-sm hover:bg-white/30 
+                           rounded-full px-3 py-1.5 text-xs font-medium 
+                           transition-all flex items-center justify-center gap-1"
+                >
+                  <Phone className="w-3 h-3" />
+                  וואטסאפ
+                </button>
+                <button
+                  onClick={() => window.location.href = `tel:${process.env.NEXT_PUBLIC_PHONE_NUMBER}`}
+                  className="flex-1 bg-white/20 backdrop-blur-sm hover:bg-white/30 
+                           rounded-full px-3 py-1.5 text-xs font-medium 
+                           transition-all flex items-center justify-center gap-1"
+                >
+                  <Phone className="w-3 h-3" />
+                  התקשרי
+                </button>
               </div>
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#FAFAF8]">
-              {messages.map((message) => (
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gradient-to-b from-blush-50 to-white">
+              {messages.map((message, index) => (
                 <motion.div
-                  key={message.id}
+                  key={index}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  <div className={`max-w-[75%] ${message.sender === 'user' ? 'order-2' : 'order-1'}`}>
+                  <div className={`max-w-[85%]`}>
                     <div
-                      className={`rounded-2xl px-4 py-3 ${
-                        message.sender === 'user'
-                          ? 'bg-[#D4AF37] text-white rounded-br-none'
-                          : 'bg-white text-[#1A1A1A] rounded-bl-none shadow-sm border border-[#F4E4E1]'
+                      className={`p-4 rounded-2xl shadow-md ${
+                        message.role === "user"
+                          ? "bg-gradient-to-r from-gold-500 to-gold-600 text-white rounded-br-none"
+                          : "bg-white text-charcoal-900 rounded-bl-none border border-gold-100"
                       }`}
                     >
-                      <p className="text-sm leading-relaxed whitespace-pre-line">{message.text}</p>
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">
+                        {message.content}
+                      </p>
                     </div>
-                    
-                    {/* Quick Replies */}
-                    {message.sender === 'bot' && message.quickReplies && (
-                      <div className="flex flex-wrap gap-2 mt-3">
-                        {message.quickReplies.map((reply) => (
-                          <motion.button
-                            key={reply}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleQuickReply(reply)}
-                            className="px-3 py-1.5 bg-white border-2 border-[#D4AF37] text-[#D4AF37] rounded-full text-xs font-medium hover:bg-[#D4AF37] hover:text-white transition-all"
-                          >
-                            {reply}
-                          </motion.button>
-                        ))}
-                      </div>
-                    )}
+                    <p className={`text-xs mt-1 opacity-60 ${
+                      message.role === "user" ? "text-left" : "text-right"
+                    }`}>
+                      {message.timestamp.toLocaleTimeString("he-IL", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
                   </div>
                 </motion.div>
               ))}
               
-              {/* Typing Indicator */}
-              {isTyping && (
+              {isLoading && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="flex justify-start"
                 >
-                  <div className="bg-white rounded-2xl rounded-bl-none px-4 py-3 shadow-sm border border-[#F4E4E1]">
-                    <div className="flex gap-1">
+                  <div className="bg-white p-4 rounded-2xl rounded-bl-none shadow-md border border-gold-100">
+                    <div className="flex gap-2">
                       <motion.div
-                        animate={{ y: [0, -5, 0] }}
+                        className="w-2 h-2 bg-gold-500 rounded-full"
+                        animate={{ y: [0, -8, 0] }}
                         transition={{ duration: 0.6, repeat: Infinity, delay: 0 }}
-                        className="w-2 h-2 bg-[#D4AF37] rounded-full"
                       />
                       <motion.div
-                        animate={{ y: [0, -5, 0] }}
+                        className="w-2 h-2 bg-gold-500 rounded-full"
+                        animate={{ y: [0, -8, 0] }}
                         transition={{ duration: 0.6, repeat: Infinity, delay: 0.2 }}
-                        className="w-2 h-2 bg-[#D4AF37] rounded-full"
                       />
                       <motion.div
-                        animate={{ y: [0, -5, 0] }}
+                        className="w-2 h-2 bg-gold-500 rounded-full"
+                        animate={{ y: [0, -8, 0] }}
                         transition={{ duration: 0.6, repeat: Infinity, delay: 0.4 }}
-                        className="w-2 h-2 bg-[#D4AF37] rounded-full"
                       />
                     </div>
                   </div>
@@ -563,52 +310,69 @@ export default function AIChatbot() {
               <div ref={messagesEndRef} />
             </div>
 
+            {messages.length <= 2 && (
+              <div className="px-4 py-3 bg-white border-t border-gold-100">
+                <p className="text-xs text-warm-gray-600 mb-2 font-medium">שאלות מהירות:</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {quickQuestions.map((q, index) => (
+                    <motion.button
+                      key={index}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleQuickQuestion(q.query)}
+                      className="text-xs px-3 py-2 bg-gradient-to-r from-gold-50 to-gold-100 
+                               text-gold-700 rounded-lg hover:from-gold-100 hover:to-gold-200 
+                               transition-all font-medium border border-gold-200"
+                    >
+                      {q.text}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Input */}
-            <div className="p-4 bg-white border-t border-[#F4E4E1]">
+            <form onSubmit={sendMessage} className="p-4 bg-white border-t border-gold-100">
               <div className="flex gap-2">
                 <input
                   ref={inputRef}
                   type="text"
-                  value={inputValue}
-                  onChange={(e) => setInputValue(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="שאלי אותי משהו..."
-                  className="flex-1 px-4 py-3 bg-[#FAFAF8] border border-[#F4E4E1] rounded-full text-sm focus:outline-none focus:border-[#D4AF37] transition-all"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="כתבי את השאלה שלך..."
+                  className="flex-1 px-4 py-3 border-2 border-gold-200 rounded-full 
+                           focus:outline-none focus:ring-2 focus:ring-gold-400 
+                           focus:border-transparent transition-all text-sm"
+                  disabled={isLoading}
                 />
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => handleSendMessage()}
-                  disabled={!inputValue.trim()}
-                  className="w-12 h-12 bg-gradient-to-br from-[#D4AF37] to-[#C9A87C] rounded-full flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all"
+                  type="submit"
+                  disabled={!input.trim() || isLoading}
+                  className="bg-gradient-to-r from-gold-500 to-gold-600 text-white 
+                           rounded-full p-3 hover:from-gold-600 hover:to-gold-700 
+                           disabled:opacity-50 disabled:cursor-not-allowed 
+                           transition-all shadow-lg hover:shadow-xl"
                 >
-                  <Send className="w-5 h-5 text-white" />
+                  {isLoading ? (
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
                 </motion.button>
               </div>
               
-              {/* Quick Actions */}
-              <div className="flex gap-2 mt-3 justify-center">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  onClick={() => window.open(`https://wa.me/972522676718`, '_blank')}
-                  className="flex items-center gap-1 px-3 py-1.5 bg-[#25D366] text-white rounded-full text-xs hover:bg-[#20BA5A] transition-all"
-                >
-                  <Phone className="w-3 h-3" />
-                  <span>וואטסאפ</span>
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  onClick={() => window.location.href = 'mailto:hagit@example.com'}
-                  className="flex items-center gap-1 px-3 py-1.5 bg-[#D4AF37] text-white rounded-full text-xs hover:bg-[#C9A87C] transition-all"
-                >
-                  <Mail className="w-3 h-3" />
-                  <span>מייל</span>
-                </motion.button>
+              <div className="mt-2 text-center">
+                <p className="text-xs text-warm-gray-500 flex items-center justify-center gap-1">
+                  <Sparkles className="w-3 h-3" />
+                  מופעל על ידי Claude AI
+                </p>
               </div>
-            </div>
+            </form>
           </motion.div>
         )}
       </AnimatePresence>
     </>
-  )
+  );
 }
