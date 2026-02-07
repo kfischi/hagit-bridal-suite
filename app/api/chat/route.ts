@@ -1,30 +1,29 @@
 import { Anthropic } from '@anthropic-ai/sdk';
 import { NextResponse } from 'next/server';
 
-// הדפסה ראשונית כדי לראות אם המפתח קיים (בלי לחשוף אותו)
-console.log("Server initialized. API Key exists?", !!process.env.ANTHROPIC_API_KEY);
-
+// אתחול הקליינט
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || '',
 });
 
-export const runtime = 'edge';
-
 export async function POST(req: Request) {
   try {
+    // 1. בדיקה ראשונית שהמפתח קיים
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.error("❌ Error: Missing ANTHROPIC_API_KEY in environment variables.");
+      return NextResponse.json(
+        { reply: "שגיאת מערכת: מפתח API חסר בשרת." },
+        { status: 500 }
+      );
+    }
+
     const body = await req.json();
     const { messages, purpose } = body;
 
-    console.log("Received request with purpose:", purpose || "chat");
+    console.log(`📩 Request received. Purpose: ${purpose || 'chat'}`);
 
-    if (!process.env.ANTHROPIC_API_KEY) {
-      console.error("CRITICAL ERROR: ANTHROPIC_API_KEY is missing in process.env");
-      return NextResponse.json({ reply: "שגיאת מערכת: מפתח API חסר." }, { status: 500 });
-    }
-
-    // בדיקת סיכום
+    // 2. תרחיש: סיכום לוואטסאפ
     if (purpose === 'summary') {
-      console.log("Generating summary...");
       const summaryPrompt = `
         את העוזרת האישית של חגית. סכמי את השיחה להודעת וואטסאפ קצרה:
         "היי חגית, דיברתי עם הבוט באתר ואשמח לשריין! 💍
@@ -34,7 +33,7 @@ export async function POST(req: Request) {
         - חבילה: [אם יש]
         אשמח לאישור!"
       `;
-      
+
       const response = await anthropic.messages.create({
         model: 'claude-3-haiku-20240307',
         max_tokens: 300,
@@ -43,12 +42,12 @@ export async function POST(req: Request) {
            { role: "user", content: summaryPrompt }
         ]
       });
-      console.log("Summary generated successfully");
-      return NextResponse.json({ reply: response.content[0].type === 'text' ? response.content[0].text : '' });
+      
+      const text = response.content[0].type === 'text' ? response.content[0].text : '';
+      return NextResponse.json({ reply: text });
     }
 
-    // שיחה רגילה
-    console.log("Sending message to Claude...");
+    // 3. תרחיש: שיחה רגילה
     const systemPrompt = `
       את חגית, בעלת "סוויטת כלות" בשורש.
       מטרה: לסגור עסקה.
@@ -73,18 +72,27 @@ export async function POST(req: Request) {
       }))
     });
 
-    console.log("Claude replied successfully");
-    return NextResponse.json({ reply: response.content[0].type === 'text' ? response.content[0].text : '' });
+    const text = response.content[0].type === 'text' ? response.content[0].text : '';
+    console.log("✅ Success: Reply sent.");
+    return NextResponse.json({ reply: text });
 
   } catch (error: any) {
-    // הדפסת השגיאה המדויקת ליומן
-    console.error('FULL API ERROR DETAILS:', error);
-    
-    // בדיקה אם השגיאה היא בגלל מפתח לא תקין
+    // 4. טיפול בשגיאות ספציפיות
+    console.error('🔴 API Error:', error);
+
+    // שגיאה נפוצה: מפתח לא תקין או אין קרדיט
     if (error.status === 401) {
-        console.error("Error 401: The API Key is invalid or expired.");
+      console.error("Reason: Unauthorized. Check API Key validity.");
+    }
+    
+    // שגיאה נפוצה: נגמר הכסף בחשבון (Credit Balance is 0)
+    if (error.status === 402 || error.type === 'insufficient_quota') {
+       console.error("Reason: Insufficient credits in Anthropic account.");
     }
 
-    return NextResponse.json({ reply: "אוי, יש לי בעיה קטנה בחיבור. בואי נדבר בוואטסאפ! 💖" }, { status: 500 });
+    return NextResponse.json(
+      { reply: "אוי, יש לי בעיה קטנה בתקשורת. בואי נדבר ישר בוואטסאפ! (לחצי על הכפתור הירוק) 💖" },
+      { status: 500 }
+    );
   }
 }
