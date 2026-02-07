@@ -4,9 +4,7 @@ import { motion } from 'framer-motion'
 import { 
   Heart, 
   MessageCircle, 
-  Play, 
   ArrowLeft,
-  Star,
   Wine,
   Sun,
   Sparkles,
