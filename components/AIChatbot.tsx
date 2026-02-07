@@ -1,73 +1,121 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Send, X } from 'lucide-react'
+import { Send, X, MessageCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+
+type Message = {
+  role: 'user' | 'assistant';
+  content: string;
+}
 
 export default function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState([
-    { role: 'assistant', content: 'היי, אני חגית :) איך אני יכולה לעזור לך לתכנן את בוקר ההתארגנות המושלם?' }
+  const [messages, setMessages] = useState<Message[]>([
+    { role: 'assistant', content: 'היי אהובה, מזל טוב! 💍 אני חגית. איזה כיף שנכנסת. מתי תאריך החתונה המרגש?' }
   ])
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [isSummarizing, setIsSummarizing] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '972522676718'
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-  }, [messages])
+  }, [messages, isOpen])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!input.trim()) return
+    if (!input.trim() || isLoading) return
 
     const userMessage = input
     setInput('')
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }])
+    const newMessages = [...messages, { role: 'user', content: userMessage } as Message]
+    setMessages(newMessages)
     setIsLoading(true)
 
     try {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage }),
+        body: JSON.stringify({ messages: newMessages }),
       })
       
+      if (!response.ok) throw new Error('Network response was not ok')
       const data = await response.json()
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
     } catch (error) {
-      setMessages(prev => [...prev, { role: 'assistant', content: 'סליחה, יש לי בעיה קטנה כרגע. אפשר לנסות שוב או לשלוח הודעה בוואטסאפ!' }])
+      console.error(error)
+      setMessages(prev => [...prev, { role: 'assistant', content: 'סליחה אהובה, האינטרנט שלי קצת איטי. תוכלי לשלוח לי הודעה בוואטסאפ? הכפתור הירוק כאן בצד 😊' }])
     } finally {
       setIsLoading(false)
     }
   }
 
+  const handleFinishChat = async () => {
+    setIsSummarizing(true)
+    try {
+        const response = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages, purpose: 'summary' }),
+        })
+        const data = await response.json()
+        const summaryText = data.reply
+
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(summaryText)}`
+        window.open(whatsappUrl, '_blank')
+        
+        setMessages(prev => [...prev, { role: 'assistant', content: 'מעולה! העברתי אותך לוואטסאפ עם סיכום השיחה שלנו. מחכה להודעה ממך! 😘' }])
+
+    } catch (error) {
+        console.error("Error creating summary", error)
+    } finally {
+        setIsSummarizing(false)
+    }
+  }
+
   return (
     <>
-      {/* כפתור הפתיחה עם התמונה של חגית */}
+      {/* בועית הנעה לפעולה מעל הכפתור - החידוש כאן */}
+      <AnimatePresence>
+        {!isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: 10, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ delay: 2, duration: 0.5 }} // מופיע אחרי 2 שניות
+            className="fixed bottom-24 left-6 z-[99] origin-bottom-left"
+          >
+            <div className="bg-white text-[#2C241A] px-4 py-3 rounded-xl shadow-xl border border-[#C9A86A] text-sm font-medium relative">
+              יש לך שאלה? דברי איתי ✨
+              {/* המשולש הקטן למטה */}
+              <div className="absolute -bottom-2 left-6 w-4 h-4 bg-white border-b border-r border-[#C9A86A] transform rotate-45"></div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* כפתור הפתיחה */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={() => setIsOpen(true)}
-        className={`fixed bottom-6 left-6 z-50 w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
+        className={`fixed bottom-6 left-6 z-[100] w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 ${isOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}
         aria-label="פתח צ'אט עם חגית"
       >
         <div className="relative w-full h-full">
-            {/* מסגרת ותמונה */}
             <div className="absolute inset-0 rounded-full border-2 border-[#C9A86A] overflow-hidden bg-white">
                <img 
-                 src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770072332/image_vr8xxb.png" 
+                 src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770475427/%D7%A2%D7%9D_%D7%A7%D7%A4%D7%94_z5rutm.jpg" 
                  alt="חגית" 
                  className="w-full h-full object-cover"
                />
             </div>
-            
-            {/* נקודת סטטוס ירוקה (מחובר) */}
             <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 border-2 border-white rounded-full z-20"></div>
-            
-            {/* אפקט פעימה עדין */}
             <div className="absolute inset-0 rounded-full border border-[#C9A86A] opacity-50 animate-ping"></div>
         </div>
       </motion.button>
@@ -79,14 +127,14 @@ export default function AIChatbot() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-6 left-6 z-50 w-[90vw] sm:w-96 bg-white rounded-2xl shadow-2xl border border-[#E5D5C0] overflow-hidden flex flex-col max-h-[600px]"
+            className="fixed bottom-6 left-6 z-[100] w-[90vw] sm:w-96 bg-white rounded-2xl shadow-2xl border border-[#E5D5C0] overflow-hidden flex flex-col max-h-[600px]"
           >
-            {/* כותרת הצ'אט */}
+            {/* Header */}
             <div className="bg-[#FAF6EE] p-4 flex items-center justify-between border-b border-[#E5D5C0]">
               <div className="flex items-center gap-3">
                 <div className="relative w-10 h-10">
                    <img 
-                     src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770072332/image_vr8xxb.png" 
+                     src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770475427/%D7%A2%D7%9D_%D7%A7%D7%A4%D7%94_z5rutm.jpg" 
                      alt="חגית" 
                      className="w-full h-full object-cover rounded-full border border-[#C9A86A]"
                    />
@@ -94,7 +142,7 @@ export default function AIChatbot() {
                 </div>
                 <div>
                   <h3 className="font-cormorant font-bold text-[#2C241A]">חגית</h3>
-                  <p className="text-xs text-gray-500">זמינה לענות לך</p>
+                  <p className="text-xs text-gray-500">מחוברת כעת</p>
                 </div>
               </div>
               <button onClick={() => setIsOpen(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
@@ -102,32 +150,53 @@ export default function AIChatbot() {
               </button>
             </div>
 
-            {/* איזור ההודעות */}
+            {/* Chat Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#FAFAF8]">
               {messages.map((msg, i) => (
                 <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[80%] p-3 rounded-2xl text-sm leading-relaxed ${
+                  <div className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
                     msg.role === 'user' 
                       ? 'bg-[#2C241A] text-white rounded-br-none' 
-                      : 'bg-white border border-[#E5D5C0] text-[#2C241A] rounded-bl-none shadow-sm'
+                      : 'bg-white border border-[#E5D5C0] text-[#2C241A] rounded-bl-none'
                   }`}>
                     {msg.content}
                   </div>
                 </div>
               ))}
+              
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-white border border-[#E5D5C0] p-3 rounded-2xl rounded-bl-none shadow-sm flex gap-1">
-                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
-                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-100"></span>
-                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-200"></span>
+                  <div className="bg-white border border-[#E5D5C0] p-4 rounded-2xl rounded-bl-none shadow-sm flex gap-1.5 items-center">
+                    <span className="w-2 h-2 bg-[#C9A86A] rounded-full animate-bounce"></span>
+                    <span className="w-2 h-2 bg-[#C9A86A] rounded-full animate-bounce delay-100"></span>
+                    <span className="w-2 h-2 bg-[#C9A86A] rounded-full animate-bounce delay-200"></span>
                   </div>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
 
-            {/* איזור ההקלדה */}
+            {/* כפתור סיכום */}
+            {messages.length > 2 && (
+                <div className="px-4 pb-2 bg-[#FAFAF8]">
+                    <button 
+                        onClick={handleFinishChat}
+                        disabled={isSummarizing}
+                        className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-2 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-colors shadow-sm"
+                    >
+                        {isSummarizing ? (
+                           <span>מכין סיכום...</span>
+                        ) : (
+                           <>
+                             <MessageCircle size={16} />
+                             <span>סיימנו? שלחי לי סיכום לוואטסאפ</span>
+                           </>
+                        )}
+                    </button>
+                </div>
+            )}
+
+            {/* Input Area */}
             <form onSubmit={handleSubmit} className="p-3 bg-white border-t border-[#E5D5C0] flex gap-2">
               <input
                 type="text"
@@ -140,9 +209,9 @@ export default function AIChatbot() {
               <button 
                 type="submit" 
                 disabled={!input.trim() || isLoading}
-                className="bg-[#C9A86A] text-white p-2 rounded-full hover:bg-[#b0935c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="bg-[#C9A86A] text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#b0935c] disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm"
               >
-                <Send size={18} />
+                <Send size={18} className={input.trim() && !isLoading ? 'ml-0.5' : ''} />
               </button>
             </form>
           </motion.div>
