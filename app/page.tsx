@@ -19,7 +19,8 @@ export default function Home() {
 
   return (
     <>
-      <WhatsAppButton />
+      {/* התיקון נמצא כאן: העברנו את המספר לכפתור */}
+      <WhatsAppButton phoneNumber={phoneNumber} />
       <AccessibilityBtn />
 
       <main ref={containerRef} className="relative bg-[#FAFAF8]">
