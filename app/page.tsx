@@ -10,7 +10,6 @@ import {
   ArrowLeft
 } from 'lucide-react'
 import { useRef } from 'react'
-import WhatsAppButton from '@/components/WhatsAppButton'
 import AIChatbot from '@/components/AIChatbot'
 import SocialMediaLinks, { FloatingSocialBar } from '@/components/SocialMediaLinks'
 import LuxuryGallery from '@/components/LuxuryGallery'
@@ -28,7 +27,6 @@ export default function Home() {
       <ScrollProgress />
       
       {/* Floating Components */}
-      <WhatsAppButton phoneNumber={phoneNumber} />
       <AIChatbot />
       <FloatingSocialBar />
 
