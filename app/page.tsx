@@ -148,7 +148,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Video Section (The Experience) - התיקון כאן */}
+        {/* Video Section (The Experience) */}
         <section className="py-32 px-6 bg-[#FAF6EE]">
           <div className="max-w-7xl mx-auto">
              <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -203,4 +203,155 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="relative w-40 h-40 mx-auto mb-8"
             >
-              <div className="absolute inset-0 bg-[#C9A86A] rounded-full opacity-
+              {/* זו השורה שגרמה לשגיאה קודם - עכשיו היא תקינה */}
+              <div className="absolute inset-0 bg-[#C9A86A] rounded-full opacity-20 blur-xl animate-pulse"></div>
+              <img 
+                src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770475427/%D7%A2%D7%9D_%D7%A7%D7%A4%D7%94_z5rutm.jpg" 
+                alt="חגית - המארחת שלך" 
+                className="w-full h-full object-cover rounded-full border-[3px] border-white shadow-luxury relative z-10"
+              />
+            </motion.div>
+            
+            <h3 className="text-3xl sm:text-4xl font-cormorant text-[#2C241A] mb-4">מחכה לארח אותך</h3>
+            <p className="text-lg text-[#594937] font-light italic leading-relaxed mb-6">
+              "הבית שלי הוא הלב שלי, ואני פותחת אותו בפנייך באהבה גדולה.
+              <br />
+              מזמינה אותך להתחיל את היום המרגש בחייך באווירה של רוגע, פינוק וקסם."
+            </p>
+            <div className="w-12 h-px bg-[#C9A86A] mx-auto opacity-60 mb-2"></div>
+            <p className="text-[#2C241A] font-cormorant text-xl font-medium">- חגית -</p>
+          </div>
+        </section>
+
+        {/* Gallery Placeholder */}
+        <section id="gallery" className="py-32 px-6 bg-[#FAF6EE]">
+          <div className="max-w-7xl mx-auto text-center">
+             <h2 className="text-4xl sm:text-6xl text-[#2C241A] font-light mb-4 font-cormorant">הגלריה</h2>
+             <p className="text-[#8B7355] font-light tracking-wide text-sm mb-12 uppercase">רגעים של קסם</p>
+             <div className="aspect-video bg-white/50 rounded-lg flex items-center justify-center border border-[#E5D5C0]">
+                <p className="text-[#8B7355] font-light italic">גלריית תמונות תעלה בקרוב...</p>
+             </div>
+          </div>
+        </section>
+
+        {/* Pricing Packages */}
+        <section id="pricing" className="py-32 px-6 bg-[#2C241A] text-white">
+          <div className="max-w-7xl mx-auto text-center">
+            <h2 className="text-4xl sm:text-6xl font-light mb-6 font-cormorant text-[#FAF6EE]">בחרי את החבילה שלך</h2>
+            <div className="w-24 h-px bg-[#C9A86A] mx-auto mb-16 opacity-50" />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              
+              {/* Package 1: Basic */}
+              <motion.div 
+                whileHover={{ y: -10 }}
+                className="bg-[#FAF6EE]/5 border border-[#C9A86A]/20 p-8 rounded-2xl flex flex-col items-center"
+              >
+                <div className="w-16 h-16 bg-[#C9A86A]/10 rounded-full flex items-center justify-center mb-6">
+                  <Star className="text-[#C9A86A]" />
+                </div>
+                <h3 className="text-2xl font-cormorant mb-2 text-[#FAF6EE]">חבילת בסיס</h3>
+                <p className="text-[#8B7355] text-sm mb-6">לאירוח קליל ונעים</p>
+                <div className="text-4xl font-light font-cormorant mb-8">1,800 <span className="text-xl text-[#8B7355]">₪</span></div>
+                
+                <ul className="space-y-4 text-right w-full mb-8 flex-grow">
+                   {[
+                     'שימוש חופשי בוילה (בוקר עד יציאה)',
+                     'שתייה חמה וקרה חופשי',
+                     'פירות טריים ופינוקים מתוקים',
+                     'יין בוטיק מיקב הרי ירושלים',
+                     'שימוש במתקני הוילה'
+                   ].map((item, i) => (
+                     <li key={i} className="flex items-start gap-3 text-[#E5D5C0] font-light text-sm">
+                       <Check size={16} className="text-[#C9A86A] mt-1 shrink-0" /> {item}
+                     </li>
+                   ))}
+                </ul>
+                <a href={`https://wa.me/${phoneNumber}?text=היי, אשמח לשריין את חבילת הבסיס`} className="w-full py-3 rounded-full border border-[#C9A86A] text-[#C9A86A] hover:bg-[#C9A86A] hover:text-white transition-all text-sm tracking-wide">
+                  אני רוצה את זה
+                </a>
+              </motion.div>
+
+              {/* Package 2: Premium (Recommended) */}
+              <motion.div 
+                whileHover={{ y: -10 }}
+                className="bg-[#FAF6EE] text-[#2C241A] p-8 rounded-2xl flex flex-col items-center relative transform lg:-translate-y-4 shadow-xl border-2 border-[#C9A86A]"
+              >
+                <div className="absolute top-0 right-0 bg-[#C9A86A] text-white text-xs px-3 py-1 rounded-bl-lg rounded-tr-lg">מומלץ</div>
+                <div className="w-16 h-16 bg-[#C9A86A]/20 rounded-full flex items-center justify-center mb-6">
+                  <Gem className="text-[#C9A86A]" />
+                </div>
+                <h3 className="text-2xl font-cormorant mb-2 font-semibold">חבילת פרימיום</h3>
+                <p className="text-[#8B7355] text-sm mb-6">הכי משתלמת ומפנקת</p>
+                <div className="text-5xl font-light font-cormorant mb-8 text-[#2C241A]">2,200 <span className="text-xl text-[#8B7355]">₪</span></div>
+                
+                <ul className="space-y-4 text-right w-full mb-8 flex-grow">
+                   {[
+                     'כל מה שיש בחבילת הבסיס',
+                     'ארוחת בוקר כפרית עשירה ומפנקת',
+                     'שמפניה / קאווה חגיגית להרמת כוסית',
+                     'פינוקים נוספים לאווירה מושלמת',
+                     'מתאים לכלה + מלוות'
+                   ].map((item, i) => (
+                     <li key={i} className="flex items-start gap-3 text-[#594937] font-light text-sm">
+                       <Check size={16} className="text-[#C9A86A] mt-1 shrink-0" /> <span className="font-medium">{item}</span>
+                     </li>
+                   ))}
+                </ul>
+                <a href={`https://wa.me/${phoneNumber}?text=היי, אשמח לשריין את חבילת הפרימיום`} className="w-full py-3 rounded-full bg-[#2C241A] text-white hover:bg-[#4a3e2f] transition-all text-sm tracking-wide shadow-lg">
+                  זה בול בשבילי
+                </a>
+              </motion.div>
+
+              {/* Package 3: All Inclusive */}
+              <motion.div 
+                whileHover={{ y: -10 }}
+                className="bg-[#FAF6EE]/5 border border-[#C9A86A]/20 p-8 rounded-2xl flex flex-col items-center"
+              >
+                <div className="w-16 h-16 bg-[#C9A86A]/10 rounded-full flex items-center justify-center mb-6">
+                  <Camera className="text-[#C9A86A]" />
+                </div>
+                <h3 className="text-2xl font-cormorant mb-2 text-[#FAF6EE]">הכל כלול</h3>
+                <p className="text-[#8B7355] text-sm mb-6">להגיע בראש שקט לגמרי</p>
+                <div className="text-4xl font-light font-cormorant mb-8">
+                  <span className="text-lg align-top">החל מ-</span>6,500 <span className="text-xl text-[#8B7355]">₪</span>
+                </div>
+                
+                <ul className="space-y-4 text-right w-full mb-8 flex-grow">
+                   {[
+                     'כל מה שיש בחבילת הפרימיום',
+                     'צלם מקצועי שילווה אתכן',
+                     'עיצוב שיער לכלה ולמלוות',
+                     'איפור מקצועי לכלה ולמלוות',
+                     'חבילה מותאמת אישית לפי הצורך'
+                   ].map((item, i) => (
+                     <li key={i} className="flex items-start gap-3 text-[#E5D5C0] font-light text-sm">
+                       <Check size={16} className="text-[#C9A86A] mt-1 shrink-0" /> {item}
+                     </li>
+                   ))}
+                </ul>
+                <a href={`https://wa.me/${phoneNumber}?text=היי, אשמח לשמוע על חבילת הכל-כלול`} className="w-full py-3 rounded-full border border-[#C9A86A] text-[#C9A86A] hover:bg-[#C9A86A] hover:text-white transition-all text-sm tracking-wide">
+                  לפרטים נוספים
+                </a>
+              </motion.div>
+
+            </div>
+
+            <div className="mt-16">
+              <button 
+                onClick={() => {
+                  const chatBtn = document.querySelector('[aria-label="פתח צ\'אט עם חגית"]') as HTMLButtonElement;
+                  if (chatBtn) chatBtn.click();
+                }}
+                className="inline-flex items-center gap-2 text-[#E5D5C0] hover:text-[#C9A86A] transition-colors border-b border-[#E5D5C0] hover:border-[#C9A86A] pb-1"
+              >
+                <span>יש לך שאלות נוספות? בואי נתכתב</span>
+                <MessageCircle size={16} />
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
+  )
+}
