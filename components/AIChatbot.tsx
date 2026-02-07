@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Send, X, MessageCircle } from 'lucide-react'
+import { Send, X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 export default function AIChatbot() {
