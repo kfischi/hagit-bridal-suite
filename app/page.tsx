@@ -8,7 +8,11 @@ import {
   Wine,
   Sun,
   Sparkles,
-  Palette
+  Palette,
+  Check,
+  Star,
+  Camera,
+  Gem
 } from 'lucide-react'
 import { useRef } from 'react'
 import WhatsAppButton from '@/components/WhatsAppButton'
@@ -24,7 +28,6 @@ export default function Home() {
     <>
       <WhatsAppButton phoneNumber={phoneNumber} />
       <AccessibilityBtn />
-      {/* הצ'אטבוט - הוספתי אותו כאן כדי לוודא שהוא נטען */}
       <AIChatbot />
 
       <main ref={containerRef} className="relative bg-[#FAFAF8] text-[#2C241A]">
@@ -123,7 +126,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Features - Minimalist Icons */}
+        {/* Features */}
         <section className="py-32 px-6 bg-white">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
@@ -145,7 +148,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* The Real Suite Video Section (חדש!) */}
+        {/* Video Section */}
         <section className="py-32 px-6 bg-[#FAF6EE]">
           <div className="max-w-7xl mx-auto">
              <div className="grid md:grid-cols-2 gap-16 items-center">
@@ -202,7 +205,7 @@ export default function Home() {
             >
               <div className="absolute inset-0 bg-[#C9A86A] rounded-full opacity-20 blur-xl animate-pulse"></div>
               <img 
-                src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770072332/image_vr8xxb.png" 
+                src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770475427/%D7%A2%D7%9D_%D7%A7%D7%A4%D7%94_z5rutm.jpg" 
                 alt="חגית - המארחת שלך" 
                 className="w-full h-full object-cover rounded-full border-[3px] border-white shadow-luxury relative z-10"
               />
@@ -230,77 +233,78 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section id="testimonials" className="py-32 px-6 bg-white">
-          <div className="max-w-5xl mx-auto">
-            <h2 className="text-4xl sm:text-6xl text-[#2C241A] font-light mb-16 text-center font-cormorant">מילים חמות</h2>
-            <div className="grid md:grid-cols-2 gap-12">
-              {[
-                { name: 'שירה כהן', date: 'יולי 2024', text: 'המקום הכי מושלם להתארגנות! התאורה עשתה את כל ההבדל בתמונות, והאווירה הייתה כל כך רגועה.' },
-                { name: 'נועה לוי', date: 'יוני 2024', text: 'חגית הייתה פשוט מדהימה. כל פרט קטן היה מושלם, והרגשתי כמו נסיכה. תודה על הבוקר הכי יפה!' }
-              ].map((t, i) => (
-                <div key={i} className="bg-[#FAF6EE] p-10 rounded-sm relative shadow-sm hover:shadow-md transition-shadow">
-                  <div className="absolute -top-4 right-8 text-6xl text-[#E5D5C0] font-serif">"</div>
-                  <p className="text-[#594937] mb-8 leading-relaxed font-light text-lg italic relative z-10">{t.text}</p>
-                  <div className="flex items-center gap-4 border-t border-[#FAF6EE] pt-6">
-                    <div>
-                      <h4 className="font-medium text-[#2C241A] font-cormorant text-lg">{t.name}</h4>
-                      <span className="text-xs text-[#8B7355] uppercase tracking-widest">{t.date}</span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Pricing */}
+        {/* Pricing Packages (New & Improved) */}
         <section id="pricing" className="py-32 px-6 bg-[#2C241A] text-white">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl sm:text-6xl font-light mb-6 font-cormorant text-[#FAF6EE]">חבילת הכלולות</h2>
-            <div className="w-24 h-px bg-[#C9A86A] mx-auto mb-12 opacity-50" />
+          <div className="max-w-7xl mx-auto text-center">
+            <h2 className="text-4xl sm:text-6xl font-light mb-6 font-cormorant text-[#FAF6EE]">בחרי את החבילה שלך</h2>
+            <div className="w-24 h-px bg-[#C9A86A] mx-auto mb-16 opacity-50" />
             
-            <div className="grid sm:grid-cols-2 gap-12 text-right max-w-2xl mx-auto mb-16">
-              <ul className="space-y-4">
-                {['שהייה משעות הבוקר המוקדמות', 'ארוחת בוקר כפרית עשירה', 'יין מיקב הרי ירושלים'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-[#E5D5C0] font-light">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#C9A86A]" /> {item}
-                  </li>
-                ))}
-              </ul>
-              <ul className="space-y-4">
-                 {['שימוש מלא במתקני הווילה', 'ליווי אישי וצמוד', 'מרחב התארגנות מרווח'].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-[#E5D5C0] font-light">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#C9A86A]" /> {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              
+              {/* Package 1: Basic */}
+              <motion.div 
+                whileHover={{ y: -10 }}
+                className="bg-[#FAF6EE]/5 border border-[#C9A86A]/20 p-8 rounded-2xl flex flex-col items-center"
+              >
+                <div className="w-16 h-16 bg-[#C9A86A]/10 rounded-full flex items-center justify-center mb-6">
+                  <Star className="text-[#C9A86A]" />
+                </div>
+                <h3 className="text-2xl font-cormorant mb-2 text-[#FAF6EE]">חבילת בסיס</h3>
+                <p className="text-[#8B7355] text-sm mb-6">לאירוח קליל ונעים</p>
+                <div className="text-4xl font-light font-cormorant mb-8">1,800 <span className="text-xl text-[#8B7355]">₪</span></div>
+                
+                <ul className="space-y-4 text-right w-full mb-8 flex-grow">
+                   {[
+                     'שימוש חופשי בוילה (בוקר עד יציאה)',
+                     'שתייה חמה וקרה חופשי',
+                     'פירות טריים ופינוקים מתוקים',
+                     'יין בוטיק מיקב הרי ירושלים',
+                     'שימוש במתקני הוילה'
+                   ].map((item, i) => (
+                     <li key={i} className="flex items-start gap-3 text-[#E5D5C0] font-light text-sm">
+                       <Check size={16} className="text-[#C9A86A] mt-1 shrink-0" /> {item}
+                     </li>
+                   ))}
+                </ul>
+                <a href={`https://wa.me/${phoneNumber}?text=היי, אשמח לשריין את חבילת הבסיס`} className="w-full py-3 rounded-full border border-[#C9A86A] text-[#C9A86A] hover:bg-[#C9A86A] hover:text-white transition-all text-sm tracking-wide">
+                  אני רוצה את זה
+                </a>
+              </motion.div>
 
-            <div className="text-center mb-12">
-              <div className="inline-block border border-[#C9A86A] px-6 py-2 rounded-full mb-6">
-                 <span className="text-[#C9A86A] text-sm tracking-widest uppercase">מחיר השקה</span>
-              </div>
-              <div className="flex items-baseline justify-center gap-2">
-                <span className="text-6xl font-light font-cormorant">1,500</span>
-                <span className="text-2xl text-[#8B7355]">₪</span>
-              </div>
-              <p className="text-[#666] line-through text-sm mt-2">במקום 2,200 ₪</p>
-            </div>
+              {/* Package 2: Premium (Recommended) */}
+              <motion.div 
+                whileHover={{ y: -10 }}
+                className="bg-[#FAF6EE] text-[#2C241A] p-8 rounded-2xl flex flex-col items-center relative transform lg:-translate-y-4 shadow-xl border-2 border-[#C9A86A]"
+              >
+                <div className="absolute top-0 right-0 bg-[#C9A86A] text-white text-xs px-3 py-1 rounded-bl-lg rounded-tr-lg">מומלץ</div>
+                <div className="w-16 h-16 bg-[#C9A86A]/20 rounded-full flex items-center justify-center mb-6">
+                  <Gem className="text-[#C9A86A]" />
+                </div>
+                <h3 className="text-2xl font-cormorant mb-2 font-semibold">חבילת פרימיום</h3>
+                <p className="text-[#8B7355] text-sm mb-6">הכי משתלמת ומפנקת</p>
+                <div className="text-5xl font-light font-cormorant mb-8 text-[#2C241A]">2,200 <span className="text-xl text-[#8B7355]">₪</span></div>
+                
+                <ul className="space-y-4 text-right w-full mb-8 flex-grow">
+                   {[
+                     'כל מה שיש בחבילת הבסיס',
+                     'ארוחת בוקר כפרית עשירה ומפנקת',
+                     'שמפניה / קאווה חגיגית להרמת כוסית',
+                     'פינוקים נוספים לאווירה מושלמת',
+                     'מתאים לכלה + מלוות'
+                   ].map((item, i) => (
+                     <li key={i} className="flex items-start gap-3 text-[#594937] font-light text-sm">
+                       <Check size={16} className="text-[#C9A86A] mt-1 shrink-0" /> <span className="font-medium">{item}</span>
+                     </li>
+                   ))}
+                </ul>
+                <a href={`https://wa.me/${phoneNumber}?text=היי, אשמח לשריין את חבילת הפרימיום`} className="w-full py-3 rounded-full bg-[#2C241A] text-white hover:bg-[#4a3e2f] transition-all text-sm tracking-wide shadow-lg">
+                  זה בול בשבילי
+                </a>
+              </motion.div>
 
-            <button 
-              onClick={() => {
-                 const chatBtn = document.querySelector('[aria-label="פתח צ\'אט עם חגית"]') as HTMLButtonElement;
-                 if (chatBtn) chatBtn.click();
-              }}
-              className="bg-[#FAF6EE] text-[#2C241A] px-10 py-4 rounded-full inline-flex items-center gap-3 hover:bg-[#C9A86A] hover:text-white transition-all duration-300 group"
-            >
-              <MessageCircle size={18} className="group-hover:rotate-12 transition-transform" />
-              <span className="font-medium tracking-wide">יש לך שאלות? דברי איתנו</span>
-            </button>
-          </div>
-        </section>
-      </main>
-    </>
-  )
-}
+              {/* Package 3: All Inclusive */}
+              <motion.div 
+                whileHover={{ y: -10 }}
+                className="bg-[#FAF6EE]/5 border border-[#C9A86A]/20 p-8 rounded-2xl flex flex-col items-center"
+              >
+                <div className="w-16 h-16 bg-[#C
