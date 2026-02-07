@@ -110,7 +110,7 @@ export default function Home() {
                 <h1 className="font-cormorant text-5xl sm:text-6xl lg:text-7xl text-[#2C241A] leading-[1.1] font-light">
                   הרגע שלפני
                   <br />
-                  <span className="gradient-text-warm font-semibold block mt-3">
+                  <span className="text-shimmer-elegant font-semibold block mt-3">
                     הרגע הגדול
                   </span>
                 </h1>
@@ -138,13 +138,15 @@ export default function Home() {
                   transition={{ duration: 0.8, delay: 0.7 }}
                   className="flex flex-col sm:flex-row items-center justify-center gap-5 pt-4"
                 >
-                  <a
+                  <motion.a
                     href="#pricing"
-                    className="btn-warm group flex items-center gap-3 px-10 py-4 rounded-full font-semibold relative z-10"
+                    className="btn-warm btn-refined group flex items-center gap-3 px-10 py-4 rounded-full font-semibold relative z-10"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.98 }}
                   >
                     <span>גלי את החבילה המושלמת</span>
                     <ArrowLeft className="w-5 h-5 transition-transform group-hover:-translate-x-2" />
-                  </a>
+                  </motion.a>
                   
                   <a
                     href="#gallery"
@@ -236,8 +238,11 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: index * 0.15 }}
-                  className="elegant-border-warm hover-warm p-10 card-warm rounded-lg group cursor-default transition-all duration-500"
+                  className="elegant-lift card-elegant p-10 rounded-lg group cursor-default"
                 >
+                  <div className="text-5xl mb-6 text-center">
+                    {feature.icon}
+                  </div>
                   <div className="number-circle-warm">
                     {String(index + 1).padStart(2, '0')}
                   </div>
@@ -253,6 +258,7 @@ export default function Home() {
             </div>
           </div>
         </section>
+
         {/* Experience Section - Warm Split Layout */}
         <section id="experience" className="py-32 px-6 bg-gradient-to-b from-[#FAF6EE] to-[#FFFBF5]">
           <div className="max-w-7xl mx-auto">
@@ -284,7 +290,6 @@ export default function Home() {
                     type="video/mp4" 
                   />
                 </video>
-                {/* Subtle overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
               </motion.div>
 
@@ -363,13 +368,11 @@ export default function Home() {
               </p>
             </motion.div>
 
-            {/* Gallery Grid with Lightbox */}
             <LuxuryGallery />
           </div>
         </section>
 
-
-        {/* Testimonials Section - מה הכלות אומרות */}
+        {/* Testimonials Section */}
         <section id="testimonials" className="py-32 px-6 bg-gradient-to-b from-[#FAF6EE] to-[#FFFBF5]">
           <div className="max-w-6xl mx-auto">
             <motion.div
@@ -406,7 +409,7 @@ export default function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.2 }}
-                  className="bg-white p-10 rounded-2xl shadow-luxury hover-lift"
+                  className="testimonial-elegant shadow-lift"
                 >
                   <div className="flex gap-1 mb-6">
                     {[...Array(5)].map((_, i) => (
@@ -414,7 +417,7 @@ export default function Home() {
                     ))}
                   </div>
                   <p className="text-[#1A1A1A] mb-8 leading-relaxed font-light text-lg italic">
-                    "{testimonial.text}"
+                    {testimonial.text}
                   </p>
                   <div className="flex items-center justify-between border-t border-[#F4E4E1] pt-6">
                     <span className="font-medium text-[#1A1A1A]">{testimonial.name}</span>
@@ -440,7 +443,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Pricing Section - Chatbot CTA */}
+        {/* Pricing Section */}
         <section id="pricing" className="py-32 px-6 bg-white">
           <div className="max-w-4xl mx-auto">
             <motion.div
@@ -458,14 +461,13 @@ export default function Home() {
               </p>
             </motion.div>
 
-            {/* Pricing Card */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
-              className="bg-gradient-to-br from-white to-[#F4E4E1]/20 p-12 rounded-3xl shadow-luxury border border-[#D4AF37]/20"
+              whileHover={{ y: -6 }}
+              className="bg-gradient-to-br from-white to-[#F4E4E1]/20 p-12 rounded-3xl shadow-lift border border-[#D4AF37]/20"
             >
-              {/* What's Included */}
               <div className="mb-10">
                 <h3 className="font-cormorant text-3xl mb-8 text-[#1A1A1A] text-center font-semibold">
                   מה כלול בחבילה?
@@ -496,11 +498,10 @@ export default function Home() {
 
               <div className="divider-luxury my-10" />
 
-              {/* Pricing */}
               <div className="text-center mb-10">
                 <p className="text-[#999] mb-2 line-through text-lg font-light">2,200 ₪</p>
                 <div className="flex items-baseline justify-center gap-3 mb-4">
-                  <span className="font-cormorant text-7xl gradient-text font-semibold">1,500</span>
+                  <span className="font-cormorant text-7xl gradient-elegant font-semibold price-highlight">1,500</span>
                   <span className="text-3xl text-[#666] font-light">₪</span>
                 </div>
                 <div className="inline-block bg-[#D4AF37]/10 px-8 py-3 rounded-full">
@@ -510,7 +511,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Chatbot CTA */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -556,7 +556,6 @@ export default function Home() {
               </motion.div>
             </motion.div>
 
-            {/* Trust Elements */}
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
