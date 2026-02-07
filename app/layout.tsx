@@ -3,9 +3,8 @@ import { Raleway, Cormorant_Garamond } from 'next/font/google'
 import AccessibilityBtn from '@/components/AccessibilityBtn'
 import './globals.css'
 
-// הגדרת פונטים בצורה אופטימלית ל-Next.js
 const raleway = Raleway({
-  subsets: ['latin', 'hebrew'],
+  subsets: ['latin'], // שינינו כאן ל-latin בלבד
   weight: ['300', '400', '500', '600', '700'],
   variable: '--font-raleway',
   display: 'swap',
@@ -36,7 +35,7 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/og-image.jpg', // מומלץ להוסיף תמונה בשם זה לתיקיית public
+        url: '/og-image.jpg',
         width: 1200,
         height: 630,
         alt: 'חגית - וילת התארגנות כלות',
@@ -66,10 +65,8 @@ export default function RootLayout({
       <body className="font-raleway antialiased bg-[#FAFAF8] text-[#2C241A]">
         {children}
         
-        {/* כפתור נגישות צף */}
         <AccessibilityBtn />
         
-        {/* פס קישורים משפטיים בתחתית כל העמודים */}
         <div className="bg-[#FAFAF8] border-t border-[#E5D5C0] text-center py-3 text-xs text-gray-500 flex justify-center gap-4 relative z-40">
           <a href="/accessibility" className="hover:text-[#C9A86A] transition-colors">הצהרת נגישות</a>
           <span className="text-gray-300">|</span>
