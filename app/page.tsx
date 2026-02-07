@@ -142,4 +142,55 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-20
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mt-20">
+              {[
+                { icon: '🥂', title: 'יין ופינוקים', description: 'יין בוטיק מיקב הרי ירושלים, פירות העונה ומאפים ביתיים' },
+                { icon: '🌿', title: 'השקט של ההרים', description: 'וילה מבודדת המאפשרת ניתוק מוחלט מהלחץ' },
+                { icon: '💄', title: 'מרחב ביוטי', description: 'עמדות מוארות ומקצועיות למאפרת ומעצבת השיער' },
+                { icon: '✨', title: 'זמן איכות', description: 'מרחבים רחבים לך ולחברות להתרגש ביחד' }
+              ].map((feature, index) => (
+                <div key={index} className="p-10 bg-white border border-[#E5D5C0] rounded-lg text-center hover:shadow-xl transition-all duration-500">
+                  <div className="text-4xl mb-4">{feature.icon}</div>
+                  <h3 className="text-2xl mb-4 text-[#2C241A] font-light tracking-wide font-serif">{feature.title}</h3>
+                  <p className="text-[#2C241A] leading-relaxed font-normal text-base">{feature.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Gallery Section Placeholder */}
+        <section id="gallery" className="py-32 px-6 bg-gradient-to-b from-[#FFFBF5] to-[#FAF6EE]">
+          <div className="max-w-7xl mx-auto text-center">
+             <h2 className="text-5xl sm:text-6xl text-[#2C241A] font-light mb-6 font-serif">הגלריה שלנו</h2>
+             <p className="text-gray-500">תמונות יעלו בקרוב...</p>
+          </div>
+        </section>
+
+        {/* Pricing */}
+        <section id="pricing" className="py-32 px-6 bg-white">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-5xl sm:text-6xl mb-6 text-[#1A1A1A] font-light font-serif">חבילת פרימיום</h2>
+            <div className="bg-gradient-to-br from-white to-[#F4E4E1]/20 p-12 rounded-3xl shadow-xl border border-[#D4AF37]/20 mt-10">
+               <div className="grid sm:grid-cols-2 gap-4 mb-10 text-right">
+                 {['שהייה בווילה משעות הבוקר', 'פירות העונה ושתייה', 'יין משובח', 'שימוש מלא במתקני הווילה'].map((item, i) => (
+                   <div key={i} className="flex items-center gap-3">
+                     <Check className="w-5 h-5 text-[#D4AF37]" /> <span className="text-[#1A1A1A] font-light">{item}</span>
+                   </div>
+                 ))}
+               </div>
+               <div className="text-center mb-10">
+                 <p className="text-[#999] line-through text-lg">2,200 ₪</p>
+                 <div className="text-7xl font-semibold text-[#1A1A1A]">1,500 <span className="text-3xl text-[#666]">₪</span></div>
+                 <p className="text-[#D4AF37] mt-2">מחיר השקה לזמן מוגבל</p>
+               </div>
+               <a href={`https://wa.me/${phoneNumber}`} className="bg-[#1A1A1A] text-white px-8 py-4 rounded-full flex items-center justify-center gap-3 mx-auto hover:bg-black transition-colors w-full sm:w-auto">
+                 <Bot className="w-6 h-6" /> <span>דברי עם העוזרת החכמה</span>
+               </a>
+            </div>
+          </div>
+        </section>
+      </main>
+    </>
+  )
+}
