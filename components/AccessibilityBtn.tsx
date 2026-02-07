@@ -11,10 +11,6 @@ export default function AccessibilityBtn() {
 
   const handleFontSize = (action: 'increase' | 'decrease' | 'reset') => {
     const html = document.documentElement
-    // Get current font size or default to 100
-    const currentSize = parseInt(window.getComputedStyle(html).fontSize) || 16
-    
-    let newSize = 100 // percentage
     
     if (action === 'increase') {
        html.style.fontSize = '120%'
