@@ -11,15 +11,19 @@ type Message = {
 
 export default function AIChatbot() {
   const [isOpen, setIsOpen] = useState(false)
+  
   const [messages, setMessages] = useState<Message[]>([
     { role: 'assistant', content: 'היי אהובה, מזל טוב! 💍 אני חגית. איזה כיף שנכנסת. מתי תאריך החתונה המרגש?' }
   ])
+  
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [isSummarizing, setIsSummarizing] = useState(false)
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '972522676718'
+  // התמונה הנכונה של חגית
+  const hagitImage = "https://res.cloudinary.com/dptyfvwyo/image/upload/v1770072332/image_vr8xxb.png"
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -31,6 +35,7 @@ export default function AIChatbot() {
 
     const userMessage = input
     setInput('')
+    
     const newMessages = [...messages, { role: 'user', content: userMessage } as Message]
     setMessages(newMessages)
     setIsLoading(true)
@@ -43,11 +48,13 @@ export default function AIChatbot() {
       })
       
       if (!response.ok) throw new Error('Network response was not ok')
+      
       const data = await response.json()
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
     } catch (error) {
       console.error(error)
-      setMessages(prev => [...prev, { role: 'assistant', content: 'סליחה אהובה, האינטרנט שלי קצת איטי. תוכלי לשלוח לי הודעה בוואטסאפ? הכפתור הירוק כאן בצד 😊' }])
+      // זו ההודעה שראית כשהחיבור נכשל - זה אומר שהAPI לא מוגדר טוב
+      setMessages(prev => [...prev, { role: 'assistant', content: 'סליחה אהובה, יש לי בעיה רגעית בתקשורת. בואי נדבר בוואטסאפ בינתיים (לחצי על הכפתור הירוק) 💖' }])
     } finally {
       setIsLoading(false)
     }
@@ -67,7 +74,7 @@ export default function AIChatbot() {
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(summaryText)}`
         window.open(whatsappUrl, '_blank')
         
-        setMessages(prev => [...prev, { role: 'assistant', content: 'מעולה! העברתי אותך לוואטסאפ עם סיכום השיחה שלנו. מחכה להודעה ממך! 😘' }])
+        setMessages(prev => [...prev, { role: 'assistant', content: 'מעולה! העברתי אותך לוואטסאפ עם סיכום השיחה. מחכה לך שם! 😘' }])
 
     } catch (error) {
         console.error("Error creating summary", error)
@@ -78,26 +85,23 @@ export default function AIChatbot() {
 
   return (
     <>
-      {/* בועית הנעה לפעולה מעל הכפתור - החידוש כאן */}
       <AnimatePresence>
         {!isOpen && (
           <motion.div
             initial={{ opacity: 0, y: 10, scale: 0.8 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ delay: 2, duration: 0.5 }} // מופיע אחרי 2 שניות
+            transition={{ delay: 2, duration: 0.5 }}
             className="fixed bottom-24 left-6 z-[99] origin-bottom-left"
           >
             <div className="bg-white text-[#2C241A] px-4 py-3 rounded-xl shadow-xl border border-[#C9A86A] text-sm font-medium relative">
               יש לך שאלה? דברי איתי ✨
-              {/* המשולש הקטן למטה */}
               <div className="absolute -bottom-2 left-6 w-4 h-4 bg-white border-b border-r border-[#C9A86A] transform rotate-45"></div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* כפתור הפתיחה */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
@@ -110,7 +114,7 @@ export default function AIChatbot() {
         <div className="relative w-full h-full">
             <div className="absolute inset-0 rounded-full border-2 border-[#C9A86A] overflow-hidden bg-white">
                <img 
-                 src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770475427/%D7%A2%D7%9D_%D7%A7%D7%A4%D7%94_z5rutm.jpg" 
+                 src={hagitImage}
                  alt="חגית" 
                  className="w-full h-full object-cover"
                />
@@ -120,7 +124,6 @@ export default function AIChatbot() {
         </div>
       </motion.button>
 
-      {/* חלון הצ'אט */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -134,7 +137,7 @@ export default function AIChatbot() {
               <div className="flex items-center gap-3">
                 <div className="relative w-10 h-10">
                    <img 
-                     src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770475427/%D7%A2%D7%9D_%D7%A7%D7%A4%D7%94_z5rutm.jpg" 
+                     src={hagitImage}
                      alt="חגית" 
                      className="w-full h-full object-cover rounded-full border border-[#C9A86A]"
                    />
