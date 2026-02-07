@@ -1,5 +1,3 @@
-mkdir -p app/privacy
-cat > app/privacy/page.tsx << 'EOF'
 export default function PrivacyPage() {
   return (
     <div className="max-w-4xl mx-auto py-20 px-6 text-right" dir="rtl">
@@ -19,4 +17,3 @@ export default function PrivacyPage() {
     </div>
   )
 }
-EOF
