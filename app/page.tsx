@@ -13,6 +13,7 @@ import {
 import { useRef } from 'react'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import AccessibilityBtn from '@/components/AccessibilityBtn'
+import AIChatbot from '@/components/AIChatbot'
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -23,6 +24,8 @@ export default function Home() {
     <>
       <WhatsAppButton phoneNumber={phoneNumber} />
       <AccessibilityBtn />
+      {/* הצ'אטבוט - הוספתי אותו כאן כדי לוודא שהוא נטען */}
+      <AIChatbot />
 
       <main ref={containerRef} className="relative bg-[#FAFAF8] text-[#2C241A]">
         {/* Header */}
@@ -142,18 +145,92 @@ export default function Home() {
           </div>
         </section>
 
+        {/* The Real Suite Video Section (חדש!) */}
+        <section className="py-32 px-6 bg-[#FAF6EE]">
+          <div className="max-w-7xl mx-auto">
+             <div className="grid md:grid-cols-2 gap-16 items-center">
+               <motion.div
+                 initial={{ opacity: 0, x: -30 }}
+                 whileInView={{ opacity: 1, x: 0 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 0.8 }}
+               >
+                 <span className="text-[#C9A86A] text-xs tracking-[0.2em] uppercase mb-4 block">The Experience</span>
+                 <h2 className="text-4xl sm:text-5xl text-[#2C241A] font-cormorant mb-6">הצצה לתוך הסוויטה</h2>
+                 <p className="text-[#594937] font-light text-lg leading-relaxed mb-8">
+                   המרחב שבו הקסם קורה. סלון רחב ידיים, פינות ישיבה מפנקות, ושפע של אור טבעי שנכנס מהחלונות הגדולים ומשקיף אל הנוף ההררי.
+                   <br/><br/>
+                   כל פרט בוילה תוכנן כדי להעניק לך ולמלוות תחושת רוגע, מרחב ופרטיות מוחלטת.
+                 </p>
+                 <a href="#pricing" className="inline-flex items-center gap-2 text-[#2C241A] font-medium hover:text-[#C9A86A] transition-colors">
+                   <span>לפרטים נוספים</span>
+                   <ArrowLeft size={16} />
+                 </a>
+               </motion.div>
+
+               <motion.div
+                 initial={{ opacity: 0, scale: 0.95 }}
+                 whileInView={{ opacity: 1, scale: 1 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 0.8 }}
+                 className="relative aspect-[4/5] md:aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/50"
+               >
+                 <video
+                   controls
+                   playsInline
+                   preload="metadata"
+                   className="absolute inset-0 w-full h-full object-cover"
+                 >
+                   <source 
+                     src="https://res.cloudinary.com/dptyfvwyo/video/upload/v1769895273/VID-20260129-WA0099_ujpg85.mp4" 
+                     type="video/mp4" 
+                   />
+                 </video>
+               </motion.div>
+             </div>
+          </div>
+        </section>
+
+        {/* Meet Hagit */}
+        <section className="py-20 px-6 bg-white">
+          <div className="max-w-2xl mx-auto text-center">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="relative w-40 h-40 mx-auto mb-8"
+            >
+              <div className="absolute inset-0 bg-[#C9A86A] rounded-full opacity-20 blur-xl animate-pulse"></div>
+              <img 
+                src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770072332/image_vr8xxb.png" 
+                alt="חגית - המארחת שלך" 
+                className="w-full h-full object-cover rounded-full border-[3px] border-white shadow-luxury relative z-10"
+              />
+            </motion.div>
+            
+            <h3 className="text-3xl sm:text-4xl font-cormorant text-[#2C241A] mb-4">מחכה לארח אותך</h3>
+            <p className="text-lg text-[#594937] font-light italic leading-relaxed mb-6">
+              "הבית שלי הוא הלב שלי, ואני פותחת אותו בפנייך באהבה גדולה.
+              <br />
+              מזמינה אותך להתחיל את היום המרגש בחייך באווירה של רוגע, פינוק וקסם."
+            </p>
+            <div className="w-12 h-px bg-[#C9A86A] mx-auto opacity-60 mb-2"></div>
+            <p className="text-[#2C241A] font-cormorant text-xl font-medium">- חגית -</p>
+          </div>
+        </section>
+
         {/* Gallery Placeholder */}
         <section id="gallery" className="py-32 px-6 bg-[#FAF6EE]">
           <div className="max-w-7xl mx-auto text-center">
              <h2 className="text-4xl sm:text-6xl text-[#2C241A] font-light mb-4 font-cormorant">הגלריה</h2>
              <p className="text-[#8B7355] font-light tracking-wide text-sm mb-12 uppercase">רגעים של קסם</p>
-             <div className="aspect-video bg-[#E5D5C0]/20 rounded-lg flex items-center justify-center border border-[#E5D5C0]">
+             <div className="aspect-video bg-white/50 rounded-lg flex items-center justify-center border border-[#E5D5C0]">
                 <p className="text-[#8B7355] font-light italic">גלריית תמונות תעלה בקרוב...</p>
              </div>
           </div>
         </section>
 
-        {/* Testimonials - Clean Design */}
+        {/* Testimonials */}
         <section id="testimonials" className="py-32 px-6 bg-white">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-4xl sm:text-6xl text-[#2C241A] font-light mb-16 text-center font-cormorant">מילים חמות</h2>
@@ -162,10 +239,10 @@ export default function Home() {
                 { name: 'שירה כהן', date: 'יולי 2024', text: 'המקום הכי מושלם להתארגנות! התאורה עשתה את כל ההבדל בתמונות, והאווירה הייתה כל כך רגועה.' },
                 { name: 'נועה לוי', date: 'יוני 2024', text: 'חגית הייתה פשוט מדהימה. כל פרט קטן היה מושלם, והרגשתי כמו נסיכה. תודה על הבוקר הכי יפה!' }
               ].map((t, i) => (
-                <div key={i} className="bg-[#FAF6EE] p-10 rounded-sm relative">
+                <div key={i} className="bg-[#FAF6EE] p-10 rounded-sm relative shadow-sm hover:shadow-md transition-shadow">
                   <div className="absolute -top-4 right-8 text-6xl text-[#E5D5C0] font-serif">"</div>
                   <p className="text-[#594937] mb-8 leading-relaxed font-light text-lg italic relative z-10">{t.text}</p>
-                  <div className="flex items-center gap-4 border-t border-[#E5D5C0]/50 pt-6">
+                  <div className="flex items-center gap-4 border-t border-[#FAF6EE] pt-6">
                     <div>
                       <h4 className="font-medium text-[#2C241A] font-cormorant text-lg">{t.name}</h4>
                       <span className="text-xs text-[#8B7355] uppercase tracking-widest">{t.date}</span>
@@ -177,7 +254,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Pricing - Elegant */}
+        {/* Pricing */}
         <section id="pricing" className="py-32 px-6 bg-[#2C241A] text-white">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl sm:text-6xl font-light mb-6 font-cormorant text-[#FAF6EE]">חבילת הכלולות</h2>
@@ -211,13 +288,16 @@ export default function Home() {
               <p className="text-[#666] line-through text-sm mt-2">במקום 2,200 ₪</p>
             </div>
 
-            <a 
-              href={`https://wa.me/${phoneNumber}`} 
-              className="bg-[#FAF6EE] text-[#2C241A] px-10 py-4 rounded-full inline-flex items-center gap-3 hover:bg-[#C9A86A] hover:text-white transition-all duration-300"
+            <button 
+              onClick={() => {
+                 const chatBtn = document.querySelector('[aria-label="פתח צ\'אט עם חגית"]') as HTMLButtonElement;
+                 if (chatBtn) chatBtn.click();
+              }}
+              className="bg-[#FAF6EE] text-[#2C241A] px-10 py-4 rounded-full inline-flex items-center gap-3 hover:bg-[#C9A86A] hover:text-white transition-all duration-300 group"
             >
-              <MessageCircle size={18} />
-              <span className="font-medium tracking-wide">דברי איתנו בוואטסאפ</span>
-            </a>
+              <MessageCircle size={18} className="group-hover:rotate-12 transition-transform" />
+              <span className="font-medium tracking-wide">יש לך שאלות? דברי איתנו</span>
+            </button>
           </div>
         </section>
       </main>
