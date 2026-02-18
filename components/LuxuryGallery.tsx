@@ -203,7 +203,7 @@ export default function LuxuryGallery() {
 
             {/* Thumbnail strip */}
             <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 overflow-x-auto max-w-[90vw] pb-1">
-              {IMAGES.map((img, i) => (
+              {IMAGES.map((img) => (
                 <button
                   key={img.id}
                   onClick={e => { e.stopPropagation(); setSelected(img.id) }}
