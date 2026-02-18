@@ -64,8 +64,14 @@ export default function Home() {
 
   const scrollTo = (href: string) => {
     setMenuOpen(false)
-    const el = document.querySelector(href)
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    // delay כדי לתת לתפריט להיסגר לפני הגלילה
+    setTimeout(() => {
+      const el = document.querySelector(href) as HTMLElement
+      if (!el) return
+      const headerHeight = 80
+      const top = el.getBoundingClientRect().top + window.scrollY - headerHeight
+      window.scrollTo({ top, behavior: 'smooth' })
+    }, 150)
   }
 
   return (
@@ -146,10 +152,11 @@ export default function Home() {
               {/* Hamburger */}
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="md:hidden p-2 rounded-full hover:bg-[#F5EDE3] transition-colors"
+                className="md:hidden flex flex-col items-center gap-0.5 p-2 rounded-full hover:bg-[#F5EDE3] transition-colors"
                 aria-label="תפריט"
               >
                 {menuOpen ? <XIcon size={22} className="text-[#2C241A]" /> : <Menu size={22} className="text-[#2C241A]" />}
+                <span className="text-[9px] tracking-widest text-[#8B7355] font-light uppercase">תפריט</span>
               </button>
             </div>
           </div>
@@ -311,7 +318,7 @@ export default function Home() {
                   className="absolute inset-0 w-full h-full object-cover"
                 >
                   <source
-                    src="https://res.cloudinary.com/dptyfvwyo/video/upload/v1769895273/VID-20260129-WA0099_ujpg85.mp4"
+                    src="https://res.cloudinary.com/decirk3zb/video/upload/q_auto,f_auto/v1771445813/111_ezphwg.mp4"
                     type="video/mp4"
                   />
                 </video>
