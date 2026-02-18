@@ -12,17 +12,61 @@ import {
   Check,
   Star,
   Camera,
-  Gem
+  Gem,
+  Menu,
+  X as XIcon
 } from 'lucide-react'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import WhatsAppButton from '@/components/WhatsAppButton'
 import AccessibilityBtn from '@/components/AccessibilityBtn'
 import AIChatbot from '@/components/AIChatbot'
+import LuxuryGallery from '@/components/LuxuryGallery'
+
+// ── Nav links ────────────────────────────────────────────────────────────────
+const NAV_LINKS = [
+  { label: 'הבית',    href: '#hero'    },
+  { label: 'חוויה',   href: '#experience' },
+  { label: 'גלריה',   href: '#gallery' },
+  { label: 'חבילות',  href: '#pricing' },
+  { label: 'צרי קשר', href: '#contact' },
+]
 
 export default function Home() {
   const containerRef = useRef<HTMLDivElement>(null)
-  
+  const [menuOpen,     setMenuOpen]     = useState(false)
+  const [scrolled,     setScrolled]     = useState(false)
+  const [activeSection, setActiveSection] = useState('hero')
+
   const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '972522676718'
+
+  // ── Shrink header on scroll ──
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // ── Active section tracking ──
+  useEffect(() => {
+    const ids = NAV_LINKS.map(l => l.href.replace('#', ''))
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(e => { if (e.isIntersecting) setActiveSection(e.target.id) })
+      },
+      { rootMargin: '-40% 0px -55% 0px' }
+    )
+    ids.forEach(id => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
+    return () => observer.disconnect()
+  }, [])
+
+  const scrollTo = (href: string) => {
+    setMenuOpen(false)
+    const el = document.querySelector(href)
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
     <>
@@ -31,219 +75,345 @@ export default function Home() {
       <AIChatbot />
 
       <main ref={containerRef} className="relative bg-[#FAFAF8] text-[#2C241A]">
-        {/* Header */}
+
+        {/* ══════════════════════════════════════════
+            HEADER — full nav with gallery link
+        ══════════════════════════════════════════ */}
         <motion.header
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.3 }}
-          className="fixed top-6 right-6 left-6 z-50 pointer-events-none"
+          className={`
+            fixed top-0 right-0 left-0 z-50
+            transition-all duration-500
+            ${scrolled
+              ? 'bg-white/95 backdrop-blur-md shadow-sm border-b border-[#E5D5C0] py-3'
+              : 'bg-transparent py-5'}
+          `}
         >
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <motion.div
+          <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
+
+            {/* Logo */}
+            <motion.button
               whileHover={{ scale: 1.02 }}
-              className="glass-cream px-6 py-3 rounded-full flex items-center gap-2 pointer-events-auto shadow-sm bg-white/90 backdrop-blur-md border border-[#E5D5C0]"
+              onClick={() => scrollTo('#hero')}
+              className="flex items-center gap-2 pointer-events-auto"
             >
               <Heart className="w-4 h-4 text-[#C9A86A]" fill="#C9A86A" />
               <span className="font-cormorant text-lg text-[#2C241A] font-medium tracking-wide">
                 חגית | סוויטת כלות
               </span>
-            </motion.div>
+            </motion.button>
 
-            <motion.a
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי, אשמח לשמוע פרטים על התארגנות בוילה')}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-[#2C241A] hover:bg-[#4a3e2f] px-6 py-3 rounded-full flex items-center gap-3 pointer-events-auto shadow-md transition-all text-white font-light tracking-wide text-sm"
-            >
-              <span>שרייני תאריך</span>
-              <ArrowLeft size={16} />
-            </motion.a>
+            {/* Desktop Nav */}
+            <nav className="hidden md:flex items-center gap-1">
+              {NAV_LINKS.map(link => (
+                <button
+                  key={link.href}
+                  onClick={() => scrollTo(link.href)}
+                  className={`
+                    relative px-4 py-2 text-sm font-light tracking-wide transition-colors duration-200
+                    ${activeSection === link.href.replace('#', '')
+                      ? 'text-[#C9A86A]'
+                      : 'text-[#2C241A] hover:text-[#C9A86A]'}
+                  `}
+                >
+                  {link.label}
+                  {activeSection === link.href.replace('#', '') && (
+                    <motion.div
+                      layoutId="nav-indicator"
+                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#C9A86A]"
+                    />
+                  )}
+                </button>
+              ))}
+            </nav>
+
+            {/* CTA + Mobile menu toggle */}
+            <div className="flex items-center gap-3">
+              <motion.a
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי, אשמח לשמוע פרטים על התארגנות בוילה')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden sm:flex bg-[#2C241A] hover:bg-[#4a3e2f] px-5 py-2.5 rounded-full items-center gap-2 shadow-md transition-all text-white font-light tracking-wide text-sm"
+              >
+                <span>שרייני תאריך</span>
+                <ArrowLeft size={14} />
+              </motion.a>
+
+              {/* Hamburger */}
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="md:hidden p-2 rounded-full hover:bg-[#F5EDE3] transition-colors"
+                aria-label="תפריט"
+              >
+                {menuOpen ? <XIcon size={22} className="text-[#2C241A]" /> : <Menu size={22} className="text-[#2C241A]" />}
+              </button>
+            </div>
           </div>
+
+          {/* Mobile Nav drawer */}
+          <motion.div
+            initial={false}
+            animate={{ height: menuOpen ? 'auto' : 0, opacity: menuOpen ? 1 : 0 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="md:hidden overflow-hidden bg-white/98 backdrop-blur-md border-t border-[#E5D5C0]"
+          >
+            <div className="px-6 py-4 flex flex-col gap-1">
+              {NAV_LINKS.map(link => (
+                <button
+                  key={link.href}
+                  onClick={() => scrollTo(link.href)}
+                  className={`
+                    text-right py-3 px-2 text-base font-light border-b border-[#E5D5C0]/50 last:border-0
+                    transition-colors duration-200
+                    ${activeSection === link.href.replace('#', '') ? 'text-[#C9A86A]' : 'text-[#2C241A]'}
+                  `}
+                >
+                  {link.label}
+                </button>
+              ))}
+              <a
+                href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי, אשמח לשמוע פרטים על התארגנות בוילה')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 w-full py-3 rounded-full bg-[#2C241A] text-white text-center text-sm tracking-wide"
+              >
+                שרייני תאריך
+              </a>
+            </div>
+          </motion.div>
         </motion.header>
 
-        {/* Hero Section */}
-        <section className="relative min-h-screen flex flex-col overflow-hidden bg-[#FAF6EE]">
+        {/* ══════════════════════════════════════════
+            HERO
+        ══════════════════════════════════════════ */}
+        <section id="hero" className="relative min-h-screen flex flex-col overflow-hidden bg-[#FAF6EE]">
           <div className="relative h-[70vh] sm:h-[80vh] w-full overflow-hidden">
             <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              preload="auto"
+              autoPlay muted loop playsInline preload="auto"
               className="absolute inset-0 w-full h-full object-cover"
               poster="https://res.cloudinary.com/dptyfvwyo/image/upload/v1769898872/poster_placeholder.jpg"
             >
-              <source 
-                src="https://res.cloudinary.com/dptyfvwyo/video/upload/q_auto,f_auto/v1769898872/HERO3_d2m9ny.mp4" 
-                type="video/mp4" 
+              <source
+                src="https://res.cloudinary.com/dptyfvwyo/video/upload/q_auto,f_auto/v1769898872/HERO3_d2m9ny.mp4"
+                type="video/mp4"
               />
             </video>
-            <div className="absolute inset-0 bg-black/10" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#FAF6EE] via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#2C241A]/30 via-transparent to-[#FAF6EE]" />
           </div>
 
-          <div className="relative z-10 px-6 -mt-32 pb-20">
-            <div className="max-w-4xl mx-auto text-center space-y-8">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: 0.2 }}
-              >
-                <span className="inline-block py-1 px-3 border border-[#C9A86A] rounded-full text-[#C9A86A] text-xs tracking-[0.2em] uppercase mb-4 bg-white/50 backdrop-blur-sm">
-                  Luxury Bridal Suite
-                </span>
-                <h1 className="text-5xl sm:text-7xl lg:text-8xl text-[#2C241A] leading-[1.1] font-light font-cormorant">
-                  הרגע שלפני
-                  <br />
-                  <span className="italic font-normal">הרגע הגדול</span>
-                </h1>
-              </motion.div>
-
-              <motion.p 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 1, delay: 0.5 }}
-                className="text-xl sm:text-2xl text-[#594937] font-light max-w-2xl mx-auto leading-relaxed"
-              >
-                וילה פרטית בלב הטבע הירושלמי.
-                <br className="hidden sm:block" />
+          <div className="relative z-10 max-w-4xl mx-auto px-6 pt-12 pb-24 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.5 }}
+            >
+              <span className="text-[#C9A86A] text-xs tracking-[0.3em] uppercase font-light block mb-6">
+                וילת כלות יוקרתית בהרי ירושלים
+              </span>
+              <h1 className="font-cormorant text-5xl sm:text-7xl md:text-8xl text-[#2C241A] font-light leading-none mb-8">
+                הרגע שלפני<br />
+                <em className="italic">הרגע הגדול</em>
+              </h1>
+              <p className="text-[#594937] font-light text-lg md:text-xl leading-relaxed mb-10 max-w-2xl mx-auto">
                 מרחב נשימה, יין משובח ואווירה של בית ביום המרגש בחייך.
-              </motion.p>
-              
-              <motion.div
-                 initial={{ opacity: 0, y: 20 }}
-                 animate={{ opacity: 1, y: 0 }}
-                 transition={{ duration: 0.8, delay: 0.7 }}
-                 className="pt-4"
-              >
-                <a href="#pricing" className="text-[#2C241A] border-b border-[#2C241A] pb-1 hover:text-[#C9A86A] hover:border-[#C9A86A] transition-all text-sm tracking-widest uppercase">
-                  גלי את החבילה
+              </p>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a
+                  href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי, אשמח לשמוע פרטים על התארגנות בוילה')}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="bg-[#2C241A] hover:bg-[#4a3e2f] text-white px-8 py-3.5 rounded-full text-sm tracking-widest font-light transition-all shadow-lg"
+                >
+                  שרייני תאריך
                 </a>
-              </motion.div>
-            </div>
+                <button
+                  onClick={() => scrollTo('#gallery')}
+                  className="text-[#2C241A] border-b border-[#2C241A]/40 pb-0.5 hover:text-[#C9A86A] hover:border-[#C9A86A] transition-all text-sm tracking-widest uppercase font-light"
+                >
+                  צפי בגלריה
+                </button>
+              </div>
+            </motion.div>
           </div>
         </section>
 
-        {/* Features */}
-        <section className="py-32 px-6 bg-white">
+        {/* ══════════════════════════════════════════
+            FEATURES
+        ══════════════════════════════════════════ */}
+        <section className="py-28 px-6 bg-white">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
               {[
-                { icon: Wine, title: 'יין ופינוקים', desc: 'יין בוטיק וכיבוד קל לאורך כל היום' },
-                { icon: Sun, title: 'השקט של ההרים', desc: 'נוף עוצר נשימה ושקט מוחלט' },
-                { icon: Palette, title: 'עמדות ביוטי', desc: 'תאורה מקצועית למאפרת ועיצוב שיער' },
-                { icon: Sparkles, title: 'זמן איכות', desc: 'סלון מרווח לך ולמלוות שלך' }
+                { icon: Wine,     title: 'יין ופינוקים',    desc: 'יין בוטיק וכיבוד קל לאורך כל היום' },
+                { icon: Sun,      title: 'השקט של ההרים',   desc: 'נוף עוצר נשימה ושקט מוחלט' },
+                { icon: Palette,  title: 'עמדות ביוטי',     desc: 'תאורה מקצועית למאפרת ועיצוב שיער' },
+                { icon: Sparkles, title: 'זמן איכות',        desc: 'סלון מרווח לך ולמלוות שלך' }
               ].map((item, i) => (
-                <div key={i} className="text-center group">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.1 }}
+                  className="text-center group"
+                >
                   <div className="flex justify-center mb-6">
                     <item.icon strokeWidth={1} size={40} className="text-[#C9A86A] group-hover:scale-110 transition-transform duration-500" />
                   </div>
                   <h3 className="text-xl font-cormorant font-semibold text-[#2C241A] mb-3">{item.title}</h3>
                   <p className="text-[#8B7355] font-light text-sm leading-relaxed">{item.desc}</p>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Video Section (The Experience) */}
-        <section className="py-32 px-6 bg-[#FAF6EE]">
+        {/* ══════════════════════════════════════════
+            EXPERIENCE (Video)
+        ══════════════════════════════════════════ */}
+        <section id="experience" className="py-28 px-6 bg-[#FAF6EE]">
           <div className="max-w-7xl mx-auto">
-             <div className="grid md:grid-cols-2 gap-16 items-center">
-               <motion.div
-                 initial={{ opacity: 0, x: -30 }}
-                 whileInView={{ opacity: 1, x: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ duration: 0.8 }}
-               >
-                 <span className="text-[#C9A86A] text-xs tracking-[0.2em] uppercase mb-4 block">The Experience</span>
-                 <h2 className="text-4xl sm:text-5xl text-[#2C241A] font-cormorant mb-6">הצצה לתוך הסוויטה</h2>
-                 <p className="text-[#594937] font-light text-lg leading-relaxed mb-8">
-                   המרחב שבו הקסם קורה. סלון רחב ידיים, פינות ישיבה מפנקות, ושפע של אור טבעי שנכנס מהחלונות הגדולים ומשקיף אל הנוף ההררי.
-                   <br/><br/>
-                   כל פרט בוילה תוכנן כדי להעניק לך ולמלוות תחושת רוגע, מרחב ופרטיות מוחלטת.
-                 </p>
-                 <a href="#pricing" className="inline-flex items-center gap-2 text-[#2C241A] font-medium hover:text-[#C9A86A] transition-colors">
-                   <span>לפרטים נוספים</span>
-                   <ArrowLeft size={16} />
-                 </a>
-               </motion.div>
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+              >
+                <span className="text-[#C9A86A] text-xs tracking-[0.2em] uppercase mb-4 block">The Experience</span>
+                <h2 className="text-4xl sm:text-5xl text-[#2C241A] font-cormorant mb-6">הצצה לתוך הסוויטה</h2>
+                <p className="text-[#594937] font-light text-lg leading-relaxed mb-8">
+                  המרחב שבו הקסם קורה. סלון רחב ידיים, פינות ישיבה מפנקות, ושפע של אור טבעי שנכנס מהחלונות הגדולים ומשקיף אל הנוף ההררי.
+                  <br /><br />
+                  כל פרט בוילה תוכנן כדי להעניק לך ולמלוות תחושת רוגע, מרחב ופרטיות מוחלטת.
+                </p>
+                <button
+                  onClick={() => scrollTo('#gallery')}
+                  className="inline-flex items-center gap-2 text-[#2C241A] font-medium hover:text-[#C9A86A] transition-colors"
+                >
+                  <span>לגלריה המלאה</span>
+                  <ArrowLeft size={16} />
+                </button>
+              </motion.div>
 
-               <motion.div
-                 initial={{ opacity: 0, scale: 0.95 }}
-                 whileInView={{ opacity: 1, scale: 1 }}
-                 viewport={{ once: true }}
-                 transition={{ duration: 0.8 }}
-                 className="relative aspect-[4/5] md:aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/50"
-               >
-                 <video
-                   controls
-                   playsInline
-                   preload="metadata"
-                   className="absolute inset-0 w-full h-full object-cover"
-                 >
-                   <source 
-                     src="https://res.cloudinary.com/dptyfvwyo/video/upload/v1769895273/VID-20260129-WA0099_ujpg85.mp4" 
-                     type="video/mp4" 
-                   />
-                 </video>
-               </motion.div>
-             </div>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="relative aspect-[4/5] md:aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/50"
+              >
+                <video
+                  controls playsInline preload="metadata"
+                  className="absolute inset-0 w-full h-full object-cover"
+                >
+                  <source
+                    src="https://res.cloudinary.com/dptyfvwyo/video/upload/v1769895273/VID-20260129-WA0099_ujpg85.mp4"
+                    type="video/mp4"
+                  />
+                </video>
+              </motion.div>
+            </div>
           </div>
         </section>
 
-        {/* Meet Hagit */}
+        {/* ══════════════════════════════════════════
+            GALLERY ← החלק החדש
+        ══════════════════════════════════════════ */}
+        <section id="gallery" className="py-28 px-6 bg-[#FAF6EE]">
+          <div className="max-w-6xl mx-auto">
+
+            {/* Section header */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              className="text-center mb-14"
+            >
+              <div className="flex items-center justify-center gap-4 mb-5">
+                <div className="h-px w-14 bg-gradient-to-r from-transparent to-[#C9A86A]" />
+                <span className="text-[#C9A86A] text-xs tracking-[0.3em] uppercase font-light">הגלריה שלנו</span>
+                <div className="h-px w-14 bg-gradient-to-l from-transparent to-[#C9A86A]" />
+              </div>
+              <h2 className="font-cormorant text-5xl md:text-6xl text-[#2C241A] font-light leading-none mb-3">
+                רגעים של קסם
+              </h2>
+              <p className="text-[#8B7355] font-light tracking-widest text-sm">
+                כל תמונה — סיפור של יום מושלם
+              </p>
+            </motion.div>
+
+            {/* Gallery component */}
+            <LuxuryGallery />
+
+            {/* Instagram CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="text-center mt-12"
+            >
+              <a
+                href="https://www.instagram.com/"
+                target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 border border-[#C9A86A] text-[#C9A86A] px-8 py-3 rounded-full text-xs tracking-[0.25em] font-light uppercase hover:bg-[#C9A86A] hover:text-white transition-all duration-300"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                </svg>
+                <span>עוד תמונות באינסטגרם</span>
+              </a>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* ══════════════════════════════════════════
+            MEET HAGIT
+        ══════════════════════════════════════════ */}
         <section className="py-20 px-6 bg-white">
           <div className="max-w-2xl mx-auto text-center">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="relative w-40 h-40 mx-auto mb-8"
             >
-              {/* זו השורה שגרמה לשגיאה קודם - עכשיו היא תקינה */}
-              <div className="absolute inset-0 bg-[#C9A86A] rounded-full opacity-20 blur-xl animate-pulse"></div>
-              <img 
-                src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770475427/%D7%A2%D7%9D_%D7%A7%D7%A4%D7%94_z5rutm.jpg" 
-                alt="חגית - המארחת שלך" 
+              <div className="absolute inset-0 bg-[#C9A86A] rounded-full opacity-20 blur-xl animate-pulse" />
+              <img
+                src="https://res.cloudinary.com/dptyfvwyo/image/upload/v1770475427/%D7%A2%D7%9D_%D7%A7%D7%A4%D7%94_z5rutm.jpg"
+                alt="חגית - המארחת שלך"
                 className="w-full h-full object-cover rounded-full border-[3px] border-white shadow-luxury relative z-10"
               />
             </motion.div>
-            
             <h3 className="text-3xl sm:text-4xl font-cormorant text-[#2C241A] mb-4">מחכה לארח אותך</h3>
             <p className="text-lg text-[#594937] font-light italic leading-relaxed mb-6">
               "הבית שלי הוא הלב שלי, ואני פותחת אותו בפנייך באהבה גדולה.
               <br />
               מזמינה אותך להתחיל את היום המרגש בחייך באווירה של רוגע, פינוק וקסם."
             </p>
-            <div className="w-12 h-px bg-[#C9A86A] mx-auto opacity-60 mb-2"></div>
+            <div className="w-12 h-px bg-[#C9A86A] mx-auto opacity-60 mb-2" />
             <p className="text-[#2C241A] font-cormorant text-xl font-medium">- חגית -</p>
           </div>
         </section>
 
-        {/* Gallery Placeholder */}
-        <section id="gallery" className="py-32 px-6 bg-[#FAF6EE]">
-          <div className="max-w-7xl mx-auto text-center">
-             <h2 className="text-4xl sm:text-6xl text-[#2C241A] font-light mb-4 font-cormorant">הגלריה</h2>
-             <p className="text-[#8B7355] font-light tracking-wide text-sm mb-12 uppercase">רגעים של קסם</p>
-             <div className="aspect-video bg-white/50 rounded-lg flex items-center justify-center border border-[#E5D5C0]">
-                <p className="text-[#8B7355] font-light italic">גלריית תמונות תעלה בקרוב...</p>
-             </div>
-          </div>
-        </section>
-
-        {/* Pricing Packages */}
-        <section id="pricing" className="py-32 px-6 bg-[#2C241A] text-white">
+        {/* ══════════════════════════════════════════
+            PRICING
+        ══════════════════════════════════════════ */}
+        <section id="pricing" className="py-28 px-6 bg-[#2C241A] text-white">
           <div className="max-w-7xl mx-auto text-center">
             <h2 className="text-4xl sm:text-6xl font-light mb-6 font-cormorant text-[#FAF6EE]">בחרי את החבילה שלך</h2>
             <div className="w-24 h-px bg-[#C9A86A] mx-auto mb-16 opacity-50" />
-            
+
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              
+
               {/* Package 1: Basic */}
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -10 }}
                 className="bg-[#FAF6EE]/5 border border-[#C9A86A]/20 p-8 rounded-2xl flex flex-col items-center"
               >
@@ -253,27 +423,20 @@ export default function Home() {
                 <h3 className="text-2xl font-cormorant mb-2 text-[#FAF6EE]">חבילת בסיס</h3>
                 <p className="text-[#8B7355] text-sm mb-6">לאירוח קליל ונעים</p>
                 <div className="text-4xl font-light font-cormorant mb-8">1,800 <span className="text-xl text-[#8B7355]">₪</span></div>
-                
                 <ul className="space-y-4 text-right w-full mb-8 flex-grow">
-                   {[
-                     'שימוש חופשי בוילה (בוקר עד יציאה)',
-                     'שתייה חמה וקרה חופשי',
-                     'פירות טריים ופינוקים מתוקים',
-                     'יין בוטיק מיקב הרי ירושלים',
-                     'שימוש במתקני הוילה'
-                   ].map((item, i) => (
-                     <li key={i} className="flex items-start gap-3 text-[#E5D5C0] font-light text-sm">
-                       <Check size={16} className="text-[#C9A86A] mt-1 shrink-0" /> {item}
-                     </li>
-                   ))}
+                  {['שימוש חופשי בוילה (בוקר עד יציאה)', 'שתייה חמה וקרה חופשי', 'פירות טריים ופינוקים מתוקים', 'יין בוטיק מיקב הרי ירושלים', 'שימוש במתקני הוילה'].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-[#E5D5C0] font-light text-sm">
+                      <Check size={16} className="text-[#C9A86A] mt-1 shrink-0" /> {item}
+                    </li>
+                  ))}
                 </ul>
-                <a href={`https://wa.me/${phoneNumber}?text=היי, אשמח לשריין את חבילת הבסיס`} className="w-full py-3 rounded-full border border-[#C9A86A] text-[#C9A86A] hover:bg-[#C9A86A] hover:text-white transition-all text-sm tracking-wide">
+                <a href={`https://wa.me/${phoneNumber}?text=היי, אשמח לשריין את חבילת הבסיס`} className="w-full py-3 rounded-full border border-[#C9A86A] text-[#C9A86A] hover:bg-[#C9A86A] hover:text-white transition-all text-sm tracking-wide text-center block">
                   אני רוצה את זה
                 </a>
               </motion.div>
 
               {/* Package 2: Premium (Recommended) */}
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -10 }}
                 className="bg-[#FAF6EE] text-[#2C241A] p-8 rounded-2xl flex flex-col items-center relative transform lg:-translate-y-4 shadow-xl border-2 border-[#C9A86A]"
               >
@@ -284,27 +447,20 @@ export default function Home() {
                 <h3 className="text-2xl font-cormorant mb-2 font-semibold">חבילת פרימיום</h3>
                 <p className="text-[#8B7355] text-sm mb-6">הכי משתלמת ומפנקת</p>
                 <div className="text-5xl font-light font-cormorant mb-8 text-[#2C241A]">2,200 <span className="text-xl text-[#8B7355]">₪</span></div>
-                
                 <ul className="space-y-4 text-right w-full mb-8 flex-grow">
-                   {[
-                     'כל מה שיש בחבילת הבסיס',
-                     'ארוחת בוקר כפרית עשירה ומפנקת',
-                     'שמפניה / קאווה חגיגית להרמת כוסית',
-                     'פינוקים נוספים לאווירה מושלמת',
-                     'מתאים לכלה + מלוות'
-                   ].map((item, i) => (
-                     <li key={i} className="flex items-start gap-3 text-[#594937] font-light text-sm">
-                       <Check size={16} className="text-[#C9A86A] mt-1 shrink-0" /> <span className="font-medium">{item}</span>
-                     </li>
-                   ))}
+                  {['כל מה שיש בחבילת הבסיס', 'ארוחת בוקר כפרית עשירה ומפנקת', 'שמפניה / קאווה חגיגית להרמת כוסית', 'פינוקים נוספים לאווירה מושלמת', 'מתאים לכלה + מלוות'].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-[#594937] font-light text-sm">
+                      <Check size={16} className="text-[#C9A86A] mt-1 shrink-0" /> <span className="font-medium">{item}</span>
+                    </li>
+                  ))}
                 </ul>
-                <a href={`https://wa.me/${phoneNumber}?text=היי, אשמח לשריין את חבילת הפרימיום`} className="w-full py-3 rounded-full bg-[#2C241A] text-white hover:bg-[#4a3e2f] transition-all text-sm tracking-wide shadow-lg">
+                <a href={`https://wa.me/${phoneNumber}?text=היי, אשמח לשריין את חבילת הפרימיום`} className="w-full py-3 rounded-full bg-[#2C241A] text-white hover:bg-[#4a3e2f] transition-all text-sm tracking-wide shadow-lg text-center block">
                   זה בול בשבילי
                 </a>
               </motion.div>
 
               {/* Package 3: All Inclusive */}
-              <motion.div 
+              <motion.div
                 whileHover={{ y: -10 }}
                 className="bg-[#FAF6EE]/5 border border-[#C9A86A]/20 p-8 rounded-2xl flex flex-col items-center"
               >
@@ -316,32 +472,24 @@ export default function Home() {
                 <div className="text-4xl font-light font-cormorant mb-8">
                   <span className="text-lg align-top">החל מ-</span>6,500 <span className="text-xl text-[#8B7355]">₪</span>
                 </div>
-                
                 <ul className="space-y-4 text-right w-full mb-8 flex-grow">
-                   {[
-                     'כל מה שיש בחבילת הפרימיום',
-                     'צלם מקצועי שילווה אתכן',
-                     'עיצוב שיער לכלה ולמלוות',
-                     'איפור מקצועי לכלה ולמלוות',
-                     'חבילה מותאמת אישית לפי הצורך'
-                   ].map((item, i) => (
-                     <li key={i} className="flex items-start gap-3 text-[#E5D5C0] font-light text-sm">
-                       <Check size={16} className="text-[#C9A86A] mt-1 shrink-0" /> {item}
-                     </li>
-                   ))}
+                  {['כל מה שיש בחבילת הפרימיום', 'צלם מקצועי שילווה אתכן', 'עיצוב שיער לכלה ולמלוות', 'איפור מקצועי לכלה ולמלוות', 'חבילה מותאמת אישית לפי הצורך'].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-[#E5D5C0] font-light text-sm">
+                      <Check size={16} className="text-[#C9A86A] mt-1 shrink-0" /> {item}
+                    </li>
+                  ))}
                 </ul>
-                <a href={`https://wa.me/${phoneNumber}?text=היי, אשמח לשמוע על חבילת הכל-כלול`} className="w-full py-3 rounded-full border border-[#C9A86A] text-[#C9A86A] hover:bg-[#C9A86A] hover:text-white transition-all text-sm tracking-wide">
+                <a href={`https://wa.me/${phoneNumber}?text=היי, אשמח לשמוע על חבילת הכל-כלול`} className="w-full py-3 rounded-full border border-[#C9A86A] text-[#C9A86A] hover:bg-[#C9A86A] hover:text-white transition-all text-sm tracking-wide text-center block">
                   לפרטים נוספים
                 </a>
               </motion.div>
-
             </div>
 
             <div className="mt-16">
-              <button 
+              <button
                 onClick={() => {
-                  const chatBtn = document.querySelector('[aria-label="פתח צ\'אט עם חגית"]') as HTMLButtonElement;
-                  if (chatBtn) chatBtn.click();
+                  const chatBtn = document.querySelector('[aria-label="פתח צ\'אט עם חגית"]') as HTMLButtonElement
+                  if (chatBtn) chatBtn.click()
                 }}
                 className="inline-flex items-center gap-2 text-[#E5D5C0] hover:text-[#C9A86A] transition-colors border-b border-[#E5D5C0] hover:border-[#C9A86A] pb-1"
               >
@@ -351,6 +499,43 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* ══════════════════════════════════════════
+            CONTACT
+        ══════════════════════════════════════════ */}
+        <section id="contact" className="py-28 px-6 bg-white">
+          <div className="max-w-xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+            >
+              <div className="flex items-center justify-center gap-4 mb-5">
+                <div className="h-px w-14 bg-gradient-to-r from-transparent to-[#C9A86A]" />
+                <span className="text-[#C9A86A] text-xs tracking-[0.3em] uppercase font-light">צרי קשר</span>
+                <div className="h-px w-14 bg-gradient-to-l from-transparent to-[#C9A86A]" />
+              </div>
+              <h2 className="font-cormorant text-4xl md:text-5xl text-[#2C241A] font-light mb-4">
+                מוכנה להתחיל?
+              </h2>
+              <p className="text-[#8B7355] font-light mb-10 leading-relaxed">
+                שלחי הודעה ונחזור אליך תוך שעה לקביעת תאריך וגיבוש חבילה מותאמת אישית.
+              </p>
+              <a
+                href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי חגית, אשמח לשמוע פרטים על ההתארגנות בוילה ולשריין תאריך 💍')}`}
+                target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#128C7E] text-white px-8 py-4 rounded-full text-sm tracking-widest font-light transition-all shadow-lg"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                <span>שרייני תאריך בוואטסאפ</span>
+              </a>
+            </motion.div>
+          </div>
+        </section>
+
       </main>
     </>
   )
