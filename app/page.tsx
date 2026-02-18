@@ -194,7 +194,7 @@ export default function Home() {
                 type="video/mp4"
               />
             </video>
-            <div className="absolute inset-0 bg-gradient-to-b from-[#2C241A]/30 via-transparent to-[#FAF6EE]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#2C241A]/50 via-[#2C241A]/10 to-white" />
           </div>
 
           <div className="relative z-10 max-w-4xl mx-auto px-6 pt-10 pb-24 text-center">
@@ -236,7 +236,7 @@ export default function Home() {
         {/* ══════════════════════════════════════════
             FEATURES
         ══════════════════════════════════════════ */}
-        <section className="py-28 px-6 bg-white">
+        <section className="py-24 px-6 bg-white">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
               {[
