@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion'
 import {
   Heart,
+  MessageCircle,
   ArrowLeft,
   Wine,
   Sun,
@@ -193,7 +194,7 @@ export default function Home() {
                 type="video/mp4"
               />
             </video>
-            <div className="absolute inset-0 bg-gradient-to-b from-[#2C241A]/50 via-[#2C241A]/10 to-white" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#2C241A]/40 via-transparent to-[#FAF6EE]" />
           </div>
 
           <div className="relative z-10 max-w-4xl mx-auto px-6 pt-10 pb-24 text-center">
@@ -203,7 +204,7 @@ export default function Home() {
               transition={{ duration: 1, delay: 0.5 }}
             >
               {/* ── Gold label — גדול וכהה יותר ── */}
-              <span className="text-[#A07840] text-sm tracking-[0.3em] uppercase font-medium block mb-6">
+              <span className="text-[#7A5520] text-base tracking-[0.25em] uppercase font-semibold block mb-6">
                 וילת כלות יוקרתית בהרי ירושלים
               </span>
               <h1 className="font-cormorant text-5xl sm:text-7xl md:text-8xl text-[#2C241A] font-light leading-none mb-8">
@@ -391,6 +392,91 @@ export default function Home() {
             </p>
             <div className="w-12 h-px bg-[#C9A86A] mx-auto opacity-60 mb-2" />
             <p className="text-[#2C241A] font-cormorant text-xl font-medium">- חגית -</p>
+          </div>
+        </section>
+
+
+        {/* ══════════════════════════════════════════
+            VILLA STORY — תוכן הוילה
+        ══════════════════════════════════════════ */}
+        <section className="py-28 px-6 bg-[#FAF6EE]">
+          <div className="max-w-4xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-center mb-16"
+            >
+              <span className="text-[#7A5520] text-base tracking-[0.25em] uppercase font-semibold block mb-5">
+                היום הגדול שלך
+              </span>
+              <h2 className="font-cormorant text-4xl md:text-5xl text-[#2C241A] font-light leading-snug mb-6">
+                מתחיל בסוויטה של חגית
+              </h2>
+              <p className="text-[#594937] font-light text-lg leading-relaxed max-w-2xl mx-auto">
+                החופה שלך מתחילה הרבה לפני הצעידה בשביל. היא מתחילה ברגע שבו את פותחת את העיניים בבוקר.
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {[
+                {
+                  emoji: '✨',
+                  title: 'מרחב שכולו שלווה',
+                  text: 'הסוויטה מוארת, מעוצבת ומזמינה – בדיוק מה שהגוף שלך צריך כדי להוריד דופק. כאן תמצאי פינות צילום מושלמות ל"בקסטייג'" של האלבום שלך, באווירה אינטימית ונינוחה ששמורה רק לך ולמלוות שלך.'
+                },
+                {
+                  emoji: '🥐',
+                  title: 'בוקר של פינוקים',
+                  text: 'אנחנו יודעות שעם כל ההתרגשות, קל לשכוח לאכול. דאגנו לך להכל: בראנץ' טרי, פירות חתוכים, קפה איכותי ושתייה קלה שזורמת לאורך כל היום. הכל כדי שתגיעי לחופה מלאת אנרגיה.'
+                },
+                {
+                  emoji: '🚿',
+                  title: 'ה-Reset שאת צריכה',
+                  text: 'קמת מוקדם? נסעת? המקלחת המרווחת שלנו מחכה לך כדי לשטוף את כל המתח ולהתחיל את היום עם דף חלק, רעננה וזוהרת.'
+                },
+                {
+                  emoji: '🛋️',
+                  title: 'זמן נשימה פרטי',
+                  text: 'רגע לפני שהצלמים נכנסים – מחכה לך חדר מנוחה פרטי. לעצום עיניים, לנשום עמוק, ולעכל שזה באמת קורה. בלי הפרעות ובלי לחץ.'
+                },
+              ].map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: i * 0.1 }}
+                  className="bg-white rounded-3xl p-8 border border-[#E5D5C0] shadow-sm"
+                >
+                  <span className="text-3xl block mb-4">{item.emoji}</span>
+                  <h3 className="font-cormorant text-2xl text-[#2C241A] font-semibold mb-3">{item.title}</h3>
+                  <p className="text-[#6B5540] font-light text-sm leading-relaxed">{item.text}</p>
+                </motion.div>
+              ))}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="text-center mt-16 bg-[#2C241A] rounded-3xl p-10"
+            >
+              <p className="text-[#E5D5C0] font-cormorant text-2xl font-light italic mb-2">
+                "זה לא רק מקום להתארגן בו.
+              </p>
+              <p className="text-[#C9A86A] font-cormorant text-2xl font-light italic mb-6">
+                זו התחושה שאת בידיים טובות."
+              </p>
+              <p className="text-[#B09880] font-light text-sm mb-8 max-w-lg mx-auto">
+                בסוויטה של חגית, המטרה שלנו היא אחת: שתגיעי לחופה לא רק הכי יפה שיש, אלא בעיקר רגועה, נוכחת ומוכנה.
+              </p>
+              <p className="text-[#D5C5B0] font-light text-sm mb-8">
+                המקומות נתפסים מהר — דברי איתי ונשריין לך את השקט שמגיע לך.
+              </p>
+            </motion.div>
           </div>
         </section>
 
