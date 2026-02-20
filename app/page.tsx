@@ -302,7 +302,7 @@ export default function Home() {
                 className="relative aspect-[4/5] md:aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/50"
               >
                 <video
-                  controls playsInline preload="metadata"
+                  autoPlay muted loop playsInline preload="auto"
                   className="absolute inset-0 w-full h-full object-cover"
                 >
                   <source
@@ -558,6 +558,7 @@ export default function Home() {
                     'פירות טריים ופינוקים מתוקים',
                     'יין בוטיק מיקב הרי ירושלים',
                     'עמדת ביוטי עם תאורה מקצועית',
+                    'מוזיקה אמבינטית ורקע מושלם',
                     'שימוש מלא במתקני הוילה',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-[#D5C5B0] font-light text-sm">
@@ -608,8 +609,7 @@ export default function Home() {
                     'ארוחת בוקר כפרית עשירה לכולן',
                     'שמפניה / קאווה חגיגית לצ\'ינ\'ין',
                     'זר פרחים טריים לסלון',
-                    'מוזיקה אמבינטית ורקע מושלם',
-                    'שעה נוספת בווילה — כמתנה',
+                    'כריכים וכיבוד קל לאורך הבוקר',
                   ].map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-[#4a3e2f] font-light text-sm">
                       <Check size={15} className="text-[#C9A86A] mt-0.5 shrink-0" />
