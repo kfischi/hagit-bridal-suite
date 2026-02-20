@@ -22,7 +22,7 @@ export default function AIChatbot() {
   const [isSummarizing, setIsSummarizing] = useState(false)
   const messagesEndRef              = useRef<HTMLDivElement>(null)
 
-  const phoneNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '972522676718'
+
   const hagitImage  = 'https://res.cloudinary.com/dptyfvwyo/image/upload/v1770072332/image_vr8xxb.png'
 
   useEffect(() => {
