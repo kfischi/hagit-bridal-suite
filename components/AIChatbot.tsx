@@ -4,26 +4,42 @@ import { useState, useRef, useEffect } from 'react'
 import { Send, X, MessageCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-type Message = {
-  role: 'user' | 'assistant'
-  content: string
+type Message = { role: 'user' | 'assistant'; content: string }
+type ChatMode = 'standard' | 'custom'
+
+const INITIAL_MESSAGES: Record<ChatMode, Message> = {
+  standard: {
+    role: 'assistant',
+    content: 'היי! מזל טוב 💍 אני חגית.\n\nמתי תאריך החתונה שלך?'
+  },
+  custom: {
+    role: 'assistant',
+    content: 'היי! שמחה שפנית 😊\n\nבואי נבנה לך חבילה מותאמת אישית.\n\nאיזה שירותים את מחפשת?\n1️⃣ צלמת\n2️⃣ מאפרת\n3️⃣ מעצבת שיער\n4️⃣ קייטרינג / אוכל מיוחד\n5️⃣ כמה מהדברים האלה'
+  }
 }
 
 export default function AIChatbot() {
-  const [isOpen, setIsOpen]       = useState(false)
-  const [messages, setMessages]   = useState<Message[]>([
-    {
-      role: 'assistant',
-      content: 'היי אהובה, מזל טוב! 💍 אני חגית. כל כך שמחה שנכנסת.\n\nספרי לי קצת — מתי תאריך החתונה שלך?'
-    }
-  ])
-  const [input, setInput]           = useState('')
-  const [isLoading, setIsLoading]   = useState(false)
+  const [isOpen, setIsOpen]             = useState(false)
+  const [mode, setMode]                 = useState<ChatMode>('standard')
+  const [messages, setMessages]         = useState<Message[]>([INITIAL_MESSAGES.standard])
+  const [input, setInput]               = useState('')
+  const [isLoading, setIsLoading]       = useState(false)
   const [isSummarizing, setIsSummarizing] = useState(false)
-  const messagesEndRef              = useRef<HTMLDivElement>(null)
+  const messagesEndRef                  = useRef<HTMLDivElement>(null)
 
+  const hagitImage = 'https://res.cloudinary.com/decirk3zb/image/upload/v1771449984/Gemini_Generated_Image_b9r9hrb9r9hrb9r9_kanqpt.png'
 
-  const hagitImage  = 'https://res.cloudinary.com/dptyfvwyo/image/upload/v1770072332/image_vr8xxb.png'
+  // חשיפת פונקציה גלובלית לפתיחה עם מצב מותאם
+  useEffect(() => {
+    (window as Window & { openHagitChat?: (m: ChatMode) => void }).openHagitChat = (m: ChatMode) => {
+      setMode(m)
+      setMessages([INITIAL_MESSAGES[m]])
+      setIsOpen(true)
+    }
+    return () => {
+      delete (window as Window & { openHagitChat?: (m: ChatMode) => void }).openHagitChat
+    }
+  }, [])
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -35,7 +51,6 @@ export default function AIChatbot() {
 
     const userMessage = input.trim()
     setInput('')
-
     const newMessages: Message[] = [...messages, { role: 'user', content: userMessage }]
     setMessages(newMessages)
     setIsLoading(true)
@@ -44,18 +59,15 @@ export default function AIChatbot() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages }),
+        body: JSON.stringify({ messages: newMessages, mode }),
       })
-
       if (!response.ok) throw new Error('Network error')
-
       const data = await response.json()
       setMessages(prev => [...prev, { role: 'assistant', content: data.reply }])
-    } catch (error) {
-      console.error(error)
+    } catch {
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'סליחה אהובה, יש לי בעיה רגעית בתקשורת. בואי נדבר בוואטסאפ בינתיים 💖'
+        content: 'יש לי בעיה קטנה עכשיו. בואי נדבר בוואטסאפ ישירות 💚'
       }])
     } finally {
       setIsLoading(false)
@@ -68,24 +80,27 @@ export default function AIChatbot() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages, purpose: 'summary' }),
+        body: JSON.stringify({ messages, purpose: 'summary', mode }),
       })
       const data = await response.json()
-
-      // שולחים לחגית — לא לכלה
       const hagitPhone = '972522676718'
       const hagitUrl = data.hagitUrl || `https://wa.me/${hagitPhone}?text=${encodeURIComponent(data.reply)}`
       window.open(hagitUrl, '_blank')
-
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'שלחתי את כל הפרטים שלך לחגית בוואטסאפ.\nהיא תחזור אליך תוך שעה לאישור 💚'
+        content: 'שלחתי את הפרטים שלך לחגית — היא תחזור אליך בהקדם 💚'
       }])
-    } catch (error) {
-      console.error(error)
+    } catch {
+      console.error('Summary error')
     } finally {
       setIsSummarizing(false)
     }
+  }
+
+  const openStandard = () => {
+    setMode('standard')
+    setMessages([INITIAL_MESSAGES.standard])
+    setIsOpen(true)
   }
 
   return (
@@ -108,13 +123,13 @@ export default function AIChatbot() {
         )}
       </AnimatePresence>
 
-      {/* FAB Button */}
+      {/* FAB */}
       <motion.button
         initial={{ scale: 0 }}
         animate={{ scale: 1 }}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
-        onClick={() => setIsOpen(true)}
+        onClick={openStandard}
         aria-label="פתח צ'אט עם חגית"
         className={`fixed bottom-6 left-6 z-[100] w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 ${
           isOpen ? 'opacity-0 pointer-events-none scale-75' : 'opacity-100'
@@ -143,16 +158,22 @@ export default function AIChatbot() {
                 </div>
                 <div>
                   <p className="text-white font-medium text-sm">חגית</p>
-                  <p className="text-[#C9A86A] text-xs">מייסדת סוויטת הכלות</p>
+                  <p className="text-[#C9A86A] text-xs">
+                    {mode === 'custom' ? 'בניית חבילה מותאמת' : 'מייסדת סוויטת הכלות'}
+                  </p>
                 </div>
               </div>
-              <button
-                onClick={() => setIsOpen(false)}
-                className="text-[#8B7355] hover:text-white transition-colors p-1"
-              >
+              <button onClick={() => setIsOpen(false)} className="text-[#8B7355] hover:text-white transition-colors p-1">
                 <X size={18} />
               </button>
             </div>
+
+            {/* Mode badge */}
+            {mode === 'custom' && (
+              <div className="bg-[#C9A86A]/10 border-b border-[#C9A86A]/20 px-4 py-2 text-center">
+                <span className="text-[#A07840] text-xs font-medium tracking-wide">✦ מצב חבילה מותאמת אישית ✦</span>
+              </div>
+            )}
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-[#FAFAF8]" style={{ minHeight: '300px' }}>
@@ -184,7 +205,7 @@ export default function AIChatbot() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* WhatsApp summary button — after 4 messages */}
+            {/* Send to Hagit button */}
             {messages.length >= 4 && (
               <div className="px-4 py-2 bg-[#FAFAF8] border-t border-[#E5D5C0]">
                 <button
@@ -192,13 +213,8 @@ export default function AIChatbot() {
                   disabled={isSummarizing}
                   className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white py-2.5 rounded-xl text-sm font-medium flex items-center justify-center gap-2 transition-colors shadow-sm"
                 >
-                  {isSummarizing ? (
-                    <span>מכינה סיכום...</span>
-                  ) : (
-                    <>
-                      <MessageCircle size={15} />
-                      <span>סיימנו? שלחי לי סיכום לוואטסאפ</span>
-                    </>
+                  {isSummarizing ? <span>מכינה סיכום...</span> : (
+                    <><MessageCircle size={15} /><span>שלחי לחגית את הפרטים</span></>
                   )}
                 </button>
               </div>
@@ -219,7 +235,7 @@ export default function AIChatbot() {
                 disabled={!input.trim() || isLoading}
                 className="bg-[#C9A86A] text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-[#b0935c] disabled:opacity-40 disabled:cursor-not-allowed transition-colors shadow-sm shrink-0"
               >
-                <Send size={16} className={input.trim() && !isLoading ? 'ml-0.5' : ''} />
+                <Send size={16} />
               </button>
             </form>
           </motion.div>
