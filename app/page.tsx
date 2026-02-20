@@ -306,7 +306,7 @@ export default function Home() {
                   className="absolute inset-0 w-full h-full object-cover"
                 >
                   <source
-                    src="https://res.cloudinary.com/decirk3zb/video/upload/q_auto,f_auto/v1771445813/111_ezphwg.mp4"
+                    src="https://res.cloudinary.com/decirk3zb/video/upload/q_auto,f_auto,vc_auto/v1771623544/%D7%A1%D7%A8%D7%98%D7%95%D7%9F_%D7%9C%D7%90%D7%AA%D7%A82_n0kfh2.mp4"
                     type="video/mp4"
                   />
                 </video>
