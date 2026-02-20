@@ -420,10 +420,54 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {[
-                { emoji: String.fromCodePoint(10024), title: "מרחב שכולו שלווה", text: "הסוויטה מוארת, מעוצבת ומזמינה. פינות צילום מושלמות לאלבום שלך, באווירה אינטימית ונינוחה ששמורה רק לך ולמלוות שלך." },
-                { emoji: String.fromCodePoint(129360), title: "בוקר של פינוקים", text: "קל לשכוח לאכול ביום החתונה. דאגנו לך להכל: ארוחת בוקר טרייה, פירות חתוכים, קפה איכותי ושתייה קלה לאורך כל היום." },
-                { emoji: String.fromCodePoint(128703), title: "ה-Reset שאת צריכה", text: "קמת מוקדם? המקלחת המרווחת שלנו מחכה לך. לשטוף את כל המתח ולהתחיל את היום רעננה וזוהרת." },
-                { emoji: String.fromCodePoint(128715), title: "זמן נשימה פרטי", text: "רגע לפני שהצלמים נכנסים, מחכה לך חדר מנוחה פרטי. לעצום עיניים, לנשום עמוק, ולעכל שזה באמת קורה." },
+                {
+                  icon: (
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M16 3C16 3 8 8 8 17C8 21.418 11.582 25 16 25C20.418 25 24 21.418 24 17C24 8 16 3 16 3Z" stroke="#C9A86A" strokeWidth="1.5" strokeLinejoin="round"/>
+                      <path d="M16 25V29" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M12 29H20" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M13 17C13 15.343 14.343 14 16 14" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                  ),
+                  title: "מרחב שכולו שלווה",
+                  text: "הסוויטה מוארת, מעוצבת ומזמינה. פינות צילום מושלמות לאלבום שלך, באווירה אינטימית ונינוחה ששמורה רק לך ולמלוות שלך."
+                },
+                {
+                  icon: (
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6 12C6 10.343 7.343 9 9 9H23C24.657 9 26 10.343 26 12V22C26 23.657 24.657 25 23 25H9C7.343 25 6 23.657 6 22V12Z" stroke="#C9A86A" strokeWidth="1.5"/>
+                      <path d="M11 9V7C11 6.448 11.448 6 12 6H20C20.552 6 21 6.448 21 7V9" stroke="#C9A86A" strokeWidth="1.5"/>
+                      <path d="M16 13V21" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M12 17H20" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
+                    </svg>
+                  ),
+                  title: "בוקר של פינוקים",
+                  text: "קל לשכוח לאכול ביום החתונה. דאגנו לך להכל: ארוחת בוקר טרייה, פירות חתוכים, קפה איכותי ושתייה קלה לאורך כל היום."
+                },
+                {
+                  icon: (
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M10 7C10 7 8 10 8 14C8 18.418 11.582 22 16 22C20.418 22 24 18.418 24 14C24 10 22 7 22 7" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M16 22V26" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M12 26H20" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
+                      <circle cx="16" cy="13" r="3" stroke="#C9A86A" strokeWidth="1.5"/>
+                    </svg>
+                  ),
+                  title: "ה-Reset שאת צריכה",
+                  text: "קמת מוקדם? המקלחת המרווחת שלנו מחכה לך. לשטוף את כל המתח ולהתחיל את היום רעננה וזוהרת."
+                },
+                {
+                  icon: (
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="4" y="12" width="24" height="14" rx="3" stroke="#C9A86A" strokeWidth="1.5"/>
+                      <path d="M9 12V10C9 7.239 11.239 5 14 5H18C20.761 5 23 7.239 23 10V12" stroke="#C9A86A" strokeWidth="1.5"/>
+                      <path d="M4 18H28" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
+                      <circle cx="16" cy="21" r="1.5" fill="#C9A86A"/>
+                    </svg>
+                  ),
+                  title: "זמן נשימה פרטי",
+                  text: "רגע לפני שהצלמים נכנסים, מחכה לך חדר מנוחה פרטי. לעצום עיניים, לנשום עמוק, ולעכל שזה באמת קורה."
+                },
               ].map((item, i) => (
                 <motion.div
                   key={i}
@@ -433,7 +477,9 @@ export default function Home() {
                   transition={{ duration: 0.6, delay: i * 0.1 }}
                   className="bg-white rounded-3xl p-8 border border-[#E5D5C0] shadow-sm"
                 >
-                  <span className="text-3xl block mb-4">{item.emoji}</span>
+                  <div className="w-12 h-12 rounded-2xl bg-[#FAF6EE] border border-[#E5D5C0] flex items-center justify-center mb-5">
+                    {item.icon}
+                  </div>
                   <h3 className="font-cormorant text-2xl text-[#2C241A] font-semibold mb-3">{item.title}</h3>
                   <p className="text-[#6B5540] font-light text-sm leading-relaxed">{item.text}</p>
                 </motion.div>
@@ -582,19 +628,33 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* ── הערה תחתית ── */}
-            <p className="text-[#7A6550] text-sm font-light mt-12">
-              רוצה להוסיף צלמת, מאפרת או שירותים נוספים?{' '}
+            {/* ── באנר אפסייל ── */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="mt-14 border border-[#C9A86A]/40 rounded-3xl p-8 text-center bg-white/5"
+            >
+              <p className="text-[#C9A86A] text-xs tracking-[0.3em] uppercase font-medium mb-3">
+                רוצה משהו מיוחד?
+              </p>
+              <h3 className="font-cormorant text-2xl md:text-3xl text-[#FAF6EE] font-light mb-3">
+                צלמת, מאפרת, קייטרינג ועוד
+              </h3>
+              <p className="text-[#B09880] font-light text-sm mb-6 max-w-md mx-auto leading-relaxed">
+                נרכיב יחד חבילה מותאמת אישית בדיוק לצרכים שלך — בלי תוספות מיותרות, בלי הפתעות.
+              </p>
               <button
                 onClick={() => {
-                  const chatBtn = document.querySelector('[aria-label="פתח צ\'אט עם חגית"]') as HTMLButtonElement
-                  if (chatBtn) chatBtn.click()
+                  const w = window as Window & { openHagitChat?: (m: string) => void }
+                  if (w.openHagitChat) w.openHagitChat('custom')
                 }}
-                className="text-[#C9A86A] hover:text-[#A07840] border-b border-[#C9A86A]/40 hover:border-[#A07840] transition-colors pb-0.5"
+                className="inline-flex items-center gap-2 bg-[#C9A86A] hover:bg-[#b0935c] text-white px-8 py-3.5 rounded-full text-sm font-medium tracking-widest transition-all shadow-lg"
               >
-                בואי נרכיב יחד חבילה מותאמת
+                בואי נבנה יחד את החבילה שלך
               </button>
-            </p>
+            </motion.div>
 
           </div>
         </section>
