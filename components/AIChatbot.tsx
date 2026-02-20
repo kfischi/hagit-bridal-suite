@@ -71,11 +71,15 @@ export default function AIChatbot() {
         body: JSON.stringify({ messages, purpose: 'summary' }),
       })
       const data = await response.json()
-      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(data.reply)}`
-      window.open(whatsappUrl, '_blank')
+
+      // שולחים לחגית — לא לכלה
+      const hagitPhone = '972522676718'
+      const hagitUrl = data.hagitUrl || `https://wa.me/${hagitPhone}?text=${encodeURIComponent(data.reply)}`
+      window.open(hagitUrl, '_blank')
+
       setMessages(prev => [...prev, {
         role: 'assistant',
-        content: 'מעולה! העברתי אותך לוואטסאפ עם סיכום השיחה שלנו. מחכה לך שם 😘'
+        content: 'שלחתי את כל הפרטים שלך לחגית בוואטסאפ.\nהיא תחזור אליך תוך שעה לאישור 💚'
       }])
     } catch (error) {
       console.error(error)
