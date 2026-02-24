@@ -298,7 +298,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="relative aspect-video md:aspect-[16/10] rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.25)] border border-white/30 group"
+                className="relative aspect-[9/16] max-w-sm mx-auto rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.25)] border border-white/30 group"
               >
                 <video
                   id="suite-video"
