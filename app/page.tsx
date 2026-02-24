@@ -134,14 +134,13 @@ export default function Home() {
 
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="md:hidden flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl hover:bg-[#FAF6EE] transition-colors"
+                className="md:hidden flex items-center justify-center w-11 h-11 rounded-2xl bg-[#C9A86A]/15 hover:bg-[#C9A86A]/25 border border-[#C9A86A]/40 transition-all active:scale-95"
                 aria-label="תפריט"
               >
                 {menuOpen
-                  ? <XIcon size={22} className="text-[#2C241A]" />
-                  : <Menu size={22} className="text-[#2C241A]" />
+                  ? <XIcon size={26} className="text-[#2C241A]" strokeWidth={2} />
+                  : <Menu size={26} className="text-[#2C241A]" strokeWidth={2} />
                 }
-                <span className="text-[9px] tracking-widest text-[#8B7355] font-medium uppercase">תפריט</span>
               </button>
             </div>
           </div>
@@ -299,17 +298,58 @@ export default function Home() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="relative aspect-[4/5] md:aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/50"
+                className="relative aspect-video md:aspect-[16/10] rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.25)] border border-white/30 group"
               >
                 <video
+                  id="suite-video"
                   autoPlay muted loop playsInline preload="auto"
                   className="absolute inset-0 w-full h-full object-cover"
                 >
                   <source
-                    src="https://res.cloudinary.com/decirk3zb/video/upload/q_auto,f_auto,vc_auto/v1771623544/%D7%A1%D7%A8%D7%98%D7%95%D7%9F_%D7%9C%D7%90%D7%AA%D7%A82_n0kfh2.mp4"
+                    src="https://res.cloudinary.com/decirk3zb/video/upload/q_auto,f_auto,vc_auto/v1771964642/%D7%A1%D7%A8%D7%98%D7%95%D7%9F_%D7%9C%D7%90%D7%AA%D7%A8_gcga8x.mp4"
                     type="video/mp4"
                   />
                 </video>
+
+                {/* Gradient overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+
+                {/* Sound toggle button */}
+                <button
+                  onClick={() => {
+                    const v = document.getElementById('suite-video') as HTMLVideoElement
+                    if (v) {
+                      v.muted = !v.muted
+                      const btn = document.getElementById('sound-btn')
+                      if (btn) btn.textContent = v.muted ? '🔇' : '🔊'
+                    }
+                  }}
+                  className="absolute bottom-4 left-4 z-10 bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white w-11 h-11 rounded-full flex items-center justify-center text-lg transition-all shadow-lg"
+                  aria-label="הפעל/כבה שמע"
+                >
+                  <span id="sound-btn">🔇</span>
+                </button>
+
+                {/* Play/Pause button */}
+                <button
+                  onClick={() => {
+                    const v = document.getElementById('suite-video') as HTMLVideoElement
+                    if (v) {
+                      if (v.paused) { v.play() } else { v.pause() }
+                      const btn = document.getElementById('play-btn')
+                      if (btn) btn.textContent = v.paused ? '▶' : '⏸'
+                    }
+                  }}
+                  className="absolute bottom-4 left-20 z-10 bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white w-11 h-11 rounded-full flex items-center justify-center text-sm transition-all shadow-lg"
+                  aria-label="הפעל/עצור"
+                >
+                  <span id="play-btn">⏸</span>
+                </button>
+
+                {/* Luxury label */}
+                <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-sm text-[#C9A86A] text-xs px-3 py-1.5 rounded-full font-medium tracking-widest">
+                  ✦ הצצה בלעדית
+                </div>
               </motion.div>
             </div>
           </div>
