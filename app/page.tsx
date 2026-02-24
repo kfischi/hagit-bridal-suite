@@ -269,36 +269,11 @@ export default function Home() {
           <div className="max-w-7xl mx-auto">
             <div className="grid md:grid-cols-2 gap-16 items-center">
               <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
-              >
-                {/* ── Gold label — גדול וכהה יותר ── */}
-                <span className="text-[#A07840] text-sm tracking-[0.2em] uppercase font-medium mb-4 block">
-                  The Experience
-                </span>
-                <h2 className="text-4xl sm:text-5xl text-[#2C241A] font-cormorant mb-6">הצצה לתוך הסוויטה</h2>
-                <p className="text-[#594937] font-light text-lg leading-relaxed mb-8">
-                  המרחב שבו הקסם קורה. סלון רחב ידיים, פינות ישיבה מפנקות, ושפע של אור טבעי שנכנס מהחלונות הגדולים ומשקיף אל הנוף ההררי.
-                  <br /><br />
-                  כל פרט בוילה תוכנן כדי להעניק לך ולמלוות תחושת רוגע, מרחב ופרטיות מוחלטת.
-                </p>
-                <button
-                  onClick={() => scrollTo('#gallery')}
-                  className="inline-flex items-center gap-2 text-[#2C241A] font-medium hover:text-[#C9A86A] transition-colors"
-                >
-                  <span>לגלריה המלאה</span>
-                  <ArrowLeft size={16} />
-                </button>
-              </motion.div>
-
-              <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="relative aspect-[9/16] max-w-sm mx-auto rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.25)] border border-white/30 group"
+                className="relative w-full aspect-[9/16] max-w-[420px] mx-auto rounded-3xl overflow-hidden shadow-[0_30px_80px_rgba(0,0,0,0.25)] border border-white/30 group order-2 md:order-1"
               >
                 <video
                   id="suite-video"
@@ -350,6 +325,31 @@ export default function Home() {
                 <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-sm text-[#C9A86A] text-xs px-3 py-1.5 rounded-full font-medium tracking-widest">
                   ✦ הצצה בלעדית
                 </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="order-1 md:order-2"
+              >
+                <span className="text-[#A07840] text-sm tracking-[0.2em] uppercase font-medium mb-4 block">
+                  The Experience
+                </span>
+                <h2 className="text-4xl sm:text-5xl text-[#2C241A] font-cormorant mb-6">הצצה לתוך הסוויטה</h2>
+                <p className="text-[#594937] font-light text-lg leading-relaxed mb-8">
+                  המרחב שבו הקסם קורה. סלון רחב ידיים, פינות ישיבה מפנקות, ושפע של אור טבעי שנכנס מהחלונות הגדולים ומשקיף אל הנוף ההררי.
+                  <br /><br />
+                  כל פרט בוילה תוכנן כדי להעניק לך ולמלוות תחושת רוגע, מרחב ופרטיות מוחלטת.
+                </p>
+                <button
+                  onClick={() => scrollTo('#gallery')}
+                  className="inline-flex items-center gap-2 text-[#2C241A] font-medium hover:text-[#C9A86A] transition-colors"
+                >
+                  <span>לגלריה המלאה</span>
+                  <ArrowLeft size={16} />
+                </button>
               </motion.div>
             </div>
           </div>
