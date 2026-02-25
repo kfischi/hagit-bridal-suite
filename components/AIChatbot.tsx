@@ -27,7 +27,7 @@ export default function AIChatbot() {
   const [isSummarizing, setIsSummarizing] = useState(false)
   const messagesEndRef                  = useRef<HTMLDivElement>(null)
 
-  const hagitImage = 'https://res.cloudinary.com/decirk3zb/image/upload/v1771449984/Gemini_Generated_Image_b9r9hrb9r9hrb9r9_kanqpt.png'
+  const hagitImage = 'https://res.cloudinary.com/decirk3zb/image/upload/v1772044210/%D7%97%D7%92%D7%99%D7%AA_pdkkr4.jpg'
 
   // חשיפת פונקציה גלובלית לפתיחה עם מצב מותאם
   useEffect(() => {
@@ -83,6 +83,16 @@ export default function AIChatbot() {
         body: JSON.stringify({ messages, purpose: 'summary', mode }),
       })
       const data = await response.json()
+
+      // אל תשלח לחגית אם ה-API נכשל
+      if (!response.ok || !data.reply || data.reply.includes('בעיה טכנית')) {
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: 'היה קושי ביצירת הסיכום. נסי שוב בעוד רגע 🙏'
+        }])
+        return
+      }
+
       const hagitPhone = '972522676718'
       const hagitUrl = data.hagitUrl || `https://wa.me/${hagitPhone}?text=${encodeURIComponent(data.reply)}`
       window.open(hagitUrl, '_blank')
@@ -92,6 +102,10 @@ export default function AIChatbot() {
       }])
     } catch {
       console.error('Summary error')
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: 'היה קושי ביצירת הסיכום. נסי שוב בעוד רגע 🙏'
+      }])
     } finally {
       setIsSummarizing(false)
     }
