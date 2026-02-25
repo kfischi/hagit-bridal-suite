@@ -7,7 +7,7 @@ import Link from 'next/link'
 
 type Message = { role: 'user' | 'assistant'; content: string }
 
-const HAGIT_IMAGE = 'https://res.cloudinary.com/decirk3zb/image/upload/v1771449984/Gemini_Generated_Image_b9r9hrb9r9hrb9r9_kanqpt.png'
+const HAGIT_IMAGE = 'https://res.cloudinary.com/decirk3zb/image/upload/v1772044210/%D7%97%D7%92%D7%99%D7%AA_pdkkr4.jpg'
 const HAGIT_PHONE = '972522676718'
 const WHATSAPP_URL = `https://wa.me/${HAGIT_PHONE}?text=${encodeURIComponent('היי, אשמח לשמוע פרטים על התארגנות בוילה')}`
 
