@@ -18,6 +18,8 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'מחיר השקה מיוחד | חגית',
     description: 'הזדמנות בלעדית — חווית ההתארגנות שכולן מדברות עליה, עכשיו ב-₪500 בלבד',
+    url: 'https://suite-hagit.co.il/hashaka',
+    siteName: 'חגית התארגנות כלות',
     // הוסיפי תמונה כאן לשיתוף בוואטסאפ / אינסטגרם
     // images: ['/images/hashaka-og.jpg'],
   },
