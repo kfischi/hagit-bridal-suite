@@ -71,7 +71,7 @@ export default function Home() {
       <main ref={containerRef} className="relative bg-[#FAFAF8] text-[#2C241A]">
 
         {/* ══════════════════════════════════════════
-            HEADER — תמיד גלוי, בולט
+            HEADER
         ══════════════════════════════════════════ */}
         <motion.header
           initial={{ y: -20, opacity: 0 }}
@@ -86,7 +86,6 @@ export default function Home() {
         >
           <div className="max-w-7xl mx-auto px-5 flex items-center justify-between">
 
-            {/* ── Logo ── */}
             <motion.button
               whileHover={{ scale: 1.02 }}
               onClick={() => scrollTo('#hero')}
@@ -98,7 +97,6 @@ export default function Home() {
               </span>
             </motion.button>
 
-            {/* ── Desktop Nav ── */}
             <nav className="hidden md:flex items-center gap-0.5">
               {NAV_LINKS.map(link => {
                 const isActive = activeSection === link.href.replace('#', '')
@@ -119,7 +117,6 @@ export default function Home() {
               })}
             </nav>
 
-            {/* ── CTA + Hamburger ── */}
             <div className="flex items-center gap-3">
               <motion.a
                 whileHover={{ scale: 1.02 }}
@@ -145,7 +142,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ── Mobile drawer ── */}
           <motion.div
             initial={false}
             animate={{ height: menuOpen ? 'auto' : 0, opacity: menuOpen ? 1 : 0 }}
@@ -201,7 +197,6 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.5 }}
             >
-              {/* ── Gold label — גדול וכהה יותר ── */}
               <span className="text-[#7A5520] text-base tracking-[0.25em] uppercase font-semibold block mb-6">
                 וילת כלות יוקרתית בהרי ירושלים
               </span>
@@ -263,11 +258,13 @@ export default function Home() {
         </section>
 
         {/* ══════════════════════════════════════════
-            EXPERIENCE (Video)
+            EXPERIENCE — ✦ הסרטון החדש ✦
         ══════════════════════════════════════════ */}
         <section id="experience" className="py-28 px-6 bg-[#FAF6EE]">
           <div className="max-w-7xl mx-auto">
             <div className="grid md:grid-cols-2 gap-16 items-center">
+
+              {/* ── Video ── */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -280,8 +277,9 @@ export default function Home() {
                   autoPlay muted loop playsInline preload="auto"
                   className="absolute inset-0 w-full h-full object-cover"
                 >
+                  {/* ✦ הסרטון החדש ✦ */}
                   <source
-                    src="https://res.cloudinary.com/decirk3zb/video/upload/q_auto,f_auto,vc_auto/v1771964642/%D7%A1%D7%A8%D7%98%D7%95%D7%9F_%D7%9C%D7%90%D7%AA%D7%A8_gcga8x.mp4"
+                    src="https://res.cloudinary.com/decirk3zb/video/upload/f_auto,q_auto,vc_auto/v1772203254/%D7%A1%D7%A8%D7%98%D7%95%D7%9F_%D7%9B%D7%AA%D7%95%D7%91%D7%99%D7%95%D7%AA_rzni0l.mp4"
                     type="video/mp4"
                   />
                 </video>
@@ -289,7 +287,7 @@ export default function Home() {
                 {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
-                {/* Sound toggle button */}
+                {/* Sound toggle */}
                 <button
                   onClick={() => {
                     const v = document.getElementById('suite-video') as HTMLVideoElement
@@ -305,7 +303,7 @@ export default function Home() {
                   <span id="sound-btn">🔇</span>
                 </button>
 
-                {/* Play/Pause button */}
+                {/* Play/Pause */}
                 <button
                   onClick={() => {
                     const v = document.getElementById('suite-video') as HTMLVideoElement
@@ -321,12 +319,13 @@ export default function Home() {
                   <span id="play-btn">⏸</span>
                 </button>
 
-                {/* Luxury label */}
+                {/* Label */}
                 <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-sm text-[#C9A86A] text-xs px-3 py-1.5 rounded-full font-medium tracking-widest">
                   ✦ הצצה בלעדית
                 </div>
               </motion.div>
 
+              {/* ── Text ── */}
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -351,6 +350,7 @@ export default function Home() {
                   <ArrowLeft size={16} />
                 </button>
               </motion.div>
+
             </div>
           </div>
         </section>
@@ -369,7 +369,6 @@ export default function Home() {
             >
               <div className="flex items-center justify-center gap-4 mb-5">
                 <div className="h-px w-14 bg-gradient-to-r from-transparent to-[#C9A86A]" />
-                {/* ── Gold label — גדול וכהה יותר ── */}
                 <span className="text-[#A07840] text-sm tracking-[0.3em] uppercase font-medium">הגלריה שלנו</span>
                 <div className="h-px w-14 bg-gradient-to-l from-transparent to-[#C9A86A]" />
               </div>
@@ -425,18 +424,17 @@ export default function Home() {
             </motion.div>
             <h3 className="text-3xl sm:text-4xl font-cormorant text-[#2C241A] mb-4">מחכה לארח אותך</h3>
             <p className="text-lg text-[#594937] font-light italic leading-relaxed mb-6">
-              "הבית שלי הוא הלב שלי, ואני פותחת אותו בפנייך באהבה גדולה.
+              &quot;הבית שלי הוא הלב שלי, ואני פותחת אותו בפנייך באהבה גדולה.
               <br />
-              מזמינה אותך להתחיל את היום המרגש בחייך באווירה של רוגע, פינוק וקסם."
+              מזמינה אותך להתחיל את היום המרגש בחייך באווירה של רוגע, פינוק וקסם.&quot;
             </p>
             <div className="w-12 h-px bg-[#C9A86A] mx-auto opacity-60 mb-2" />
             <p className="text-[#2C241A] font-cormorant text-xl font-medium">- חגית -</p>
           </div>
         </section>
 
-
         {/* ══════════════════════════════════════════
-            VILLA STORY — תוכן הוילה
+            VILLA STORY
         ══════════════════════════════════════════ */}
         <section className="py-28 px-6 bg-[#FAF6EE]">
           <div className="max-w-4xl mx-auto">
@@ -534,15 +532,15 @@ export default function Home() {
               className="text-center mt-16 bg-[#2C241A] rounded-3xl p-10"
             >
               <p className="text-[#E5D5C0] font-cormorant text-2xl font-light italic mb-2">
-                "זה לא רק מקום להתארגן בו.
+                &quot;זה לא רק מקום להתארגן בו.
               </p>
               <p className="text-[#C9A86A] font-cormorant text-2xl font-light italic mb-6">
-                זו התחושה שאת בידיים טובות."
+                זו התחושה שאת בידיים טובות.&quot;
               </p>
-              <p className="text-[#B09880] font-light text-sm mb-8 max-w-lg mx-auto">
+              <p className="text-[#B09880] font-light text-sm mb-6 max-w-lg mx-auto leading-relaxed">
                 בסוויטה של חגית, המטרה שלנו היא אחת: שתגיעי לחופה לא רק הכי יפה שיש, אלא בעיקר רגועה, נוכחת ומוכנה.
               </p>
-              <p className="text-[#D5C5B0] font-light text-sm mb-8">
+              <p className="text-[#D5C5B0] font-light text-sm">
                 המקומות נתפסים מהר — דברי איתי ונשריין לך את השקט שמגיע לך.
               </p>
             </motion.div>
@@ -550,12 +548,10 @@ export default function Home() {
         </section>
 
         {/* ══════════════════════════════════════════
-            PRICING — 2 חבילות שוות
+            PRICING
         ══════════════════════════════════════════ */}
         <section id="pricing" className="py-28 px-6 bg-[#2C241A] text-white">
           <div className="max-w-5xl mx-auto text-center">
-
-            {/* ── Gold label — גדול וכהה יותר ── */}
             <span className="text-[#C9A86A] text-sm tracking-[0.3em] uppercase font-medium block mb-4">
               בחרי את מה שמתאים לך
             </span>
@@ -567,10 +563,9 @@ export default function Home() {
             </p>
             <div className="w-24 h-px bg-[#C9A86A] mx-auto mb-14 opacity-40" />
 
-            {/* ── 2 חבילות זהות בגודל ── */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
 
-              {/* חבילה א — בסיס */}
+              {/* חבילת בסיס */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -582,15 +577,12 @@ export default function Home() {
                 <div className="w-16 h-16 bg-[#C9A86A]/15 rounded-full flex items-center justify-center mb-6 border border-[#C9A86A]/30">
                   <Star strokeWidth={1.5} size={28} className="text-[#C9A86A]" />
                 </div>
-
                 <h3 className="text-3xl font-cormorant mb-1 text-[#FAF6EE] font-light">חבילת בסיס</h3>
                 <p className="text-[#B09880] text-sm mb-8 tracking-wide">לאירוח קליל ומפנק</p>
-
                 <div className="mb-10">
                   <span className="text-6xl font-cormorant font-light text-[#FAF6EE]">2,000</span>
                   <span className="text-2xl text-[#C9A86A] mr-1">₪</span>
                 </div>
-
                 <ul className="space-y-4 w-full mb-10 flex-grow">
                   {[
                     'שימוש בוילה מהבוקר עד אחה״צ',
@@ -607,7 +599,6 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-
                 <a
                   href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי חגית, אשמח לשריין את חבילת הבסיס ב-2,000₪ 💍')}`}
                   target="_blank" rel="noopener noreferrer"
@@ -617,7 +608,7 @@ export default function Home() {
                 </a>
               </motion.div>
 
-              {/* חבילה ב — פרימיום */}
+              {/* חבילת פרימיום */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -626,23 +617,18 @@ export default function Home() {
                 whileHover={{ y: -8, transition: { duration: 0.3 } }}
                 className="bg-[#FAF6EE] text-[#2C241A] p-10 rounded-3xl flex flex-col items-center text-right relative shadow-[0_20px_60px_rgba(0,0,0,0.3)] border-2 border-[#C9A86A]"
               >
-                {/* Badge */}
                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#C9A86A] text-white text-xs px-5 py-1.5 rounded-full font-medium tracking-widest shadow-md">
                   ✦ המומלצת ✦
                 </div>
-
                 <div className="w-16 h-16 bg-[#C9A86A]/20 rounded-full flex items-center justify-center mb-6 border border-[#C9A86A]/40">
                   <Gem strokeWidth={1.5} size={28} className="text-[#C9A86A]" />
                 </div>
-
                 <h3 className="text-3xl font-cormorant mb-1 text-[#2C241A] font-light">חבילת פרימיום</h3>
                 <p className="text-[#8B7355] text-sm mb-8 tracking-wide">החוויה המלאה והמפנקת</p>
-
                 <div className="mb-10">
                   <span className="text-6xl font-cormorant font-light text-[#2C241A]">2,500</span>
                   <span className="text-2xl text-[#C9A86A] mr-1">₪</span>
                 </div>
-
                 <ul className="space-y-4 w-full mb-10 flex-grow">
                   {[
                     'כל מה שיש בחבילת הבסיס',
@@ -657,7 +643,6 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-
                 <a
                   href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי חגית, אשמח לשריין את חבילת הפרימיום ב-2,500₪ 💍')}`}
                   target="_blank" rel="noopener noreferrer"
@@ -668,7 +653,7 @@ export default function Home() {
               </motion.div>
             </div>
 
-            {/* ── באנר אפסייל ── */}
+            {/* באנר אפסייל */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -695,7 +680,6 @@ export default function Home() {
                 בואי נבנה יחד את החבילה שלך
               </button>
             </motion.div>
-
           </div>
         </section>
 
@@ -712,7 +696,6 @@ export default function Home() {
             >
               <div className="flex items-center justify-center gap-4 mb-5">
                 <div className="h-px w-14 bg-gradient-to-r from-transparent to-[#C9A86A]" />
-                {/* ── Gold label — גדול וכהה יותר ── */}
                 <span className="text-[#A07840] text-sm tracking-[0.3em] uppercase font-medium">צרי קשר</span>
                 <div className="h-px w-14 bg-gradient-to-l from-transparent to-[#C9A86A]" />
               </div>
