@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Raleway, Cormorant_Garamond } from 'next/font/google'
 import AccessibilityBtn from '@/components/AccessibilityBtn'
 import SocialMediaLinks from '@/components/SocialMediaLinks'
+import LaunchPopup from '@/components/LaunchPopup'
 import { Heart, Phone, Mail } from 'lucide-react'
 import './globals.css'
 
@@ -22,34 +23,11 @@ const cormorant = Cormorant_Garamond({
 export const metadata: Metadata = {
   metadataBase: new URL('https://suite-hagit.co.il'),
   title: {
-    default: 'חגית | סוויטת כלות יוקרתית בהרי ירושלים',
-    template: '%s | חגית - סוויטת כלות',
+    default: "חגית | וילת התארגנות כלות",
+    template: "%s | חגית - וילת כלות"
   },
-  description: 'סוויטת כלות יוקרתית בהרי ירושלים. חבילות התארגנות מפנקות לכלה וחברותיה — ארוחת בוקר, שמפניה, ביוטי ועוד. שריינו תאריך עוד היום.',
-  keywords: ['סוויטת כלות', 'התארגנות כלה', 'הרי ירושלים', 'חגית', 'וילה כלות', 'יום חתונה'],
+  description: 'וילה יוקרתית בהרי ירושלים ליום ההתארגנות המושלם שלך.',
   robots: { index: true, follow: true },
-  openGraph: {
-    type: 'website',
-    locale: 'he_IL',
-    url: 'https://suite-hagit.co.il',
-    siteName: 'חגית | סוויטת כלות',
-    title: 'חגית | סוויטת כלות יוקרתית בהרי ירושלים',
-    description: 'סוויטת כלות יוקרתית בהרי ירושלים. התארגנות מפנקת לכלה וחברותיה — ארוחת בוקר, שמפניה, ביוטי ועוד.',
-    images: [
-      {
-        url: 'https://res.cloudinary.com/decirk3zb/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/v1771444671/8_oaoxjm.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'סוויטת כלות חגית — הרי ירושלים',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'חגית | סוויטת כלות יוקרתית בהרי ירושלים',
-    description: 'סוויטת כלות יוקרתית בהרי ירושלים. התארגנות מפנקת לכלה וחברותיה.',
-    images: ['https://res.cloudinary.com/decirk3zb/image/upload/w_1200,h_630,c_fill,q_auto,f_auto/v1771444671/8_oaoxjm.jpg'],
-  },
 }
 
 export default function RootLayout({
@@ -61,25 +39,32 @@ export default function RootLayout({
     <html lang="he" dir="rtl" className={`${raleway.variable} ${cormorant.variable}`}>
       <body className="font-raleway antialiased bg-[#FAFAF8] text-[#2C241A] flex flex-col min-h-screen">
 
+        {/* תוכן העמוד */}
         <main className="flex-grow">
           {children}
         </main>
 
         <AccessibilityBtn />
 
+        {/* פופאפ השקה — מופיע אחרי 4 שניות, נעלם לאחר 31.03.2026 */}
+        <LaunchPopup />
+
         {/* Footer */}
         <footer className="bg-white border-t border-[#E5D5C0] pt-12 pb-6 relative z-40">
           <div className="max-w-6xl mx-auto px-6 text-center">
 
+            {/* לוגו */}
             <div className="flex items-center justify-center gap-3 mb-8">
               <Heart className="w-8 h-8 text-[#D4AF37]" fill="#D4AF37" />
               <span className="font-cormorant text-4xl text-[#1A1A1A] font-semibold">חגית</span>
             </div>
 
+            {/* רשתות חברתיות */}
             <div className="flex justify-center mb-8">
               <SocialMediaLinks />
             </div>
 
+            {/* פרטי קשר */}
             <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-[#666] mb-8 font-light">
               <a href="tel:052-267-6718" className="flex items-center gap-2 hover:text-[#D4AF37] transition-colors">
                 <Phone size={16} />
@@ -92,8 +77,10 @@ export default function RootLayout({
               </a>
             </div>
 
+            {/* קו מפריד */}
             <div className="w-full h-px bg-gradient-to-r from-transparent via-[#E5D5C0] to-transparent mb-6 opacity-50" />
 
+            {/* שורה תחתונה */}
             <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400">
               <div className="flex gap-4">
                 <a href="/accessibility" className="hover:text-[#666] transition-colors">הצהרת נגישות</a>
@@ -102,8 +89,10 @@ export default function RootLayout({
               </div>
               <p>© 2026 חגית התארגנות כלות • כל הזכויות שמורות</p>
             </div>
+
           </div>
         </footer>
+
       </body>
     </html>
   )
