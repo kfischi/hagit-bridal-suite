@@ -2,14 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { X, Sparkles } from 'lucide-react'
+import { X, Sparkles, ArrowLeft } from 'lucide-react'
 
-const STORAGE_KEY = 'hagit_launch_popup_dismissed'
+const STORAGE_KEY = 'hagit_launch_popup_v2'
 const LAUNCH_DEADLINE = new Date('2026-03-31T23:59:59')
 
-function useCountdownShort(target: Date) {
+function useDaysLeft(target: Date) {
   const [days, setDays] = useState(0)
-
   useEffect(() => {
     const calc = () => {
       const diff = target.getTime() - Date.now()
@@ -19,20 +18,16 @@ function useCountdownShort(target: Date) {
     const id = setInterval(calc, 60000)
     return () => clearInterval(id)
   }, [target])
-
   return days
 }
 
 export default function LaunchPopup() {
   const [visible, setVisible] = useState(false)
-  const daysLeft = useCountdownShort(LAUNCH_DEADLINE)
+  const daysLeft = useDaysLeft(LAUNCH_DEADLINE)
 
   useEffect(() => {
-    // לא מציגים אם כבר נסגר בביקור הזה
     if (sessionStorage.getItem(STORAGE_KEY)) return
-    // לא מציגים אם עבר הדדליין
     if (Date.now() > LAUNCH_DEADLINE.getTime()) return
-
     const timer = setTimeout(() => setVisible(true), 4000)
     return () => clearTimeout(timer)
   }, [])
@@ -42,93 +37,135 @@ export default function LaunchPopup() {
     sessionStorage.setItem(STORAGE_KEY, '1')
   }
 
+  const goToLaunch = () => {
+    dismiss()
+    window.location.href = '/hashaka'
+  }
+
   return (
     <AnimatePresence>
       {visible && (
         <>
-          {/* Backdrop */}
+          {/* BACKDROP */}
           <motion.div
             key="backdrop"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.35 }}
             onClick={dismiss}
-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[9998]"
+            className="fixed inset-0 z-[9990]"
+            style={{ background: 'rgba(10,6,2,0.65)', backdropFilter: 'blur(4px)' }}
           />
 
-          {/* Popup */}
+          {/* POPUP */}
           <motion.div
             key="popup"
-            initial={{ opacity: 0, y: 40, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.97 }}
-            transition={{ type: 'spring', damping: 22, stiffness: 280 }}
-            className="fixed bottom-0 left-0 right-0 sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 z-[9999] w-full sm:max-w-sm sm:rounded-2xl overflow-hidden"
             dir="rtl"
+            initial={{ opacity: 0, scale: 0.88, y: 32 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.93, y: 16 }}
+            transition={{ type: 'spring', damping: 20, stiffness: 260, delay: 0.05 }}
+            className="fixed z-[9999] inset-x-4 bottom-4 sm:inset-x-auto sm:left-1/2 sm:bottom-auto sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-[420px] rounded-2xl overflow-hidden shadow-2xl"
+            style={{ boxShadow: '0 24px 60px rgba(0,0,0,0.45), 0 0 0 1px rgba(201,168,106,0.2)' }}
           >
-            {/* Background image strip */}
-            <div className="relative">
-              <div className="h-36 overflow-hidden">
-                <img
-                  src="https://res.cloudinary.com/decirk3zb/image/upload/f_auto,q_auto,w_600,h_200,c_fill,g_center/v1771444671/8_oaoxjm.jpg"
-                  alt=""
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(18,10,3,0.3) 0%, rgba(18,10,3,0.75) 100%)' }} />
+            {/* IMAGE */}
+            <div className="relative h-48 overflow-hidden">
+              <img
+                src="https://res.cloudinary.com/decirk3zb/image/upload/f_auto,q_auto,w_840,h_400,c_fill,g_center/v1771444671/8_oaoxjm.jpg"
+                alt="חגית התארגנות כלות"
+                className="w-full h-full object-cover"
+              />
+              <div
+                className="absolute inset-0"
+                style={{ background: 'linear-gradient(180deg, rgba(10,6,2,0.15) 0%, rgba(10,6,2,0.70) 100%)' }}
+              />
 
-                {/* Close */}
-                <button
-                  onClick={dismiss}
-                  className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white/70 hover:text-white transition-colors"
-                  aria-label="סגרי"
-                >
-                  <X size={15} />
-                </button>
+              {/* CLOSE */}
+              <button
+                onClick={dismiss}
+                aria-label="סגרי"
+                className="absolute top-3 left-3 w-9 h-9 rounded-full flex items-center justify-center transition-colors"
+                style={{ background: 'rgba(0,0,0,0.4)', backdropFilter: 'blur(8px)' }}
+              >
+                <X size={16} className="text-white" />
+              </button>
 
-                {/* Badge */}
-                <div className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#C9A86A]/90 backdrop-blur-sm">
-                  <Sparkles size={11} className="text-[#1A1209]" />
-                  <span className="text-[#1A1209] text-[10px] font-medium tracking-wider uppercase">מחיר השקה</span>
-                </div>
-
-                {/* Headline over image */}
-                <div className="absolute bottom-4 right-4 left-4">
-                  <p
-                    className="text-white font-light leading-snug"
-                    style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.35rem' }}
-                  >
-                    הרגע שלפני הרגע הגדול
-                  </p>
-                </div>
+              {/* BADGE */}
+              <div
+                className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-full"
+                style={{ background: 'rgba(201,168,106,0.95)' }}
+              >
+                <Sparkles size={12} className="text-[#1A1209]" />
+                <span className="text-[#1A1209] text-[11px] font-semibold tracking-widest uppercase">מחיר השקה</span>
               </div>
 
-              {/* Content */}
-              <div className="bg-[#FAF6EE] px-5 py-4">
-                <p className="text-[#594937] font-light text-sm leading-relaxed mb-1">
-                  חווית ההתארגנות שכולן מדברות עליה — עכשיו במחיר שלא יחזור.
+              {/* HEADLINE */}
+              <div className="absolute bottom-0 right-0 left-0 px-5 pb-4">
+                <p className="text-white text-[11px] tracking-[0.25em] uppercase mb-1 opacity-70">
+                  לזמן מוגבל בלבד
                 </p>
-                <p className="text-[#8B7355] text-xs mb-4">
-                  עוד {daysLeft} ימים במחיר ההשקה ·{' '}
-                  <span className="line-through text-[#8B7355]">₪2,000</span>{' '}
-                  <span className="text-[#C9A86A] font-medium">₪500</span>
-                </p>
+                <h3
+                  className="text-white font-light leading-tight"
+                  style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.6rem' }}
+                >
+                  הרגע שלפני הרגע הגדול
+                </h3>
+              </div>
+            </div>
 
-                <div className="flex gap-2">
-                  <a
-                    href="/hashaka"
-                    onClick={dismiss}
-                    className="flex-1 bg-[#C9A86A] hover:bg-[#b8955a] text-[#1A1209] text-sm font-medium py-2.5 px-4 rounded-full text-center transition-colors shadow-sm shadow-[#C9A86A]/20"
+            {/* CONTENT */}
+            <div className="bg-[#FAF6EE] px-5 pt-5 pb-5">
+              <p className="text-[#2C241A] text-base leading-relaxed mb-3" style={{ fontFamily: 'Heebo, sans-serif' }}>
+                חווית ההתארגנות שכולן מדברות עליה —<br />
+                <span className="font-medium">עכשיו במחיר שלא יחזור.</span>
+              </p>
+
+              {/* PRICE ROW */}
+              <div className="flex items-center gap-3 mb-5 pb-4 border-b border-[#E5D5C0]">
+                <div className="flex items-baseline gap-2">
+                  <span
+                    className="text-3xl font-light"
+                    style={{ fontFamily: "'Cormorant Garamond', serif", color: '#C9A86A' }}
                   >
-                    לפרטים המלאים
-                  </a>
-                  <button
-                    onClick={dismiss}
-                    className="px-4 py-2.5 rounded-full border border-[#E5D5C0] text-[#8B7355] text-sm hover:border-[#C9A86A] transition-colors"
+                    ₪500
+                  </span>
+                  <span
+                    className="text-lg line-through"
+                    style={{ fontFamily: "'Cormorant Garamond', serif", color: '#B0A090' }}
                   >
-                    אחר כך
-                  </button>
+                    ₪2,000
+                  </span>
                 </div>
+                <div className="mr-auto bg-[#C9A86A]/15 border border-[#C9A86A]/30 rounded-full px-2.5 py-0.5">
+                  <span className="text-[#C9A86A] text-xs font-medium">-75%</span>
+                </div>
+                <span className="text-[#8B7355] text-xs">עוד {daysLeft} ימים</span>
+              </div>
+
+              {/* CTA */}
+              <div className="flex flex-col gap-2.5">
+                <button
+                  onClick={goToLaunch}
+                  className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-medium text-base transition-all active:scale-[0.98]"
+                  style={{
+                    background: 'linear-gradient(135deg, #C9A86A 0%, #D4B97A 50%, #C9A86A 100%)',
+                    color: '#1A1209',
+                    boxShadow: '0 4px 16px rgba(201,168,106,0.35)',
+                    fontFamily: 'Heebo, sans-serif',
+                  }}
+                >
+                  <span>אני רוצה את המחיר המיוחד</span>
+                  <ArrowLeft size={17} />
+                </button>
+
+                <button
+                  onClick={dismiss}
+                  className="w-full py-2.5 rounded-xl text-sm transition-colors"
+                  style={{ color: '#8B7355', fontFamily: 'Heebo, sans-serif' }}
+                >
+                  אחר כך
+                </button>
               </div>
             </div>
           </motion.div>
