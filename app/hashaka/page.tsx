@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
-import { Check, ChevronDown, Star, Phone, MessageCircle, Sparkles } from 'lucide-react'
+import { Check, ChevronDown, Phone, MessageCircle, Sparkles } from 'lucide-react'
 
 // ============================================================
 // CONFIGURATION — שני מהכאן לפי הצורך
@@ -95,30 +95,6 @@ function CountdownBlock() {
     </div>
   )
 }
-
-// ============================================================
-// TESTIMONIAL CARD
-// ============================================================
-const testimonials = [
-  {
-    text: 'לא האמנתי שאפשר להגיע לחתונה כל כך רגועה. חגית יצרה אווירה שגרמה לנו לשכוח שיש חתונה בכלל.',
-    name: 'שירה מ.',
-    date: 'נשואה ינואר 2025',
-    stars: 5,
-  },
-  {
-    text: 'הבוקר הזה היה המתנה הכי טובה שנתתי לעצמי. בואי, תשתי, תנשמי — וזהו. הכל מוכן לפניך.',
-    name: 'מיכל ר.',
-    date: 'נשואה מרץ 2025',
-    stars: 5,
-  },
-  {
-    text: 'עזבי את כל הסטרס לשאר. אצל חגית שעתיים של עולם אחר לגמרי. המלוות שלי עוד מדברות על זה.',
-    name: 'נועה א.',
-    date: 'נשואה מאי 2025',
-    stars: 5,
-  },
-]
 
 // ============================================================
 // WHAT'S INCLUDED
@@ -256,7 +232,7 @@ export default function HashakPage() {
             transition={{ duration: 1, delay: 0.35 }}
             className="relative z-10 text-center max-w-3xl"
           >
-            <p className="text-[#8B7355] font-light text-sm tracking-[0.3em] uppercase mb-5">
+            <p className="text-white/60 font-light text-sm tracking-[0.3em] uppercase mb-5">
               לפני שנפתח לכולן
             </p>
             <h1 className="font-cormorant text-5xl sm:text-7xl lg:text-8xl text-[#F5EDDF] font-light leading-[1.05] mb-6">
@@ -264,7 +240,7 @@ export default function HashakPage() {
               <br />
               <span className="italic">הרגע הגדול</span>
             </h1>
-            <p className="text-[#BFA882] font-light text-lg sm:text-xl leading-relaxed max-w-xl mx-auto">
+            <p className="text-white/85 font-light text-lg sm:text-xl leading-relaxed max-w-xl mx-auto">
               חווית ההתארגנות שכולן מדברות עליה — עכשיו במחיר שלא יחזור.
               <br />
               <span className="text-[#C9A86A]">רק לחודש הקרוב.</span>
@@ -279,7 +255,7 @@ export default function HashakPage() {
             className="relative z-10 mt-10 flex items-center gap-5 bg-black/25 border border-[#C9A86A]/25 rounded-2xl px-8 py-5 backdrop-blur-md"
           >
             <div className="text-center">
-              <span className="text-xs text-[#6B5740] tracking-widest block mb-1">המחיר הרגיל</span>
+              <span className="text-xs text-white/50 tracking-widest block mb-1">המחיר הרגיל</span>
               <span className="font-cormorant text-3xl price-line-through">₪{CONFIG.regularPrice.toLocaleString()}</span>
             </div>
             <div className="w-px h-12 bg-[#C9A86A]/20" />
@@ -310,7 +286,7 @@ export default function HashakPage() {
             </a>
             <a
               href={`tel:052-267-6718`}
-              className="inline-flex items-center gap-2 text-[#8B7355] hover:text-[#C9A86A] transition-colors text-sm border-b border-[#8B7355]/40 hover:border-[#C9A86A] pb-0.5"
+              className="inline-flex items-center gap-2 text-white/50 hover:text-[#C9A86A] transition-colors text-sm border-b border-white/20 hover:border-[#C9A86A] pb-0.5"
             >
               <Phone size={14} />
               או התקשרי: 052-267-6718
@@ -324,7 +300,7 @@ export default function HashakPage() {
             transition={{ delay: 1.2 }}
             className="relative z-10 mt-12 text-center"
           >
-            <p className="text-[#6B5740] text-xs tracking-[0.25em] uppercase mb-4">המחיר תקף עד</p>
+            <p className="text-white/40 text-xs tracking-[0.25em] uppercase mb-4">המחיר תקף עד</p>
             <CountdownBlock />
           </motion.div>
 
@@ -378,45 +354,6 @@ export default function HashakPage() {
                 <MessageCircle size={16} />
                 אני רוצה לשמוע עוד
               </a>
-            </FadeIn>
-          </div>
-        </section>
-
-        {/* ══════════════════════════════════════════
-            TESTIMONIALS
-        ══════════════════════════════════════════ */}
-        <section className="py-28 px-6" style={{ background: '#F2EBE1' }}>
-          <div className="max-w-4xl mx-auto">
-            <FadeIn className="text-center mb-16">
-              <span className="text-[#C9A86A] text-xs tracking-[0.3em] uppercase block mb-3">כבר יודעות עלינו</span>
-              <h2 className="font-cormorant text-4xl sm:text-5xl text-[#2C241A] font-light">
-                מה אומרות הכלות
-              </h2>
-            </FadeIn>
-
-            <div className="grid sm:grid-cols-3 gap-6">
-              {testimonials.map((t, i) => (
-                <FadeIn key={i} delay={i * 0.12}>
-                  <div className="bg-white rounded-2xl p-6 border border-[#E5D5C0] h-full flex flex-col">
-                    <div className="flex gap-0.5 mb-4">
-                      {[...Array(t.stars)].map((_, s) => (
-                        <Star key={s} size={13} className="text-[#C9A86A] fill-[#C9A86A]" />
-                      ))}
-                    </div>
-                    <p className="text-[#594937] font-light leading-relaxed flex-grow text-sm mb-5">
-                      &ldquo;{t.text}&rdquo;
-                    </p>
-                    <div className="border-t border-[#E5D5C0] pt-4">
-                      <p className="text-[#2C241A] text-sm font-medium">{t.name}</p>
-                      <p className="text-[#8B7355] text-xs mt-0.5">{t.date}</p>
-                    </div>
-                  </div>
-                </FadeIn>
-              ))}
-            </div>
-
-            <FadeIn delay={0.45} className="mt-6 text-center">
-              <p className="text-[#8B7355] text-xs italic">* המלל הוא placeholder — יש להחליף בעדויות אמיתיות</p>
             </FadeIn>
           </div>
         </section>
