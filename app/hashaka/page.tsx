@@ -2,26 +2,18 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
-import { Check, ChevronDown, Phone, MessageCircle, Sparkles } from 'lucide-react'
+import { Check, ChevronDown, Phone, MessageCircle } from 'lucide-react'
 
-// ============================================================
-// CONFIGURATION — שני מהכאן לפי הצורך
-// ============================================================
 const CONFIG = {
   phoneNumber: '972522676718',
   whatsappMessage: 'היי חגית! ראיתי את מחיר ההשקה המיוחד ואני רוצה לשמוע פרטים 💍',
   regularPrice: 2000,
   launchPrice: 500,
   deadline: new Date('2026-03-31T23:59:59'),
-  spotsLeft: 7,
 }
 
-// ============================================================
-// COUNTDOWN HOOK
-// ============================================================
 function useCountdown(target: Date) {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 })
-
   useEffect(() => {
     const calc = () => {
       const diff = target.getTime() - Date.now()
@@ -37,22 +29,18 @@ function useCountdown(target: Date) {
     const id = setInterval(calc, 1000)
     return () => clearInterval(id)
   }, [target])
-
   return timeLeft
 }
 
-// ============================================================
-// ANIMATED SECTION WRAPPER
-// ============================================================
 function FadeIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-80px' })
+  const isInView = useInView(ref, { once: true, margin: '-60px' })
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 24 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.75, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
       className={className}
     >
       {children}
@@ -60,9 +48,6 @@ function FadeIn({ children, delay = 0, className = '' }: { children: React.React
   )
 }
 
-// ============================================================
-// COUNTDOWN BLOCK
-// ============================================================
 function CountdownBlock() {
   const t = useCountdown(CONFIG.deadline)
   const units = [
@@ -72,33 +57,31 @@ function CountdownBlock() {
     { label: 'שניות', value: t.seconds },
   ]
   return (
-    <div className="flex gap-3 justify-center flex-wrap">
+    <div className="flex gap-2.5 justify-center flex-wrap">
       {units.map(({ label, value }) => (
         <div key={label} className="flex flex-col items-center">
-          <div className="w-[72px] h-[72px] bg-white/10 border border-[#C9A86A]/40 rounded-xl flex items-center justify-center backdrop-blur-sm">
+          <div className="w-[68px] h-[68px] rounded-2xl flex items-center justify-center"
+            style={{ background: 'rgba(255,255,255,0.07)', border: '1px solid rgba(212,185,122,0.35)', backdropFilter: 'blur(12px)' }}>
             <AnimatePresence mode="wait">
               <motion.span
                 key={value}
-                initial={{ y: -16, opacity: 0 }}
+                initial={{ y: -12, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 16, opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                className="font-cormorant text-3xl font-light text-[#F5EDDF]"
+                exit={{ y: 12, opacity: 0 }}
+                transition={{ duration: 0.25 }}
+                style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.75rem', fontWeight: 400, color: '#EDE0C8' }}
               >
                 {String(value).padStart(2, '0')}
               </motion.span>
             </AnimatePresence>
           </div>
-          <span className="text-[10px] tracking-[0.2em] text-[#C9A86A] mt-1.5 uppercase">{label}</span>
+          <span style={{ fontFamily: "'Heebo', sans-serif", fontSize: '10px', letterSpacing: '0.18em', color: '#D4B97A', marginTop: '6px', textTransform: 'uppercase' }}>{label}</span>
         </div>
       ))}
     </div>
   )
 }
 
-// ============================================================
-// WHAT'S INCLUDED
-// ============================================================
 const included = [
   'חדר פרטי בלעדי לך ולמלוות בלבד',
   'יין ספארקלינג + מגש ממתקים מפנק',
@@ -108,92 +91,74 @@ const included = [
   'ליווי אישי של חגית לאורך כל הבוקר',
 ]
 
-// ============================================================
-// MAIN PAGE
-// ============================================================
 export default function HashakPage() {
   const whatsappUrl = `https://wa.me/${CONFIG.phoneNumber}?text=${encodeURIComponent(CONFIG.whatsappMessage)}`
   const discount = Math.round((1 - CONFIG.launchPrice / CONFIG.regularPrice) * 100)
 
   return (
     <>
-      {/* ── GLOBAL STYLES ── */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Heebo:wght@300;400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Heebo:wght@300;400;500&display=swap');
 
+        * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
 
-        .font-cormorant { font-family: 'Cormorant Garamond', serif; }
-        .font-heebo     { font-family: 'Heebo', sans-serif; }
+        /* ── Scrollbar ── */
+        ::-webkit-scrollbar { width: 3px; }
+        ::-webkit-scrollbar-track { background: #0D0800; }
+        ::-webkit-scrollbar-thumb { background: #D4B97A; border-radius: 2px; }
 
-        .shimmer {
-          background: linear-gradient(90deg, #C9A86A 0%, #F0D98A 40%, #C9A86A 60%, #A07840 100%);
-          background-size: 200% auto;
-          animation: shimmer 3s linear infinite;
+        /* ── Gold shimmer on price ── */
+        .gold-shimmer {
+          background: linear-gradient(90deg, #B8892A 0%, #E8CC78 35%, #F5E09A 50%, #E8CC78 65%, #B8892A 100%);
+          background-size: 250% auto;
+          animation: gs 3.5s linear infinite;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
         }
-        @keyframes shimmer {
-          to { background-position: 200% center; }
-        }
+        @keyframes gs { to { background-position: 250% center; } }
 
-        .grain::after {
+        /* ── Subtle grain overlay ── */
+        .grain-overlay::before {
           content: '';
           position: fixed;
-          inset: -50%;
-          width: 200%;
-          height: 200%;
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-          opacity: 0.025;
+          inset: 0;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+          opacity: 0.03;
           pointer-events: none;
-          z-index: 100;
+          z-index: 999;
         }
 
-        .price-line-through {
-          position: relative;
-          color: #8B7355;
-        }
-        .price-line-through::after {
-          content: '';
-          position: absolute;
-          left: -2px;
-          right: -2px;
-          top: 50%;
-          height: 2px;
-          background: #C9A86A;
-          opacity: 0.7;
-        }
-
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: #1A1209; }
-        ::-webkit-scrollbar-thumb { background: #C9A86A; border-radius: 2px; }
-
-        .cta-btn {
-          position: relative;
-          overflow: hidden;
-        }
-        .cta-btn::before {
+        /* ── CTA shine effect ── */
+        .cta-shine { position: relative; overflow: hidden; }
+        .cta-shine::after {
           content: '';
           position: absolute;
           inset: 0;
-          background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.15) 50%, transparent 80%);
+          background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.18) 50%, transparent 70%);
           transform: translateX(-100%);
-          transition: transform 0.6s ease;
+          transition: transform 0.7s ease;
         }
-        .cta-btn:hover::before {
-          transform: translateX(100%);
+        .cta-shine:hover::after { transform: translateX(100%); }
+
+        /* ── Divider line ── */
+        .gold-line {
+          width: 1px;
+          height: 60px;
+          background: linear-gradient(to bottom, transparent, #D4B97A, transparent);
+          margin: 0 auto;
         }
       `}</style>
 
-      <div className="font-heebo grain" dir="rtl">
+      <div className="grain-overlay" dir="rtl" style={{ fontFamily: "'Heebo', sans-serif", background: '#0D0800' }}>
 
         {/* ══════════════════════════════════════════
             HERO
         ══════════════════════════════════════════ */}
         <section className="min-h-screen relative flex flex-col items-center justify-center px-6 overflow-hidden">
 
-          {/* Hero background — Cloudinary auto format + quality */}
+          {/* Background image */}
           <div className="absolute inset-0 z-0">
             <img
               src="https://res.cloudinary.com/decirk3zb/image/upload/f_auto,q_auto,w_1400/v1771444671/8_oaoxjm.jpg"
@@ -201,119 +166,135 @@ export default function HashakPage() {
               className="w-full h-full object-cover object-center"
               loading="eager"
               fetchPriority="high"
-              decoding="async"
             />
-            {/* Overlay */}
-            <div className="absolute inset-0" style={{ background: 'linear-gradient(160deg, rgba(15,8,2,0.75) 0%, rgba(26,18,9,0.50) 50%, rgba(15,8,2,0.82) 100%)' }} />
-            {/* Bottom fade to ivory */}
-            <div className="absolute bottom-0 left-0 right-0 h-40" style={{ background: 'linear-gradient(to bottom, transparent, #FAF6EE)' }} />
+            {/* Multi-layer overlay for drama + readability */}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(170deg, rgba(8,4,0,0.78) 0%, rgba(15,8,2,0.55) 45%, rgba(8,4,0,0.82) 100%)' }} />
+            <div className="absolute bottom-0 left-0 right-0 h-48" style={{ background: 'linear-gradient(to bottom, transparent, #0D0800)' }} />
           </div>
 
-          {/* Ambient glow */}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none z-10"
-            style={{ background: 'radial-gradient(circle, rgba(201,168,106,0.08) 0%, transparent 70%)' }} />
+          {/* Radial glow */}
+          <div className="absolute inset-0 z-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 60% at 50% 40%, rgba(212,185,122,0.07) 0%, transparent 70%)' }} />
 
-          {/* Badge */}
-          <motion.div
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative z-10 mb-8 flex items-center gap-2 px-4 py-2 rounded-full border border-[#C9A86A]/40 bg-black/20 backdrop-blur-md"
-          >
-            <Sparkles size={13} className="text-[#C9A86A]" />
-            <span className="text-[#C9A86A] text-xs tracking-[0.22em] uppercase font-light">מחיר השקה בלעדי</span>
-            <Sparkles size={13} className="text-[#C9A86A]" />
-          </motion.div>
+          {/* Content */}
+          <div className="relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto">
 
-          {/* Headline */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: 0.35 }}
-            className="relative z-10 text-center max-w-3xl"
-          >
-            <p className="text-white/60 font-light text-sm tracking-[0.3em] uppercase mb-5">
-              לפני שנפתח לכולן
-            </p>
-            <h1 className="font-cormorant text-5xl sm:text-7xl lg:text-8xl text-[#F5EDDF] font-light leading-[1.05] mb-6">
-              הרגע שלפני
-              <br />
-              <span className="italic">הרגע הגדול</span>
-            </h1>
-            <p className="text-white/85 font-light text-lg sm:text-xl leading-relaxed max-w-xl mx-auto">
-              חווית ההתארגנות שכולן מדברות עליה — עכשיו במחיר שלא יחזור.
-              <br />
-              <span className="text-[#C9A86A]">רק לחודש הקרוב.</span>
-            </p>
-          </motion.div>
-
-          {/* Price reveal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="relative z-10 mt-10 flex items-center gap-5 bg-black/25 border border-[#C9A86A]/25 rounded-2xl px-8 py-5 backdrop-blur-md"
-          >
-            <div className="text-center">
-              <span className="text-xs text-white/50 tracking-widest block mb-1">המחיר הרגיל</span>
-              <span className="font-cormorant text-3xl price-line-through">₪{CONFIG.regularPrice.toLocaleString()}</span>
-            </div>
-            <div className="w-px h-12 bg-[#C9A86A]/20" />
-            <div className="text-center">
-              <span className="text-xs text-[#C9A86A] tracking-widest block mb-1">מחיר ההשקה</span>
-              <span className="shimmer font-cormorant text-4xl font-light">₪{CONFIG.launchPrice.toLocaleString()}</span>
-            </div>
-            <div className="w-10 h-10 rounded-full bg-[#C9A86A]/15 border border-[#C9A86A]/40 flex items-center justify-center">
-              <span className="text-[#C9A86A] text-xs font-medium">-{discount}%</span>
-            </div>
-          </motion.div>
-
-          {/* CTA */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.95 }}
-            className="relative z-10 mt-8 flex flex-col sm:flex-row items-center gap-4"
-          >
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="cta-btn inline-flex items-center gap-3 bg-[#C9A86A] hover:bg-[#B8955A] text-[#1A1209] font-medium text-base px-8 py-4 rounded-full transition-colors duration-300 shadow-lg shadow-[#C9A86A]/20"
+            {/* Badge */}
+            <motion.div
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="mb-8 flex items-center gap-2 px-5 py-2 rounded-full"
+              style={{ border: '1px solid rgba(212,185,122,0.4)', background: 'rgba(212,185,122,0.08)', backdropFilter: 'blur(16px)' }}
             >
-              <MessageCircle size={18} />
-              אני רוצה את המחיר המיוחד
-            </a>
-            <a
-              href={`tel:052-267-6718`}
-              className="inline-flex items-center gap-2 text-white/50 hover:text-[#C9A86A] transition-colors text-sm border-b border-white/20 hover:border-[#C9A86A] pb-0.5"
-            >
-              <Phone size={14} />
-              או התקשרי: 052-267-6718
-            </a>
-          </motion.div>
+              <span style={{ color: '#D4B97A', fontSize: '11px', letterSpacing: '0.28em', textTransform: 'uppercase', fontWeight: 500 }}>
+                ✦ מחיר השקה בלעדי ✦
+              </span>
+            </motion.div>
 
-          {/* Countdown */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-            className="relative z-10 mt-12 text-center"
-          >
-            <p className="text-white/40 text-xs tracking-[0.25em] uppercase mb-4">המחיר תקף עד</p>
-            <CountdownBlock />
-          </motion.div>
+            {/* Headline */}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.35 }}
+            >
+              <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '13px', letterSpacing: '0.28em', textTransform: 'uppercase', marginBottom: '16px', fontWeight: 300 }}>
+                לפני שנפתח לכולן
+              </p>
+              <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2.8rem, 8vw, 5.5rem)', fontWeight: 400, color: '#F0E6D3', lineHeight: 1.08, marginBottom: '20px' }}>
+                הרגע שלפני<br />
+                <em style={{ fontStyle: 'italic', color: '#EDE0C8' }}>הרגע הגדול</em>
+              </h1>
+              <p style={{ color: 'rgba(240,230,210,0.75)', fontSize: '1.1rem', fontWeight: 300, lineHeight: 1.7, maxWidth: '440px', margin: '0 auto 28px' }}>
+                חווית ההתארגנות שכולן מדברות עליה —
+                עכשיו במחיר שלא יחזור.{' '}
+                <span style={{ color: '#D4B97A', fontWeight: 400 }}>רק לחודש הקרוב.</span>
+              </p>
+            </motion.div>
+
+            {/* Price block */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.65 }}
+              className="flex items-center gap-6 mb-8 px-8 py-5 rounded-2xl"
+              style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(212,185,122,0.2)', backdropFilter: 'blur(20px)' }}
+            >
+              <div className="text-center">
+                <span style={{ display: 'block', fontSize: '10px', letterSpacing: '0.22em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase', marginBottom: '4px' }}>המחיר הרגיל</span>
+                <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', color: 'rgba(255,255,255,0.3)', textDecoration: 'line-through', textDecorationColor: 'rgba(212,185,122,0.5)' }}>
+                  ₪{CONFIG.regularPrice.toLocaleString()}
+                </span>
+              </div>
+              <div style={{ width: '1px', height: '40px', background: 'rgba(212,185,122,0.25)' }} />
+              <div className="text-center">
+                <span style={{ display: 'block', fontSize: '10px', letterSpacing: '0.22em', color: '#D4B97A', textTransform: 'uppercase', marginBottom: '4px' }}>מחיר ההשקה</span>
+                <span className="gold-shimmer" style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.2rem', fontWeight: 500 }}>
+                  ₪{CONFIG.launchPrice.toLocaleString()}
+                </span>
+              </div>
+              <div style={{ background: 'rgba(212,185,122,0.12)', border: '1px solid rgba(212,185,122,0.35)', borderRadius: '50px', padding: '4px 12px' }}>
+                <span style={{ color: '#D4B97A', fontSize: '12px', fontWeight: 500 }}>-{discount}%</span>
+              </div>
+            </motion.div>
+
+            {/* CTA */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.85 }}
+              className="flex flex-col sm:flex-row items-center gap-4"
+            >
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="cta-shine flex items-center gap-3 px-8 py-4 rounded-full font-medium transition-all"
+                style={{
+                  background: 'linear-gradient(135deg, #C9A55A 0%, #E8CC78 50%, #C9A55A 100%)',
+                  color: '#1A0F00',
+                  fontSize: '1rem',
+                  boxShadow: '0 0 32px rgba(212,185,122,0.25), 0 4px 16px rgba(0,0,0,0.4)',
+                  fontWeight: 500,
+                }}
+              >
+                <MessageCircle size={18} />
+                אני רוצה את המחיר המיוחד
+              </a>
+              <a
+                href={`tel:052-267-6718`}
+                className="flex items-center gap-2 transition-colors"
+                style={{ color: 'rgba(255,255,255,0.4)', fontSize: '14px', borderBottom: '1px solid rgba(255,255,255,0.15)', paddingBottom: '2px' }}
+              >
+                <Phone size={13} />
+                052-267-6718
+              </a>
+            </motion.div>
+
+            {/* Countdown */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1.1 }}
+              className="mt-12 text-center"
+            >
+              <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '10px', letterSpacing: '0.28em', textTransform: 'uppercase', marginBottom: '14px' }}>
+                המחיר תקף עד
+              </p>
+              <CountdownBlock />
+            </motion.div>
+          </div>
 
           {/* Scroll hint */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 1.6 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#C9A86A]/50 z-10"
+            transition={{ delay: 1.5 }}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-10"
+            style={{ color: 'rgba(212,185,122,0.4)' }}
           >
-            <span className="text-xs tracking-[0.2em]">גלי למטה</span>
-            <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.6 }}>
-              <ChevronDown size={16} />
+            <span style={{ fontSize: '10px', letterSpacing: '0.2em', textTransform: 'uppercase' }}>גלי למטה</span>
+            <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.8 }}>
+              <ChevronDown size={15} />
             </motion.div>
           </motion.div>
         </section>
@@ -321,37 +302,43 @@ export default function HashakPage() {
         {/* ══════════════════════════════════════════
             WHAT'S INCLUDED
         ══════════════════════════════════════════ */}
-        <section className="py-28 px-6" style={{ background: '#FAF6EE' }}>
-          <div className="max-w-2xl mx-auto">
-            <FadeIn className="text-center mb-16">
-              <span className="text-[#C9A86A] text-xs tracking-[0.3em] uppercase block mb-3">מה כלול</span>
-              <h2 className="font-cormorant text-4xl sm:text-5xl text-[#2C241A] font-light">
+        <section style={{ padding: '100px 24px', background: '#F7F2EA' }}>
+          <div style={{ maxWidth: '560px', margin: '0 auto' }}>
+            <FadeIn className="text-center" style={{ marginBottom: '52px' }}>
+              <p style={{ color: '#A07840', fontSize: '11px', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '12px', fontWeight: 500 }}>
+                מה כלול
+              </p>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem, 5vw, 2.8rem)', color: '#1A1008', fontWeight: 400, lineHeight: 1.2 }}>
                 הכל מוכן לפניך
               </h2>
-              <div className="w-16 h-px bg-[#C9A86A] mx-auto mt-5 opacity-50" />
+              <div style={{ width: '40px', height: '1px', background: '#D4B97A', margin: '20px auto 0', opacity: 0.6 }} />
             </FadeIn>
 
-            <div className="grid gap-4">
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               {included.map((item, i) => (
                 <FadeIn key={i} delay={i * 0.07}>
-                  <div className="flex items-start gap-4 bg-white border border-[#E5D5C0] rounded-xl px-6 py-4 hover:border-[#C9A86A]/50 transition-colors">
-                    <div className="mt-0.5 w-6 h-6 rounded-full bg-[#C9A86A]/10 flex items-center justify-center shrink-0">
-                      <Check size={13} className="text-[#C9A86A]" />
+                  <div
+                    className="flex items-center gap-4"
+                    style={{ background: '#fff', border: '1px solid #EAE0D0', borderRadius: '14px', padding: '16px 20px', transition: 'border-color 0.2s' }}
+                  >
+                    <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'rgba(212,185,122,0.12)', border: '1px solid rgba(212,185,122,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      <Check size={13} color="#C9A55A" />
                     </div>
-                    <span className="text-[#2C241A] font-light leading-relaxed">{item}</span>
+                    <span style={{ color: '#2C1E0F', fontWeight: 300, fontSize: '15px', lineHeight: 1.5 }}>{item}</span>
                   </div>
                 </FadeIn>
               ))}
             </div>
 
-            <FadeIn delay={0.5} className="mt-10 text-center">
+            <FadeIn delay={0.5} className="text-center" style={{ marginTop: '44px' }}>
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="cta-btn inline-flex items-center gap-3 bg-[#2C241A] hover:bg-[#3D3020] text-[#F5EDDF] text-sm px-7 py-3.5 rounded-full transition-colors duration-300"
+                className="cta-shine inline-flex items-center gap-3 px-7 py-3.5 rounded-full transition-all"
+                style={{ background: '#1A1008', color: '#EDE0C8', fontSize: '14px', fontWeight: 400, letterSpacing: '0.05em', boxShadow: '0 4px 20px rgba(0,0,0,0.18)' }}
               >
-                <MessageCircle size={16} />
+                <MessageCircle size={15} />
                 אני רוצה לשמוע עוד
               </a>
             </FadeIn>
@@ -361,50 +348,56 @@ export default function HashakPage() {
         {/* ══════════════════════════════════════════
             ABOUT HAGIT
         ══════════════════════════════════════════ */}
-        <section className="py-28 px-6" style={{ background: '#FAF6EE' }}>
-          <div className="max-w-xl mx-auto text-center">
+        <section style={{ padding: '100px 24px', background: '#EDE5D8' }}>
+          <div style={{ maxWidth: '480px', margin: '0 auto', textAlign: 'center' }}>
             <FadeIn>
-              <div className="w-28 h-28 rounded-full overflow-hidden mx-auto mb-6 ring-2 ring-[#C9A86A]/30 ring-offset-4 ring-offset-[#FAF6EE]">
+              {/* Photo */}
+              <div style={{ width: '112px', height: '112px', borderRadius: '50%', overflow: 'hidden', margin: '0 auto 28px', boxShadow: '0 0 0 3px #EDE5D8, 0 0 0 5px rgba(212,185,122,0.4), 0 12px 40px rgba(0,0,0,0.15)' }}>
                 <img
                   src="https://res.cloudinary.com/decirk3zb/image/upload/f_auto,q_auto,w_200,h_200,c_fill,g_face/v1772200008/%D7%97%D7%92%D7%99%D7%AA_heyobf.jpg"
                   alt="חגית"
-                  className="w-full h-full object-cover"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   loading="lazy"
-                  decoding="async"
                 />
               </div>
-              <h2 className="font-cormorant text-4xl text-[#2C241A] font-light mb-5">אני חגית</h2>
-              <p className="text-[#594937] font-light leading-relaxed text-lg">
+
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.2rem', color: '#1A1008', fontWeight: 400, marginBottom: '20px' }}>
+                אני חגית
+              </h2>
+              <p style={{ color: '#5C4030', fontWeight: 300, fontSize: '1.05rem', lineHeight: 1.8, marginBottom: '28px' }}>
                 יצרתי את החלל הזה כי הבנתי שהבוקר של יום החתונה צריך להיות שלך —
                 רגוע, פנוי ומלא נשימה.
                 <br /><br />
                 לא לרוץ. לא לדאוג. פשוט להיות.
               </p>
-              <div className="w-12 h-px bg-[#C9A86A] mx-auto mt-8 opacity-50" />
-              <p className="text-[#C9A86A] font-cormorant text-xl italic mt-4">— חגית —</p>
+              <div style={{ width: '40px', height: '1px', background: '#C9A55A', margin: '0 auto 16px', opacity: 0.5 }} />
+              <p style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.2rem', fontStyle: 'italic', color: '#C9A55A' }}>— חגית —</p>
             </FadeIn>
           </div>
         </section>
 
         {/* ══════════════════════════════════════════
-            FINAL CTA — STICKY URGENCY
+            FINAL CTA
         ══════════════════════════════════════════ */}
-        <section className="py-28 px-6" style={{ background: 'linear-gradient(160deg, #1A1209 0%, #2C1F0E 100%)' }}>
-          <div className="max-w-2xl mx-auto text-center">
+        <section style={{ padding: '110px 24px', background: 'linear-gradient(170deg, #0D0800 0%, #1A0F02 100%)' }}>
+          <div style={{ maxWidth: '520px', margin: '0 auto', textAlign: 'center' }}>
             <FadeIn>
-              <div className="w-px h-16 bg-gradient-to-b from-transparent to-[#C9A86A]/40 mx-auto mb-10" />
-              <span className="text-[#C9A86A] text-xs tracking-[0.3em] uppercase block mb-4">רגע לפני שאת עוזבת</span>
-              <h2 className="font-cormorant text-4xl sm:text-6xl text-[#F5EDDF] font-light mb-6">
+              <div className="gold-line" style={{ marginBottom: '48px' }} />
+
+              <p style={{ color: '#D4B97A', fontSize: '11px', letterSpacing: '0.3em', textTransform: 'uppercase', marginBottom: '16px', fontWeight: 500 }}>
+                רגע לפני שאת עוזבת
+              </p>
+              <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 'clamp(2rem, 6vw, 3.2rem)', color: '#F0E6D3', fontWeight: 400, lineHeight: 1.15, marginBottom: '20px' }}>
                 הצעה שלא תחזור
               </h2>
-              <p className="text-[#BFA882] font-light leading-relaxed mb-3">
+              <p style={{ color: 'rgba(240,230,210,0.6)', fontWeight: 300, marginBottom: '8px', fontSize: '15px' }}>
                 מחיר ₪{CONFIG.launchPrice} במקום ₪{CONFIG.regularPrice.toLocaleString()} — בתוקף עד 31.03.2026
               </p>
-              <p className="text-[#C9A86A] text-sm mb-10">
+              <p style={{ color: '#D4B97A', fontSize: '14px', marginBottom: '36px', fontWeight: 400 }}>
                 המחיר הזה לא יחזור אחרי ה-31.03
               </p>
 
-              <div className="mb-8">
+              <div style={{ marginBottom: '40px' }}>
                 <CountdownBlock />
               </div>
 
@@ -413,32 +406,38 @@ export default function HashakPage() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="cta-btn inline-flex items-center gap-3 bg-[#C9A86A] hover:bg-[#D4B97A] text-[#1A1209] font-medium text-base px-10 py-4 rounded-full transition-colors duration-300 shadow-xl shadow-[#C9A86A]/20 w-full sm:w-auto justify-center"
+                  className="cta-shine w-full sm:w-auto flex items-center justify-center gap-3 px-10 py-4 rounded-full font-medium transition-all"
+                  style={{
+                    background: 'linear-gradient(135deg, #C9A55A 0%, #E8CC78 50%, #C9A55A 100%)',
+                    color: '#1A0F00',
+                    fontSize: '1rem',
+                    boxShadow: '0 0 40px rgba(212,185,122,0.2), 0 4px 20px rgba(0,0,0,0.5)',
+                    fontWeight: 500,
+                  }}
                 >
                   <MessageCircle size={18} />
-                  אני רוצה את המחיר המיוחד
+                  שמרי לי מקום עכשיו
                 </a>
                 <a
                   href={`tel:052-267-6718`}
-                  className="inline-flex items-center gap-2 text-[#8B7355] hover:text-[#C9A86A] transition-colors text-sm border-b border-[#8B7355]/40 hover:border-[#C9A86A] pb-0.5"
+                  className="flex items-center gap-2 transition-colors"
+                  style={{ color: 'rgba(255,255,255,0.35)', fontSize: '14px', borderBottom: '1px solid rgba(255,255,255,0.12)', paddingBottom: '2px' }}
                 >
-                  <Phone size={14} />
+                  <Phone size={13} />
                   052-267-6718
                 </a>
               </div>
 
-              <p className="text-[#4A3820] text-xs mt-8">
+              <p style={{ color: 'rgba(255,255,255,0.2)', fontSize: '12px', marginTop: '28px' }}>
                 אין התחייבות. רק שיחה קצרה עם חגית.
               </p>
             </FadeIn>
           </div>
         </section>
 
-        {/* ══════════════════════════════════════════
-            MINIMAL FOOTER
-        ══════════════════════════════════════════ */}
-        <footer className="py-6 px-6 text-center border-t border-white/5" style={{ background: '#110C05' }}>
-          <p className="text-[#3D2E1A] text-xs font-light">
+        {/* Footer */}
+        <footer style={{ padding: '20px 24px', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.04)', background: '#080500' }}>
+          <p style={{ color: 'rgba(255,255,255,0.15)', fontSize: '11px' }}>
             © 2026 חגית התארגנות כלות • כל הזכויות שמורות
           </p>
         </footer>
