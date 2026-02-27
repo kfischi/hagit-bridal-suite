@@ -215,19 +215,34 @@ export default function HashakPage() {
         {/* ══════════════════════════════════════════
             HERO
         ══════════════════════════════════════════ */}
-        <section className="min-h-screen relative flex flex-col items-center justify-center px-6 overflow-hidden"
-          style={{ background: 'linear-gradient(160deg, #1A1209 0%, #2C1F0E 40%, #1E150A 100%)' }}>
+        <section className="min-h-screen relative flex flex-col items-center justify-center px-6 overflow-hidden">
+
+          {/* Hero background — Cloudinary auto format + quality */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src="https://res.cloudinary.com/decirk3zb/image/upload/f_auto,q_auto,w_1400/v1771444671/8_oaoxjm.jpg"
+              alt=""
+              className="w-full h-full object-cover object-center"
+              loading="eager"
+              fetchPriority="high"
+              decoding="async"
+            />
+            {/* Overlay */}
+            <div className="absolute inset-0" style={{ background: 'linear-gradient(160deg, rgba(15,8,2,0.75) 0%, rgba(26,18,9,0.50) 50%, rgba(15,8,2,0.82) 100%)' }} />
+            {/* Bottom fade to ivory */}
+            <div className="absolute bottom-0 left-0 right-0 h-40" style={{ background: 'linear-gradient(to bottom, transparent, #FAF6EE)' }} />
+          </div>
 
           {/* Ambient glow */}
-          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none"
-            style={{ background: 'radial-gradient(circle, rgba(201,168,106,0.12) 0%, transparent 70%)' }} />
+          <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full pointer-events-none z-10"
+            style={{ background: 'radial-gradient(circle, rgba(201,168,106,0.08) 0%, transparent 70%)' }} />
 
           {/* Badge */}
           <motion.div
             initial={{ opacity: 0, y: -16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="mb-8 flex items-center gap-2 px-4 py-2 rounded-full border border-[#C9A86A]/30 bg-white/5 backdrop-blur-sm"
+            className="relative z-10 mb-8 flex items-center gap-2 px-4 py-2 rounded-full border border-[#C9A86A]/40 bg-black/20 backdrop-blur-md"
           >
             <Sparkles size={13} className="text-[#C9A86A]" />
             <span className="text-[#C9A86A] text-xs tracking-[0.22em] uppercase font-light">מחיר השקה בלעדי</span>
@@ -239,7 +254,7 @@ export default function HashakPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.35 }}
-            className="text-center max-w-3xl"
+            className="relative z-10 text-center max-w-3xl"
           >
             <p className="text-[#8B7355] font-light text-sm tracking-[0.3em] uppercase mb-5">
               לפני שנפתח לכולן
@@ -252,7 +267,7 @@ export default function HashakPage() {
             <p className="text-[#BFA882] font-light text-lg sm:text-xl leading-relaxed max-w-xl mx-auto">
               חווית ההתארגנות שכולן מדברות עליה — עכשיו במחיר שלא יחזור.
               <br />
-              <span className="text-[#C9A86A]">נשארו {CONFIG.spotsLeft} מקומות בלבד.</span>
+              <span className="text-[#C9A86A]">רק לחודש הקרוב.</span>
             </p>
           </motion.div>
 
@@ -261,7 +276,7 @@ export default function HashakPage() {
             initial={{ opacity: 0, scale: 0.92 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.7 }}
-            className="mt-10 flex items-center gap-5 bg-white/5 border border-[#C9A86A]/25 rounded-2xl px-8 py-5 backdrop-blur-sm"
+            className="relative z-10 mt-10 flex items-center gap-5 bg-black/25 border border-[#C9A86A]/25 rounded-2xl px-8 py-5 backdrop-blur-md"
           >
             <div className="text-center">
               <span className="text-xs text-[#6B5740] tracking-widest block mb-1">המחיר הרגיל</span>
@@ -282,7 +297,7 @@ export default function HashakPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.95 }}
-            className="mt-8 flex flex-col sm:flex-row items-center gap-4"
+            className="relative z-10 mt-8 flex flex-col sm:flex-row items-center gap-4"
           >
             <a
               href={whatsappUrl}
@@ -307,7 +322,7 @@ export default function HashakPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
-            className="mt-12 text-center"
+            className="relative z-10 mt-12 text-center"
           >
             <p className="text-[#6B5740] text-xs tracking-[0.25em] uppercase mb-4">המחיר תקף עד</p>
             <CountdownBlock />
@@ -318,7 +333,7 @@ export default function HashakPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.6 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#4A3820]"
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#C9A86A]/50 z-10"
           >
             <span className="text-xs tracking-[0.2em]">גלי למטה</span>
             <motion.div animate={{ y: [0, 6, 0] }} transition={{ repeat: Infinity, duration: 1.6 }}>
@@ -412,8 +427,14 @@ export default function HashakPage() {
         <section className="py-28 px-6" style={{ background: '#FAF6EE' }}>
           <div className="max-w-xl mx-auto text-center">
             <FadeIn>
-              <div className="w-20 h-20 rounded-full bg-[#E5D5C0] mx-auto mb-6 flex items-center justify-center">
-                <Heart size={28} className="text-[#C9A86A]" fill="#C9A86A" />
+              <div className="w-28 h-28 rounded-full overflow-hidden mx-auto mb-6 ring-2 ring-[#C9A86A]/30 ring-offset-4 ring-offset-[#FAF6EE]">
+                <img
+                  src="https://res.cloudinary.com/decirk3zb/image/upload/f_auto,q_auto,w_200,h_200,c_fill,g_face/v1772200008/%D7%97%D7%92%D7%99%D7%AA_heyobf.jpg"
+                  alt="חגית"
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
               <h2 className="font-cormorant text-4xl text-[#2C241A] font-light mb-5">אני חגית</h2>
               <p className="text-[#594937] font-light leading-relaxed text-lg">
@@ -443,7 +464,7 @@ export default function HashakPage() {
                 מחיר ₪{CONFIG.launchPrice} במקום ₪{CONFIG.regularPrice.toLocaleString()} — בתוקף עד 31.03.2026
               </p>
               <p className="text-[#C9A86A] text-sm mb-10">
-                נשארו <strong>{CONFIG.spotsLeft}</strong> מקומות במחיר הזה
+                המחיר הזה לא יחזור אחרי ה-31.03
               </p>
 
               <div className="mb-8">
@@ -458,7 +479,7 @@ export default function HashakPage() {
                   className="cta-btn inline-flex items-center gap-3 bg-[#C9A86A] hover:bg-[#D4B97A] text-[#1A1209] font-medium text-base px-10 py-4 rounded-full transition-colors duration-300 shadow-xl shadow-[#C9A86A]/20 w-full sm:w-auto justify-center"
                 >
                   <MessageCircle size={18} />
-                  שמרי לי מקום עכשיו
+                  אני רוצה את המחיר המיוחד
                 </a>
                 <a
                   href={`tel:052-267-6718`}
