@@ -1,35 +1,35 @@
 import { MetadataRoute } from 'next'
 
-// Required for static export
 export const dynamic = 'force-static'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://hagit-bridal-suite.netlify.app'
+  const base = 'https://suite-hagit.co.il'
 
   return [
     {
-      url: baseUrl,
+      url: base,
       lastModified: new Date(),
       changeFrequency: 'weekly',
-      priority: 1,
+      priority: 1.0,
     },
     {
-      url: `${baseUrl}/#about`,
+      url: `${base}/privacy`,
       lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8,
+      changeFrequency: 'yearly',
+      priority: 0.3,
     },
     {
-      url: `${baseUrl}/#gallery`,
+      url: `${base}/accessibility`,
       lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 0.9,
+      changeFrequency: 'yearly',
+      priority: 0.4,
     },
     {
-      url: `${baseUrl}/#availability`,
+      url: `${base}/cookies`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
-      priority: 0.9,
+      changeFrequency: 'yearly',
+      priority: 0.2,
     },
+    // /hashaka — noindex בכוונה, לא בסייטמאפ
   ]
 }
