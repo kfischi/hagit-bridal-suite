@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { motion, useInView, AnimatePresence } from 'framer-motion'
-import { Heart, Check, ChevronDown, Star, Phone, MessageCircle, Sparkles } from 'lucide-react'
+import { Check, ChevronDown, Star, Phone, MessageCircle, Sparkles } from 'lucide-react'
 
 // ============================================================
 // CONFIGURATION — שני מהכאן לפי הצורך
