@@ -96,6 +96,10 @@ export const metadata: Metadata = {
     images: [OG_IMAGE],
   },
 
+  verification: {
+    google: 'Zzfm-wVn1J82M7dAIq-Vt9KOT4k4nOETNF71hpCwfJw',
+  },
+
   icons: {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
@@ -243,7 +247,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
         <AccessibilityBtn />
         <LaunchPopup />
-        <CookieBanner gaId={GA_ID} />
+        <CookieBanner />
 
         {/* ── FOOTER ── */}
         <footer className="bg-white border-t border-[#E5D5C0] pt-12 pb-6 relative z-40">
