@@ -28,7 +28,7 @@ export default function LaunchPopup() {
   useEffect(() => {
     if (sessionStorage.getItem(STORAGE_KEY)) return
     if (Date.now() > LAUNCH_DEADLINE.getTime()) return
-    const timer = setTimeout(() => setVisible(true), 4000)
+    const timer = setTimeout(() => setVisible(true), 10000)
     return () => clearTimeout(timer)
   }, [])
 
