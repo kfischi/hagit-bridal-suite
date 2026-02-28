@@ -12,6 +12,8 @@ import {
   Gem,
   Star,
   Menu,
+  Phone,
+  Mail,
   X as XIcon
 } from 'lucide-react'
 import { useRef, useState, useEffect } from 'react'
@@ -19,6 +21,7 @@ import WhatsAppButton from '@/components/WhatsAppButton'
 import AccessibilityBtn from '@/components/AccessibilityBtn'
 import AIChatbot from '@/components/AIChatbot'
 import LuxuryGallery from '@/components/LuxuryGallery'
+import SocialMediaLinks from '@/components/SocialMediaLinks'
 
 const NAV_LINKS = [
   { label: 'הבית',    href: '#hero'       },
@@ -258,13 +261,11 @@ export default function Home() {
         </section>
 
         {/* ══════════════════════════════════════════
-            EXPERIENCE — ✦ הסרטון החדש ✦
+            EXPERIENCE
         ══════════════════════════════════════════ */}
         <section id="experience" className="py-28 px-6 bg-[#FAF6EE]">
           <div className="max-w-7xl mx-auto">
             <div className="grid md:grid-cols-2 gap-16 items-center">
-
-              {/* ── Video ── */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
@@ -277,55 +278,37 @@ export default function Home() {
                   autoPlay muted loop playsInline preload="auto"
                   className="absolute inset-0 w-full h-full object-cover"
                 >
-                  {/* ✦ הסרטון החדש ✦ */}
                   <source
                     src="https://res.cloudinary.com/decirk3zb/video/upload/f_auto,q_auto,vc_auto/v1772203254/%D7%A1%D7%A8%D7%98%D7%95%D7%9F_%D7%9B%D7%AA%D7%95%D7%91%D7%99%D7%95%D7%AA_rzni0l.mp4"
                     type="video/mp4"
                   />
                 </video>
-
-                {/* Gradient overlay */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
-
-                {/* Sound toggle */}
                 <button
                   onClick={() => {
                     const v = document.getElementById('suite-video') as HTMLVideoElement
-                    if (v) {
-                      v.muted = !v.muted
-                      const btn = document.getElementById('sound-btn')
-                      if (btn) btn.textContent = v.muted ? '🔇' : '🔊'
-                    }
+                    if (v) { v.muted = !v.muted; const btn = document.getElementById('sound-btn'); if (btn) btn.textContent = v.muted ? '🔇' : '🔊' }
                   }}
                   className="absolute bottom-4 left-4 z-10 bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white w-11 h-11 rounded-full flex items-center justify-center text-lg transition-all shadow-lg"
                   aria-label="הפעל/כבה שמע"
                 >
                   <span id="sound-btn">🔇</span>
                 </button>
-
-                {/* Play/Pause */}
                 <button
                   onClick={() => {
                     const v = document.getElementById('suite-video') as HTMLVideoElement
-                    if (v) {
-                      if (v.paused) { v.play() } else { v.pause() }
-                      const btn = document.getElementById('play-btn')
-                      if (btn) btn.textContent = v.paused ? '▶' : '⏸'
-                    }
+                    if (v) { if (v.paused) { v.play() } else { v.pause() }; const btn = document.getElementById('play-btn'); if (btn) btn.textContent = v.paused ? '▶' : '⏸' }
                   }}
                   className="absolute bottom-4 left-20 z-10 bg-black/50 hover:bg-black/70 backdrop-blur-sm text-white w-11 h-11 rounded-full flex items-center justify-center text-sm transition-all shadow-lg"
                   aria-label="הפעל/עצור"
                 >
                   <span id="play-btn">⏸</span>
                 </button>
-
-                {/* Label */}
                 <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-sm text-[#C9A86A] text-xs px-3 py-1.5 rounded-full font-medium tracking-widest">
                   ✦ הצצה בלעדית
                 </div>
               </motion.div>
 
-              {/* ── Text ── */}
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -333,9 +316,7 @@ export default function Home() {
                 transition={{ duration: 0.8 }}
                 className="order-1 md:order-2"
               >
-                <span className="text-[#A07840] text-sm tracking-[0.2em] uppercase font-medium mb-4 block">
-                  The Experience
-                </span>
+                <span className="text-[#A07840] text-sm tracking-[0.2em] uppercase font-medium mb-4 block">The Experience</span>
                 <h2 className="text-4xl sm:text-5xl text-[#2C241A] font-cormorant mb-6">הצצה לתוך הסוויטה</h2>
                 <p className="text-[#594937] font-light text-lg leading-relaxed mb-8">
                   המרחב שבו הקסם קורה. סלון רחב ידיים, פינות ישיבה מפנקות, ושפע של אור טבעי שנכנס מהחלונות הגדולים ומשקיף אל הנוף ההררי.
@@ -350,7 +331,6 @@ export default function Home() {
                   <ArrowLeft size={16} />
                 </button>
               </motion.div>
-
             </div>
           </div>
         </section>
@@ -364,7 +344,7 @@ export default function Home() {
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.8 }}
               className="text-center mb-14"
             >
               <div className="flex items-center justify-center gap-4 mb-5">
@@ -372,16 +352,10 @@ export default function Home() {
                 <span className="text-[#A07840] text-sm tracking-[0.3em] uppercase font-medium">הגלריה שלנו</span>
                 <div className="h-px w-14 bg-gradient-to-l from-transparent to-[#C9A86A]" />
               </div>
-              <h2 className="font-cormorant text-5xl md:text-6xl text-[#2C241A] font-light leading-none mb-3">
-                רגעים של קסם
-              </h2>
-              <p className="text-[#6B5540] font-light tracking-widest text-sm">
-                כל תמונה — סיפור של יום מושלם
-              </p>
+              <h2 className="font-cormorant text-5xl md:text-6xl text-[#2C241A] font-light leading-none mb-3">רגעים של קסם</h2>
+              <p className="text-[#6B5540] font-light tracking-widest text-sm">כל תמונה — סיפור של יום מושלם</p>
             </motion.div>
-
             <LuxuryGallery />
-
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -390,7 +364,7 @@ export default function Home() {
               className="text-center mt-12"
             >
               <a
-                href="https://www.instagram.com/"
+                href="https://www.instagram.com/hagit_argaman/"
                 target="_blank" rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 border border-[#C9A86A] text-[#A07840] px-8 py-3 rounded-full text-xs tracking-[0.25em] font-medium uppercase hover:bg-[#C9A86A] hover:text-white transition-all duration-300"
               >
@@ -445,12 +419,8 @@ export default function Home() {
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <span className="text-[#7A5520] text-base tracking-[0.25em] uppercase font-semibold block mb-5">
-                היום הגדול שלך
-              </span>
-              <h2 className="font-cormorant text-4xl md:text-5xl text-[#2C241A] font-light leading-snug mb-6">
-                מתחיל בסוויטה של חגית
-              </h2>
+              <span className="text-[#7A5520] text-base tracking-[0.25em] uppercase font-semibold block mb-5">היום הגדול שלך</span>
+              <h2 className="font-cormorant text-4xl md:text-5xl text-[#2C241A] font-light leading-snug mb-6">מתחיל בסוויטה של חגית</h2>
               <p className="text-[#594937] font-light text-lg leading-relaxed max-w-2xl mx-auto">
                 החופה שלך מתחילה הרבה לפני הצעידה בשביל. היא מתחילה ברגע שבו את פותחת את העיניים בבוקר.
               </p>
@@ -458,54 +428,10 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {[
-                {
-                  icon: (
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M16 3C16 3 8 8 8 17C8 21.418 11.582 25 16 25C20.418 25 24 21.418 24 17C24 8 16 3 16 3Z" stroke="#C9A86A" strokeWidth="1.5" strokeLinejoin="round"/>
-                      <path d="M16 25V29" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M12 29H20" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M13 17C13 15.343 14.343 14 16 14" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
-                    </svg>
-                  ),
-                  title: "מרחב שכולו שלווה",
-                  text: "הסוויטה מוארת, מעוצבת ומזמינה. פינות צילום מושלמות לאלבום שלך, באווירה אינטימית ונינוחה ששמורה רק לך ולמלוות שלך."
-                },
-                {
-                  icon: (
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M6 12C6 10.343 7.343 9 9 9H23C24.657 9 26 10.343 26 12V22C26 23.657 24.657 25 23 25H9C7.343 25 6 23.657 6 22V12Z" stroke="#C9A86A" strokeWidth="1.5"/>
-                      <path d="M11 9V7C11 6.448 11.448 6 12 6H20C20.552 6 21 6.448 21 7V9" stroke="#C9A86A" strokeWidth="1.5"/>
-                      <path d="M16 13V21" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M12 17H20" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
-                    </svg>
-                  ),
-                  title: "בוקר של פינוקים",
-                  text: "קל לשכוח לאכול ביום החתונה. דאגנו לך להכל: ארוחת בוקר טרייה, פירות חתוכים, קפה איכותי ושתייה קלה לאורך כל היום."
-                },
-                {
-                  icon: (
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M10 7C10 7 8 10 8 14C8 18.418 11.582 22 16 22C20.418 22 24 18.418 24 14C24 10 22 7 22 7" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M16 22V26" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
-                      <path d="M12 26H20" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
-                      <circle cx="16" cy="13" r="3" stroke="#C9A86A" strokeWidth="1.5"/>
-                    </svg>
-                  ),
-                  title: "ה-Reset שאת צריכה",
-                  text: "קמת מוקדם? המקלחת המרווחת שלנו מחכה לך. לשטוף את כל המתח ולהתחיל את היום רעננה וזוהרת."
-                },
-                {
-                  icon: (
-                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect x="4" y="12" width="24" height="14" rx="3" stroke="#C9A86A" strokeWidth="1.5"/>
-                      <path d="M9 12V10C9 7.239 11.239 5 14 5H18C20.761 5 23 7.239 23 10V12" stroke="#C9A86A" strokeWidth="1.5"/>
-                      <path d="M4 18H28" stroke="#C9A86A" strokeWidth="1.5" strokeLinecap="round"/>
-                      <circle cx="16" cy="21" r="1.5" fill="#C9A86A"/>
-                    </svg>
-                  ),
-                  title: "זמן נשימה פרטי",
-                  text: "רגע לפני שהצלמים נכנסים, מחכה לך חדר מנוחה פרטי. לעצום עיניים, לנשום עמוק, ולעכל שזה באמת קורה."
-                },
+                { title: 'מרחב שכולו שלווה', text: 'הסוויטה מוארת, מעוצבת ומזמינה. פינות צילום מושלמות לאלבום שלך, באווירה אינטימית ונינוחה ששמורה רק לך ולמלוות שלך.' },
+                { title: 'בוקר של פינוקים', text: 'קל לשכוח לאכול ביום החתונה. דאגנו לך להכל: ארוחת בוקר טרייה, פירות חתוכים, קפה איכותי ושתייה קלה לאורך כל היום.' },
+                { title: 'ה-Reset שאת צריכה', text: 'קמת מוקדם? המקלחת המרווחת שלנו מחכה לך. לשטוף את כל המתח ולהתחיל את היום רעננה וזוהרת.' },
+                { title: 'זמן נשימה פרטי', text: 'רגע לפני שהצלמים נכנסים, מחכה לך חדר מנוחה פרטי. לעצום עיניים, לנשום עמוק, ולעכל שזה באמת קורה.' },
               ].map((item, i) => (
                 <motion.div
                   key={i}
@@ -515,9 +441,6 @@ export default function Home() {
                   transition={{ duration: 0.6, delay: i * 0.1 }}
                   className="bg-white rounded-3xl p-8 border border-[#E5D5C0] shadow-sm"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-[#FAF6EE] border border-[#E5D5C0] flex items-center justify-center mb-5">
-                    {item.icon}
-                  </div>
                   <h3 className="font-cormorant text-2xl text-[#2C241A] font-semibold mb-3">{item.title}</h3>
                   <p className="text-[#6B5540] font-light text-sm leading-relaxed">{item.text}</p>
                 </motion.div>
@@ -531,18 +454,12 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.4 }}
               className="text-center mt-16 bg-[#2C241A] rounded-3xl p-10"
             >
-              <p className="text-[#E5D5C0] font-cormorant text-2xl font-light italic mb-2">
-                &quot;זה לא רק מקום להתארגן בו.
-              </p>
-              <p className="text-[#C9A86A] font-cormorant text-2xl font-light italic mb-6">
-                זו התחושה שאת בידיים טובות.&quot;
-              </p>
+              <p className="text-[#E5D5C0] font-cormorant text-2xl font-light italic mb-2">&quot;זה לא רק מקום להתארגן בו.</p>
+              <p className="text-[#C9A86A] font-cormorant text-2xl font-light italic mb-6">זו התחושה שאת בידיים טובות.&quot;</p>
               <p className="text-[#B09880] font-light text-sm mb-6 max-w-lg mx-auto leading-relaxed">
                 בסוויטה של חגית, המטרה שלנו היא אחת: שתגיעי לחופה לא רק הכי יפה שיש, אלא בעיקר רגועה, נוכחת ומוכנה.
               </p>
-              <p className="text-[#D5C5B0] font-light text-sm">
-                המקומות נתפסים מהר — דברי איתי ונשריין לך את השקט שמגיע לך.
-              </p>
+              <p className="text-[#D5C5B0] font-light text-sm">המקומות נתפסים מהר — דברי איתי ונשריין לך את השקט שמגיע לך.</p>
             </motion.div>
           </div>
         </section>
@@ -552,20 +469,12 @@ export default function Home() {
         ══════════════════════════════════════════ */}
         <section id="pricing" className="py-28 px-6 bg-[#2C241A] text-white">
           <div className="max-w-5xl mx-auto text-center">
-            <span className="text-[#C9A86A] text-sm tracking-[0.3em] uppercase font-medium block mb-4">
-              בחרי את מה שמתאים לך
-            </span>
-            <h2 className="text-4xl sm:text-6xl font-light mb-4 font-cormorant text-[#FAF6EE]">
-              החבילות שלנו
-            </h2>
-            <p className="text-[#B09880] font-light mb-14 text-base max-w-xl mx-auto">
-              שתי חבילות מושלמות, כל אחת כוללת את כל מה שצריך לבוקר הכי מרגש בחיים
-            </p>
+            <span className="text-[#C9A86A] text-sm tracking-[0.3em] uppercase font-medium block mb-4">בחרי את מה שמתאים לך</span>
+            <h2 className="text-4xl sm:text-6xl font-light mb-4 font-cormorant text-[#FAF6EE]">החבילות שלנו</h2>
+            <p className="text-[#B09880] font-light mb-14 text-base max-w-xl mx-auto">שתי חבילות מושלמות, כל אחת כוללת את כל מה שצריך לבוקר הכי מרגש בחיים</p>
             <div className="w-24 h-px bg-[#C9A86A] mx-auto mb-14 opacity-40" />
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-
-              {/* חבילת בסיס */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -584,31 +493,17 @@ export default function Home() {
                   <span className="text-2xl text-[#C9A86A] mr-1">₪</span>
                 </div>
                 <ul className="space-y-4 w-full mb-10 flex-grow">
-                  {[
-                    'שימוש בוילה מהבוקר עד אחה״צ',
-                    'פינת שתייה חמה וקרה חופשית',
-                    'פירות טריים ופינוקים מתוקים',
-                    'יין בוטיק מיקב הרי ירושלים',
-                    'עמדת ביוטי עם תאורה מקצועית',
-                    'מוזיקה אמבינטית ורקע מושלם',
-                    'שימוש מלא במתקני הוילה',
-                  ].map((item, i) => (
+                  {['שימוש בוילה מהבוקר עד אחה״צ','פינת שתייה חמה וקרה חופשית','פירות טריים ופינוקים מתוקים','יין בוטיק מיקב הרי ירושלים','עמדת ביוטי עם תאורה מקצועית','מוזיקה אמבינטית ורקע מושלם','שימוש מלא במתקני הוילה'].map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-[#D5C5B0] font-light text-sm">
-                      <Check size={15} className="text-[#C9A86A] mt-0.5 shrink-0" />
-                      <span>{item}</span>
+                      <Check size={15} className="text-[#C9A86A] mt-0.5 shrink-0" /><span>{item}</span>
                     </li>
                   ))}
                 </ul>
-                <a
-                  href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי חגית, אשמח לשריין את חבילת הבסיס ב-2,000₪ 💍')}`}
-                  target="_blank" rel="noopener noreferrer"
-                  className="w-full py-4 rounded-full border border-[#C9A86A] text-[#C9A86A] hover:bg-[#C9A86A] hover:text-white transition-all text-sm tracking-widest font-medium text-center block"
-                >
+                <a href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי חגית, אשמח לשריין את חבילת הבסיס ב-2,000₪ 💍')}`} target="_blank" rel="noopener noreferrer" className="w-full py-4 rounded-full border border-[#C9A86A] text-[#C9A86A] hover:bg-[#C9A86A] hover:text-white transition-all text-sm tracking-widest font-medium text-center block">
                   אני רוצה את זה
                 </a>
               </motion.div>
 
-              {/* חבילת פרימיום */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -617,9 +512,7 @@ export default function Home() {
                 whileHover={{ y: -8, transition: { duration: 0.3 } }}
                 className="bg-[#FAF6EE] text-[#2C241A] p-10 rounded-3xl flex flex-col items-center text-right relative shadow-[0_20px_60px_rgba(0,0,0,0.3)] border-2 border-[#C9A86A]"
               >
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#C9A86A] text-white text-xs px-5 py-1.5 rounded-full font-medium tracking-widest shadow-md">
-                  ✦ המומלצת ✦
-                </div>
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#C9A86A] text-white text-xs px-5 py-1.5 rounded-full font-medium tracking-widest shadow-md">✦ המומלצת ✦</div>
                 <div className="w-16 h-16 bg-[#C9A86A]/20 rounded-full flex items-center justify-center mb-6 border border-[#C9A86A]/40">
                   <Gem strokeWidth={1.5} size={28} className="text-[#C9A86A]" />
                 </div>
@@ -630,30 +523,18 @@ export default function Home() {
                   <span className="text-2xl text-[#C9A86A] mr-1">₪</span>
                 </div>
                 <ul className="space-y-4 w-full mb-10 flex-grow">
-                  {[
-                    'כל מה שיש בחבילת הבסיס',
-                    'ארוחת בוקר כפרית עשירה לכולן',
-                    'שמפניה / קאווה חגיגית לצ\'ינ\'ין',
-                    'זר פרחים טריים לסלון',
-                    'כריכים וכיבוד קל לאורך הבוקר',
-                  ].map((item, i) => (
+                  {["כל מה שיש בחבילת הבסיס","ארוחת בוקר כפרית עשירה לכולן","שמפניה / קאווה חגיגית לצ'ינ'ין","זר פרחים טריים לסלון","כריכים וכיבוד קל לאורך הבוקר"].map((item, i) => (
                     <li key={i} className="flex items-start gap-3 text-[#4a3e2f] font-light text-sm">
-                      <Check size={15} className="text-[#C9A86A] mt-0.5 shrink-0" />
-                      <span>{item}</span>
+                      <Check size={15} className="text-[#C9A86A] mt-0.5 shrink-0" /><span>{item}</span>
                     </li>
                   ))}
                 </ul>
-                <a
-                  href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי חגית, אשמח לשריין את חבילת הפרימיום ב-2,500₪ 💍')}`}
-                  target="_blank" rel="noopener noreferrer"
-                  className="w-full py-4 rounded-full bg-[#2C241A] text-white hover:bg-[#4a3e2f] transition-all text-sm tracking-widest font-medium text-center block shadow-lg"
-                >
+                <a href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי חגית, אשמח לשריין את חבילת הפרימיום ב-2,500₪ 💍')}`} target="_blank" rel="noopener noreferrer" className="w-full py-4 rounded-full bg-[#2C241A] text-white hover:bg-[#4a3e2f] transition-all text-sm tracking-widest font-medium text-center block shadow-lg">
                   זה בול בשבילי
                 </a>
               </motion.div>
             </div>
 
-            {/* באנר אפסייל */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -661,20 +542,11 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="mt-14 border border-[#C9A86A]/40 rounded-3xl p-8 text-center bg-white/5"
             >
-              <p className="text-[#C9A86A] text-xs tracking-[0.3em] uppercase font-medium mb-3">
-                רוצה משהו מיוחד?
-              </p>
-              <h3 className="font-cormorant text-2xl md:text-3xl text-[#FAF6EE] font-light mb-3">
-                צלמת, מאפרת, קייטרינג ועוד
-              </h3>
-              <p className="text-[#B09880] font-light text-sm mb-6 max-w-md mx-auto leading-relaxed">
-                נרכיב יחד חבילה מותאמת אישית בדיוק לצרכים שלך — בלי תוספות מיותרות, בלי הפתעות.
-              </p>
+              <p className="text-[#C9A86A] text-xs tracking-[0.3em] uppercase font-medium mb-3">רוצה משהו מיוחד?</p>
+              <h3 className="font-cormorant text-2xl md:text-3xl text-[#FAF6EE] font-light mb-3">צלמת, מאפרת, קייטרינג ועוד</h3>
+              <p className="text-[#B09880] font-light text-sm mb-6 max-w-md mx-auto leading-relaxed">נרכיב יחד חבילה מותאמת אישית בדיוק לצרכים שלך — בלי תוספות מיותרות, בלי הפתעות.</p>
               <button
-                onClick={() => {
-                  const w = window as Window & { openHagitChat?: (m: string) => void }
-                  if (w.openHagitChat) w.openHagitChat('custom')
-                }}
+                onClick={() => { const w = window as Window & { openHagitChat?: (m: string) => void }; if (w.openHagitChat) w.openHagitChat('custom') }}
                 className="inline-flex items-center gap-2 bg-[#C9A86A] hover:bg-[#b0935c] text-white px-8 py-3.5 rounded-full text-sm font-medium tracking-widest transition-all shadow-lg"
               >
                 בואי נבנה יחד את החבילה שלך
@@ -699,12 +571,8 @@ export default function Home() {
                 <span className="text-[#A07840] text-sm tracking-[0.3em] uppercase font-medium">צרי קשר</span>
                 <div className="h-px w-14 bg-gradient-to-l from-transparent to-[#C9A86A]" />
               </div>
-              <h2 className="font-cormorant text-4xl md:text-5xl text-[#2C241A] font-light mb-4">
-                מוכנה להתחיל?
-              </h2>
-              <p className="text-[#6B5540] font-light mb-10 leading-relaxed">
-                שלחי הודעה ונחזור אליך תוך שעה לקביעת תאריך וגיבוש חבילה מותאמת אישית.
-              </p>
+              <h2 className="font-cormorant text-4xl md:text-5xl text-[#2C241A] font-light mb-4">מוכנה להתחיל?</h2>
+              <p className="text-[#6B5540] font-light mb-10 leading-relaxed">שלחי הודעה ונחזור אליך תוך שעה לקביעת תאריך וגיבוש חבילה מותאמת אישית.</p>
               <a
                 href={`https://wa.me/${phoneNumber}?text=${encodeURIComponent('היי חגית, אשמח לשמוע פרטים על ההתארגנות בוילה ולשריין תאריך 💍')}`}
                 target="_blank" rel="noopener noreferrer"
@@ -718,6 +586,47 @@ export default function Home() {
             </motion.div>
           </div>
         </section>
+
+        {/* ══════════════════════════════════════════
+            FOOTER — רק בדף הבית
+        ══════════════════════════════════════════ */}
+        <footer className="bg-white border-t border-[#E5D5C0] pt-12 pb-6">
+          <div className="max-w-6xl mx-auto px-6 text-center">
+
+            <div className="flex items-center justify-center gap-3 mb-8">
+              <Heart className="w-8 h-8 text-[#C9A86A]" fill="#C9A86A" />
+              <span className="font-cormorant text-4xl text-[#1A1A1A] font-semibold">חגית</span>
+            </div>
+
+            <div className="flex justify-center mb-8">
+              <SocialMediaLinks />
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-[#666] mb-8 font-light">
+              <a href="tel:052-267-6718" className="flex items-center gap-2 hover:text-[#C9A86A] transition-colors">
+                <Phone size={16} /><span>052-267-6718</span>
+              </a>
+              <span className="hidden sm:inline text-[#E5D5C0]">•</span>
+              <a href="mailto:Hagitargaman@gmail.com" className="flex items-center gap-2 hover:text-[#C9A86A] transition-colors">
+                <Mail size={16} /><span>Hagitargaman@gmail.com</span>
+              </a>
+            </div>
+
+            <div className="w-full h-px bg-gradient-to-r from-transparent via-[#E5D5C0] to-transparent mb-6 opacity-50" />
+
+            <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+              <div className="flex gap-4">
+                <a href="/accessibility" className="hover:text-[#666] transition-colors">הצהרת נגישות</a>
+                <span>|</span>
+                <a href="/privacy" className="hover:text-[#666] transition-colors">מדיניות פרטיות</a>
+                <span>|</span>
+                <a href="/cookies" className="hover:text-[#666] transition-colors">מדיניות עוגיות</a>
+              </div>
+              <p>© 2026 חגית התארגנות כלות • כל הזכויות שמורות</p>
+            </div>
+
+          </div>
+        </footer>
 
       </main>
     </>
