@@ -6,7 +6,6 @@ import {
   Sparkles, 
   X, 
   Send, 
-  Menu, 
   Instagram, 
   Mail, 
   Plus,
@@ -17,8 +16,9 @@ import {
 } from 'lucide-react';
 
 /**
- * Multibrawn Unified Layout
+ * Multibrawn Unified Layout - Production Ready
  * קובץ זה מרכז את כל חוויית הממשק: ניווט, צ'אט AI ובאנר עוגיות.
+ * תוקן: הוסר ייבוא שאינו בשימוש (Menu) למניעת שגיאות Build.
  */
 
 // --- רכיב ה-Navbar ---
@@ -80,7 +80,7 @@ const Chatbot = ({ isOpen, setIsOpen }) => (
   </div>
 );
 
-// --- רכיב ה-CookieBanner (הטקסט המעודכן) ---
+// --- רכיב ה-CookieBanner ---
 const CookieBanner = () => {
   const [isVisible, setIsVisible] = useState(false);
   useEffect(() => {
