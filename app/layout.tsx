@@ -7,18 +7,13 @@ import {
   X, 
   Send, 
   Instagram, 
-  Mail, 
-  Plus,
-  Search,
-  Home,
-  Globe,
-  Image as ImageIcon
+  Mail
 } from 'lucide-react';
 
 /**
- * Multibrawn Unified Layout - Production Ready
+ * Multibrawn Unified Layout - Clean Production Version
  * קובץ זה מרכז את כל חוויית הממשק: ניווט, צ'אט AI ובאנר עוגיות.
- * תוקן: הוסר ייבוא שאינו בשימוש (Menu) למניעת שגיאות Build.
+ * תיקון: הסרת כל הייבואים שאינם בשימוש (Plus, Search, Home, Globe, ImageIcon) למניעת שגיאות Build.
  */
 
 // --- רכיב ה-Navbar ---
