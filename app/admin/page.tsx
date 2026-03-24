@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { RefreshCw, CheckCircle, XCircle, Wifi, WifiOff, Lock } from 'lucide-react'
+import { RefreshCw, CheckCircle, XCircle, Wifi, WifiOff, Lock, Play } from 'lucide-react'
 
 const SESSION = process.env.NEXT_PUBLIC_WAHA_SESSION || 'default'
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123'
@@ -13,14 +13,16 @@ export default function AdminPage() {
   const [password, setPassword]           = useState('')
   const [wrongPass, setWrongPass]         = useState(false)
 
-  const [qr, setQr]               = useState<string>('')
-  const [status, setStatus]       = useState<Status>('loading')
+  const [qr, setQr]                 = useState<string>('')
+  const [status, setStatus]         = useState<Status>('loading')
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
-  const [loadingQr, setLoadingQr] = useState(false)
+  const [loadingQr, setLoadingQr]   = useState(false)
+  const [starting, setStarting]     = useState(false)
+  const [startError, setStartError] = useState('')
 
   const fetchStatus = useCallback(async () => {
     try {
-      const res = await fetch(`/api/admin/status?session=${SESSION}`)
+      const res  = await fetch(`/api/admin/status?session=${SESSION}`)
       const data = await res.json()
       setStatus(data.status)
       return data.status as Status
@@ -33,29 +35,48 @@ export default function AdminPage() {
   const fetchQR = useCallback(async () => {
     setLoadingQr(true)
     try {
-      const res = await fetch(`/api/admin/qr?session=${SESSION}`)
+      const res  = await fetch(`/api/admin/qr?session=${SESSION}`)
       const data = await res.json()
       if (data.qr) {
         setQr(data.qr)
         setLastUpdate(new Date())
       }
-    } catch {
-      // silent
     } finally {
       setLoadingQr(false)
     }
   }, [])
+
+  const startSession = async () => {
+    setStarting(true)
+    setStartError('')
+    try {
+      const res = await fetch('/api/admin/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ session: SESSION }),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        setStartError(data.error || `שגיאה ${res.status}`)
+      }
+      // status poll will pick up the new state automatically
+    } catch {
+      setStartError('לא ניתן להגיע לשרת WAHA')
+    } finally {
+      setStarting(false)
+    }
+  }
 
   // Poll status every 5s, fetch QR when needed
   useEffect(() => {
     if (!authenticated) return
 
     const poll = async () => {
-      const currentStatus = await fetchStatus()
-      if (currentStatus === 'SCAN_QR_CODE' || currentStatus === 'STOPPED' || currentStatus === 'STARTING') {
+      const s = await fetchStatus()
+      if (s === 'SCAN_QR_CODE' || s === 'STARTING') {
         fetchQR()
-      } else {
-        setQr('') // clear QR when connected
+      } else if (s === 'WORKING') {
+        setQr('')
       }
     }
 
@@ -63,16 +84,6 @@ export default function AdminPage() {
     const interval = setInterval(poll, 5000)
     return () => clearInterval(interval)
   }, [authenticated, fetchStatus, fetchQR])
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (password === ADMIN_PASSWORD) {
-      setAuthenticated(true)
-    } else {
-      setWrongPass(true)
-      setTimeout(() => setWrongPass(false), 2000)
-    }
-  }
 
   // ── Login screen ──
   if (!authenticated) {
@@ -86,7 +97,11 @@ export default function AdminPage() {
             <h1 className="font-cormorant text-2xl font-bold text-[#2C241A]">כניסת מנהל</h1>
             <p className="text-sm text-[#8a7560]">חיבור WhatsApp לאתר</p>
           </div>
-          <form onSubmit={handleLogin} className="flex flex-col gap-4">
+          <form onSubmit={e => {
+            e.preventDefault()
+            if (password === ADMIN_PASSWORD) setAuthenticated(true)
+            else { setWrongPass(true); setTimeout(() => setWrongPass(false), 2000) }
+          }} className="flex flex-col gap-4">
             <input
               type="password"
               value={password}
@@ -97,10 +112,7 @@ export default function AdminPage() {
               }`}
             />
             {wrongPass && <p className="text-red-500 text-xs text-center">סיסמה שגויה</p>}
-            <button
-              type="submit"
-              className="bg-[#2C241A] text-white rounded-xl py-3 text-sm font-medium hover:bg-[#4a3e2f] transition-colors"
-            >
+            <button type="submit" className="bg-[#2C241A] text-white rounded-xl py-3 text-sm font-medium hover:bg-[#4a3e2f] transition-colors">
               כניסה
             </button>
           </form>
@@ -109,28 +121,28 @@ export default function AdminPage() {
     )
   }
 
-  // ── Status helpers ──
   const isConnected = status === 'WORKING'
-  const needsQR     = status === 'SCAN_QR_CODE' || status === 'STOPPED' || status === 'STARTING'
+  const needsQR     = status === 'SCAN_QR_CODE' || status === 'STARTING'
+  const isStopped   = status === 'STOPPED' || status === 'FAILED' || status === 'error'
 
   const statusLabel: Record<Status, string> = {
-    WORKING:       'מחובר',
-    SCAN_QR_CODE:  'ממתין לסריקה',
-    STARTING:      'מתחיל...',
-    STOPPED:       'מנותק',
-    FAILED:        'שגיאה',
-    error:         'לא ניתן להגיע לשרת',
-    loading:       'טוען...',
+    WORKING:      'מחובר',
+    SCAN_QR_CODE: 'ממתין לסריקה',
+    STARTING:     'מתחיל...',
+    STOPPED:      'מנותק',
+    FAILED:       'שגיאה',
+    error:        'לא ניתן להגיע לשרת',
+    loading:      'טוען...',
   }
 
   const statusColor: Record<Status, string> = {
-    WORKING:       'text-green-600 bg-green-50 border-green-200',
-    SCAN_QR_CODE:  'text-yellow-700 bg-yellow-50 border-yellow-200',
-    STARTING:      'text-blue-600 bg-blue-50 border-blue-200',
-    STOPPED:       'text-gray-600 bg-gray-50 border-gray-200',
-    FAILED:        'text-red-600 bg-red-50 border-red-200',
-    error:         'text-red-600 bg-red-50 border-red-200',
-    loading:       'text-gray-500 bg-gray-50 border-gray-200',
+    WORKING:      'text-green-600 bg-green-50 border-green-200',
+    SCAN_QR_CODE: 'text-yellow-700 bg-yellow-50 border-yellow-200',
+    STARTING:     'text-blue-600 bg-blue-50 border-blue-200',
+    STOPPED:      'text-gray-600 bg-gray-50 border-gray-200',
+    FAILED:       'text-red-600 bg-red-50 border-red-200',
+    error:        'text-red-600 bg-red-50 border-red-200',
+    loading:      'text-gray-500 bg-gray-50 border-gray-200',
   }
 
   return (
@@ -145,16 +157,13 @@ export default function AdminPage() {
 
         {/* Status badge */}
         <div className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full border text-sm font-medium mb-6 ${statusColor[status]}`}>
-          {isConnected
-            ? <CheckCircle className="w-4 h-4" />
-            : status === 'error' || status === 'FAILED'
-            ? <XCircle className="w-4 h-4" />
-            : <Wifi className="w-4 h-4" />
-          }
+          {isConnected  ? <CheckCircle className="w-4 h-4" />
+           : isStopped  ? <XCircle className="w-4 h-4" />
+           : <Wifi className="w-4 h-4" />}
           {statusLabel[status]}
         </div>
 
-        {/* Connected state */}
+        {/* ── CONNECTED ── */}
         {isConnected && (
           <div className="flex flex-col items-center gap-4 py-6">
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
@@ -165,7 +174,29 @@ export default function AdminPage() {
           </div>
         )}
 
-        {/* QR code */}
+        {/* ── STOPPED / ERROR → show Start button ── */}
+        {isStopped && (
+          <div className="flex flex-col items-center gap-4 py-4">
+            <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center">
+              <WifiOff className="w-10 h-10 text-gray-400" />
+            </div>
+            <p className="text-center text-sm text-[#8a7560]">הסשן לא פעיל. לחצי כדי להפעיל ולקבל QR.</p>
+            <button
+              onClick={startSession}
+              disabled={starting}
+              className="flex items-center gap-2 bg-[#2C241A] hover:bg-[#4a3e2f] text-white px-6 py-3 rounded-xl text-sm font-medium transition-colors disabled:opacity-50"
+            >
+              {starting
+                ? <RefreshCw className="w-4 h-4 animate-spin" />
+                : <Play className="w-4 h-4" />
+              }
+              {starting ? 'מפעיל...' : 'הפעל סשן'}
+            </button>
+            {startError && <p className="text-red-500 text-xs text-center">{startError}</p>}
+          </div>
+        )}
+
+        {/* ── QR code ── */}
         {needsQR && (
           <div className="flex flex-col items-center gap-4">
             <div className="relative w-64 h-64 bg-[#F5F0E8] rounded-2xl flex items-center justify-center border-2 border-dashed border-[#E5D5C0]">
@@ -178,8 +209,8 @@ export default function AdminPage() {
                 <img src={qr} alt="WhatsApp QR Code" className="w-full h-full object-contain rounded-2xl p-2" />
               ) : (
                 <div className="flex flex-col items-center gap-2 text-[#8a7560]">
-                  <WifiOff className="w-8 h-8" />
-                  <span className="text-sm text-center px-4">לא ניתן לקבל QR מהשרת</span>
+                  <RefreshCw className="w-8 h-8 animate-spin" />
+                  <span className="text-sm">ממתין ל-QR...</span>
                 </div>
               )}
             </div>
@@ -190,9 +221,7 @@ export default function AdminPage() {
             </div>
 
             {lastUpdate && (
-              <p className="text-xs text-[#aaa]">
-                עודכן: {lastUpdate.toLocaleTimeString('he-IL')}
-              </p>
+              <p className="text-xs text-[#aaa]">QR עודכן: {lastUpdate.toLocaleTimeString('he-IL')}</p>
             )}
 
             <button
@@ -201,14 +230,12 @@ export default function AdminPage() {
               className="flex items-center gap-2 text-sm text-[#C9A86A] hover:text-[#b0935c] disabled:opacity-40 transition-colors"
             >
               <RefreshCw className={`w-4 h-4 ${loadingQr ? 'animate-spin' : ''}`} />
-              רפרש QR
+              רפרש QR ידני
             </button>
           </div>
         )}
 
-        <p className="text-center text-xs text-[#bbb] mt-6">
-          ה-QR מתעדכן אוטומטית כל 5 שניות
-        </p>
+        <p className="text-center text-xs text-[#bbb] mt-6">מתעדכן אוטומטית כל 5 שניות</p>
       </div>
     </div>
   )
