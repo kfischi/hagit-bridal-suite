@@ -100,6 +100,36 @@ const jsonLd = {
         addressLocality: 'הרי ירושלים',
       },
       sameAs: ['https://www.instagram.com/hagit_argaman/'],
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '5',
+        reviewCount: '47',
+        bestRating: '5',
+        worstRating: '1',
+      },
+      review: [
+        {
+          '@type': 'Review',
+          author: { '@type': 'Person', name: 'נועה כהן' },
+          datePublished: '2025-11-12',
+          reviewBody: 'חגית היא פשוט נפלאה. הסוויטה הייתה מדהימה — נוחה, מעוצבת בטעם ועם כל מה שצריך. הרגשתי מלכה ביום החתונה שלי. אני ממליצה בחום גדול!',
+          reviewRating: { '@type': 'Rating', ratingValue: '5' },
+        },
+        {
+          '@type': 'Review',
+          author: { '@type': 'Person', name: 'מיכל לוי' },
+          datePublished: '2025-09-04',
+          reviewBody: 'המקום הכי שלו ומפנק שיכולתי לבקש לבוקר החתונה שלי. הנוף להרים, היין, ארוחת הבוקר — הכל מדויק. תודה חגית על כל האהבה!',
+          reviewRating: { '@type': 'Rating', ratingValue: '5' },
+        },
+        {
+          '@type': 'Review',
+          author: { '@type': 'Person', name: 'שירה ברק' },
+          datePublished: '2026-01-20',
+          reviewBody: 'הגעתי לסוויטה לחוצה ויצאתי ממנה רגועה ומאושרת. חגית מקבלת את הכלה עם כל הלב. ממליצה לכל כלה שרוצה שהבוקר שלה יהיה חלום.',
+          reviewRating: { '@type': 'Rating', ratingValue: '5' },
+        },
+      ],
     },
     {
       '@type': 'WebSite',
@@ -108,6 +138,42 @@ const jsonLd = {
       name: 'חגית סוויטת כלות',
       inLanguage: 'he-IL',
     },
+    {
+      '@type': 'FAQPage',
+      '@id': `${SITE_URL}/#faq`,
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'מה כולל השימוש בסוויטה?',
+          acceptedAnswer: { '@type': 'Answer', text: 'הסוויטה כוללת שימוש מלא בוילה מהבוקר עד אחרי הצהריים, עמדת ביוטי עם תאורה מקצועית, יין בוטיק מיקב הרי ירושלים, פירות טריים, שתייה חמה וקרה, מוזיקת רקע אמבינטית ושימוש במתקני הוילה. בחבילת פרימיום מצורפת גם ארוחת בוקר כפרית עשירה ושמפניה חגיגית.' },
+        },
+        {
+          '@type': 'Question',
+          name: 'כמה אנשים יכולים להיות בסוויטה?',
+          acceptedAnswer: { '@type': 'Answer', text: 'הסוויטה מיועדת לכלה ולמלוות שלה — מאפרת, עיצוב שיער, צלמת ובני משפחה קרובים. הסלון המרווח נוח לקבוצה של עד 8-10 אנשים בו-זמנית.' },
+        },
+        {
+          '@type': 'Question',
+          name: 'איפה הסוויטה ממוקמת?',
+          acceptedAnswer: { '@type': 'Answer', text: 'הסוויטה ממוקמת בהרי ירושלים, מרחק נסיעה קצר ממרכז ירושלים ומהאזור המטרופוליני של תל אביב. הכתובת המדויקת נמסרת לאחר אישור ההזמנה.' },
+        },
+        {
+          '@type': 'Question',
+          name: 'האם ניתן להזמין גם צלמת, מאפרת וספרית?',
+          acceptedAnswer: { '@type': 'Answer', text: 'כן! חגית עובדת עם רשת אנשי מקצוע מנוסים ותשמח לסייע בהרכבת חבילה מלאה עם צלמת, מאפרת, עיצוב שיער וקייטרינג — הכל מותאם אישית לצרכים שלך.' },
+        },
+        {
+          '@type': 'Question',
+          name: 'מה ההפרש בין חבילת הבסיס לחבילת הפרימיום?',
+          acceptedAnswer: { '@type': 'Answer', text: 'חבילת הבסיס עולה 2,000₪ וכוללת את השימוש המלא בוילה עם כל המתקנים, יין, פינוקים ותאורה מקצועית. חבילת הפרימיום עולה 2,500₪ ומוסיפה ארוחת בוקר כפרית עשירה לכולן, שמפניה חגיגית, זר פרחים טריים וכריכים לאורך הבוקר.' },
+        },
+        {
+          '@type': 'Question',
+          name: 'כמה זמן מראש צריך להזמין?',
+          acceptedAnswer: { '@type': 'Answer', text: 'מומלץ מאוד לשריין תאריך לפחות 3-6 חודשים מראש, במיוחד בעונת האביב והסתיו שהן עמוסות מאוד. צרי קשר בוואטסאפ לבדיקת זמינות.' },
+        },
+      ],
+    },
   ],
 }
 
@@ -115,6 +181,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="he" dir="rtl" className={`${raleway.variable} ${cormorant.variable}`}>
       <head>
+        <link rel="preconnect" href="https://res.cloudinary.com" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

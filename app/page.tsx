@@ -22,6 +22,8 @@ import AccessibilityBtn from '@/components/AccessibilityBtn'
 import AIChatbot from '@/components/AIChatbot'
 import LuxuryGallery from '@/components/LuxuryGallery'
 import SocialMediaLinks from '@/components/SocialMediaLinks'
+import ReviewsSection from '@/components/ReviewsSection'
+import FAQSection from '@/components/FAQSection'
 
 const NAV_LINKS = [
   { label: 'הבית',    href: '#hero'       },
@@ -378,6 +380,11 @@ export default function Home() {
         </section>
 
         {/* ══════════════════════════════════════════
+            REVIEWS
+        ══════════════════════════════════════════ */}
+        <ReviewsSection />
+
+        {/* ══════════════════════════════════════════
             MEET HAGIT
         ══════════════════════════════════════════ */}
         <section className="py-20 px-6 bg-white">
@@ -463,6 +470,11 @@ export default function Home() {
             </motion.div>
           </div>
         </section>
+
+        {/* ══════════════════════════════════════════
+            FAQ
+        ══════════════════════════════════════════ */}
+        <FAQSection />
 
         {/* ══════════════════════════════════════════
             PRICING
