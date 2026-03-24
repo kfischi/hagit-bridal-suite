@@ -95,6 +95,40 @@ const SYSTEM_CUSTOM = `את חגית, בעלת סוויטת כלות יוקרת�
    אם לא תקין: "המספר לא נראה תקין. אפשר לנסות שוב? (לדוגמה: 0501234567)"
    אם תקין: "תודה! לחצי על הכפתור הירוק למטה ואנחנו בקשר 💚"`
 
+const WAHA_BASE   = process.env.WAHA_URL
+const WAHA_KEY    = process.env.WAHA_API_KEY
+const WAHA_SESSION = process.env.WAHA_SESSION || 'default'
+
+async function wahaPost(chatId: string, text: string): Promise<boolean> {
+  if (!WAHA_BASE || !text) return false
+  try {
+    const res = await fetch(`${WAHA_BASE}/api/sendText`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(WAHA_KEY ? { 'X-Api-Key': WAHA_KEY } : {}),
+      },
+      body: JSON.stringify({ chatId, text, session: WAHA_SESSION }),
+    })
+    if (!res.ok) console.error('WAHA error', res.status, await res.text().catch(() => ''))
+    return res.ok
+  } catch (e) {
+    console.error('WAHA fetch error:', e)
+    return false
+  }
+}
+
+/** בניית תוספת לפרומפט לפי כוונת חיפוש */
+function buildIntentContext(searchIntent?: { keyword?: string | null; source?: string; category?: string } | null): string {
+  if (!searchIntent) return ''
+  const parts: string[] = []
+  if (searchIntent.keyword) parts.push(`המבקרת הגיעה מחיפוש: "${searchIntent.keyword}"`)
+  if (searchIntent.source && searchIntent.source !== 'direct') parts.push(`מקור: ${searchIntent.source}`)
+  if (searchIntent.category && searchIntent.category !== 'general') parts.push(`קטגוריית עניין: ${searchIntent.category}`)
+  if (!parts.length) return ''
+  return `\n\n## הקשר כניסה:\n${parts.join('\n')}\nהתאימי את הגישה בהתאם — אם חיפשה מאפרת, שאלי על מאפרת בהתחלה. אם חיפשה שיער, שאלי על שיער. התנהגי כאילו אתה יודעת למה היא הגיעה.`
+}
+
 export async function POST(req: Request) {
   try {
     if (!process.env.ANTHROPIC_API_KEY) {
@@ -102,7 +136,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json()
-    const { messages, purpose, mode } = body
+    const { messages, purpose, mode, searchIntent, visitorPhone } = body
     const isCustom = mode === 'custom'
 
     // ── סיכום לחגית ──
@@ -151,34 +185,22 @@ export async function POST(req: Request) {
       })
       const text = response.content[0].type === 'text' ? response.content[0].text : ''
 
-      // ── שליחה אוטומטית ל-WAHA ──
-      let wahaSent = false
-      const wahaBaseUrl = process.env.WAHA_URL
-      const wahaApiKey  = process.env.WAHA_API_KEY
-      const wahaSession = process.env.WAHA_SESSION || 'default'
+      // ── שליחה לחגית ──
+      const wahaSent = await wahaPost(`${HAGIT_PHONE}@c.us`, text)
 
-      if (wahaBaseUrl && text) {
-        try {
-          const wahaRes = await fetch(`${wahaBaseUrl}/api/sendText`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              ...(wahaApiKey ? { 'X-Api-Key': wahaApiKey } : {}),
-            },
-            body: JSON.stringify({
-              chatId: `${HAGIT_PHONE}@c.us`,
-              text,
-              session: wahaSession,
-            }),
-          })
-          wahaSent = wahaRes.ok
-          if (!wahaRes.ok) {
-            const errBody = await wahaRes.text().catch(() => '')
-            console.error('WAHA error:', wahaRes.status, errBody)
-          }
-        } catch (e) {
-          console.error('WAHA fetch error:', e)
-        }
+      // ── שליחת הודעה אישית למבקרת (אם יש טלפון) ──
+      if (visitorPhone) {
+        const kwLine = searchIntent?.keyword
+          ? `ראיתי שהגעת מחיפוש על "${searchIntent.keyword}" 🔍\n`
+          : ''
+        const visitorMsg =
+          `היי! 💍\n` +
+          `תודה שדיברת איתי — שמחה שפנית!\n\n` +
+          kwLine +
+          `הפרטים שלך אצלי ✅\n` +
+          `אחזור אליך בהקדם לתאם תאריך ולגבש את החבילה המושלמת בשבילך.\n\n` +
+          `— חגית 💛\nhttps://suite-hagit.co.il`
+        await wahaPost(`${visitorPhone}@c.us`, visitorMsg)
       }
 
       const hagitUrl = `https://wa.me/${HAGIT_PHONE}?text=${encodeURIComponent(text)}`
@@ -186,10 +208,13 @@ export async function POST(req: Request) {
     }
 
     // ── שיחה רגילה ──
+    const intentCtx = buildIntentContext(searchIntent)
+    const systemPrompt = (isCustom ? SYSTEM_CUSTOM : SYSTEM_STANDARD) + intentCtx
+
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 400,
-      system: isCustom ? SYSTEM_CUSTOM : SYSTEM_STANDARD,
+      system: systemPrompt,
       messages: messages.map((m: { role: string; content: string }) => ({
         role: m.role === 'user' ? 'user' : 'assistant',
         content: m.content,

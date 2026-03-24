@@ -3,37 +3,57 @@
 import { useState, useRef, useEffect } from 'react'
 import { Send, X, MessageCircle } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { detectSearchIntent, getPersonalizedOpener } from '@/lib/searchIntent'
+import type { SearchIntent } from '@/lib/searchIntent'
 
 type Message = { role: 'user' | 'assistant'; content: string }
 type ChatMode = 'standard' | 'custom'
 
-const INITIAL_MESSAGES: Record<ChatMode, Message> = {
-  standard: {
-    role: 'assistant',
-    content: 'היי! מזל טוב 💍 אני חגית.\n\nמתי תאריך החתונה שלך?'
-  },
-  custom: {
-    role: 'assistant',
-    content: 'היי! שמחה שפנית 😊\n\nבואי נבנה לך חבילה מותאמת אישית.\n\nאיזה שירותים את מחפשת?\n1️⃣ צלמת\n2️⃣ מאפרת\n3️⃣ מעצבת שיער\n4️⃣ קייטרינג / אוכל מיוחד\n5️⃣ כמה מהדברים האלה'
-  }
+const INITIAL_STANDARD: Message = {
+  role: 'assistant',
+  content: 'היי! מזל טוב 💍 אני חגית.\n\nמתי תאריך החתונה שלך?'
+}
+
+const INITIAL_CUSTOM: Message = {
+  role: 'assistant',
+  content: 'היי! שמחה שפנית 😊\n\nבואי נבנה לך חבילה מותאמת אישית.\n\nאיזה שירותים את מחפשת?\n1️⃣ צלמת\n2️⃣ מאפרת\n3️⃣ מעצבת שיער\n4️⃣ קייטרינג / אוכל מיוחד\n5️⃣ כמה מהדברים האלה'
+}
+
+/** חילוץ מספר טלפון מהשיחה וקונברסיה לפורמט בינלאומי */
+function extractPhone(messages: Message[]): string | null {
+  const userText = messages.filter(m => m.role === 'user').map(m => m.content).join(' ')
+  const match = userText.match(/0[5][0-9][-\s]?[0-9]{3}[-\s]?[0-9]{4}|0[5][0-9]{8}/)
+  if (!match) return null
+  const digits = match[0].replace(/[-\s]/g, '')
+  return digits.startsWith('0') ? '972' + digits.substring(1) : digits
 }
 
 export default function AIChatbot() {
-  const [isOpen, setIsOpen]             = useState(false)
-  const [mode, setMode]                 = useState<ChatMode>('standard')
-  const [messages, setMessages]         = useState<Message[]>([INITIAL_MESSAGES.standard])
-  const [input, setInput]               = useState('')
-  const [isLoading, setIsLoading]       = useState(false)
+  const [isOpen, setIsOpen]               = useState(false)
+  const [mode, setMode]                   = useState<ChatMode>('standard')
+  const [messages, setMessages]           = useState<Message[]>([INITIAL_STANDARD])
+  const [input, setInput]                 = useState('')
+  const [isLoading, setIsLoading]         = useState(false)
   const [isSummarizing, setIsSummarizing] = useState(false)
-  const messagesEndRef                  = useRef<HTMLDivElement>(null)
+  const [searchIntent, setSearchIntent]   = useState<SearchIntent | null>(null)
+  const messagesEndRef                    = useRef<HTMLDivElement>(null)
 
   const hagitImage = 'https://res.cloudinary.com/decirk3zb/image/upload/v1772044210/%D7%97%D7%92%D7%99%D7%AA_pdkkr4.jpg'
+
+  // זיהוי כוונת חיפוש בטעינה — מותאם הודעת פתיחה
+  useEffect(() => {
+    const intent = detectSearchIntent()
+    setSearchIntent(intent)
+    if (intent.keyword || intent.source !== 'direct') {
+      setMessages([{ role: 'assistant', content: getPersonalizedOpener(intent) }])
+    }
+  }, [])
 
   // חשיפת פונקציה גלובלית לפתיחה עם מצב מותאם
   useEffect(() => {
     (window as Window & { openHagitChat?: (m: ChatMode) => void }).openHagitChat = (m: ChatMode) => {
       setMode(m)
-      setMessages([INITIAL_MESSAGES[m]])
+      setMessages([m === 'custom' ? INITIAL_CUSTOM : INITIAL_STANDARD])
       setIsOpen(true)
     }
     return () => {
@@ -59,7 +79,7 @@ export default function AIChatbot() {
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: newMessages, mode }),
+        body: JSON.stringify({ messages: newMessages, mode, searchIntent }),
       })
       if (!response.ok) throw new Error('Network error')
       const data = await response.json()
@@ -77,14 +97,16 @@ export default function AIChatbot() {
   const handleFinishChat = async () => {
     setIsSummarizing(true)
     try {
+      // חילוץ טלפון המבקרת מהשיחה
+      const visitorPhone = extractPhone(messages)
+
       const response = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages, purpose: 'summary', mode }),
+        body: JSON.stringify({ messages, purpose: 'summary', mode, searchIntent, visitorPhone }),
       })
       const data = await response.json()
 
-      // אל תשלח לחגית אם ה-API נכשל
       if (!response.ok || !data.reply || data.reply.includes('בעיה טכנית')) {
         setMessages(prev => [...prev, {
           role: 'assistant',
@@ -94,13 +116,11 @@ export default function AIChatbot() {
       }
 
       if (data.wahaSent) {
-        // נשלח אוטומטית דרך WAHA ✅
         setMessages(prev => [...prev, {
           role: 'assistant',
-          content: 'הפרטים שלך נשלחו לחגית אוטומטית ✅\nהיא תחזור אליך בהקדם 💚'
+          content: 'הפרטים שלך נשלחו לחגית אוטומטית ✅\nשלחתי לך גם הודעה בוואטסאפ עם פרטי ההצעה 💚'
         }])
       } else {
-        // fallback — פתח WhatsApp ידנית
         const hagitPhone = '972522676718'
         const hagitUrl = data.hagitUrl || `https://wa.me/${hagitPhone}?text=${encodeURIComponent(data.reply)}`
         window.open(hagitUrl, '_blank')
@@ -122,7 +142,8 @@ export default function AIChatbot() {
 
   const openStandard = () => {
     setMode('standard')
-    setMessages([INITIAL_MESSAGES.standard])
+    const opener = searchIntent ? getPersonalizedOpener(searchIntent) : INITIAL_STANDARD.content
+    setMessages([{ role: 'assistant', content: opener }])
     setIsOpen(true)
   }
 
