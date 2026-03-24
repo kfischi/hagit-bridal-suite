@@ -174,14 +174,26 @@ export async function POST(req: Request) {
 
 ⭐ עדיפות: [גבוהה / רגילה]"`
 
+      // Claude API requires: starts with 'user', ends with 'user'
+      let apiMessages = messages
+        .map((m: { role: string; content: string }) => ({
+          role: m.role === 'user' ? 'user' : 'assistant',
+          content: m.content,
+        }))
+        .filter((m, i, arr) => {
+          // drop leading assistant messages
+          const firstUserIdx = arr.findIndex(x => x.role === 'user')
+          return i >= firstUserIdx
+        })
+      if (apiMessages.length === 0 || apiMessages[apiMessages.length - 1].role !== 'user') {
+        apiMessages = [...apiMessages, { role: 'user', content: 'אנא צרי סיכום מסודר של השיחה.' }]
+      }
+
       const response = await anthropic.messages.create({
         model: 'claude-haiku-4-5-20251001',
         max_tokens: 500,
         system: summarySystem,
-        messages: messages.map((m: { role: string; content: string }) => ({
-          role: m.role === 'user' ? 'user' : 'assistant',
-          content: m.content,
-        })),
+        messages: apiMessages,
       })
       const text = response.content[0].type === 'text' ? response.content[0].text : ''
 
@@ -211,14 +223,21 @@ export async function POST(req: Request) {
     const intentCtx = buildIntentContext(searchIntent)
     const systemPrompt = (isCustom ? SYSTEM_CUSTOM : SYSTEM_STANDARD) + intentCtx
 
+    const chatMessages = messages
+      .map((m: { role: string; content: string }) => ({
+        role: m.role === 'user' ? 'user' : 'assistant',
+        content: m.content,
+      }))
+      .filter((m, i, arr) => {
+        const firstUserIdx = arr.findIndex(x => x.role === 'user')
+        return i >= firstUserIdx
+      })
+
     const response = await anthropic.messages.create({
       model: 'claude-haiku-4-5-20251001',
       max_tokens: 400,
       system: systemPrompt,
-      messages: messages.map((m: { role: string; content: string }) => ({
-        role: m.role === 'user' ? 'user' : 'assistant',
-        content: m.content,
-      })),
+      messages: chatMessages,
     })
 
     const text = response.content[0].type === 'text' ? response.content[0].text : ''
