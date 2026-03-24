@@ -93,13 +93,22 @@ export default function AIChatbot() {
         return
       }
 
-      const hagitPhone = '972522676718'
-      const hagitUrl = data.hagitUrl || `https://wa.me/${hagitPhone}?text=${encodeURIComponent(data.reply)}`
-      window.open(hagitUrl, '_blank')
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: 'שלחתי את הפרטים שלך לחגית — היא תחזור אליך בהקדם 💚'
-      }])
+      if (data.wahaSent) {
+        // נשלח אוטומטית דרך WAHA ✅
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: 'הפרטים שלך נשלחו לחגית אוטומטית ✅\nהיא תחזור אליך בהקדם 💚'
+        }])
+      } else {
+        // fallback — פתח WhatsApp ידנית
+        const hagitPhone = '972522676718'
+        const hagitUrl = data.hagitUrl || `https://wa.me/${hagitPhone}?text=${encodeURIComponent(data.reply)}`
+        window.open(hagitUrl, '_blank')
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: 'שלחתי את הפרטים שלך לחגית — היא תחזור אליך בהקדם 💚'
+        }])
+      }
     } catch {
       console.error('Summary error')
       setMessages(prev => [...prev, {

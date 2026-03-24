@@ -150,8 +150,39 @@ export async function POST(req: Request) {
         })),
       })
       const text = response.content[0].type === 'text' ? response.content[0].text : ''
+
+      // ── שליחה אוטומטית ל-WAHA ──
+      let wahaSent = false
+      const wahaBaseUrl = process.env.WAHA_URL
+      const wahaApiKey  = process.env.WAHA_API_KEY
+      const wahaSession = process.env.WAHA_SESSION || 'default'
+
+      if (wahaBaseUrl && text) {
+        try {
+          const wahaRes = await fetch(`${wahaBaseUrl}/api/sendText`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              ...(wahaApiKey ? { 'X-Api-Key': wahaApiKey } : {}),
+            },
+            body: JSON.stringify({
+              chatId: `${HAGIT_PHONE}@c.us`,
+              text,
+              session: wahaSession,
+            }),
+          })
+          wahaSent = wahaRes.ok
+          if (!wahaRes.ok) {
+            const errBody = await wahaRes.text().catch(() => '')
+            console.error('WAHA error:', wahaRes.status, errBody)
+          }
+        } catch (e) {
+          console.error('WAHA fetch error:', e)
+        }
+      }
+
       const hagitUrl = `https://wa.me/${HAGIT_PHONE}?text=${encodeURIComponent(text)}`
-      return NextResponse.json({ reply: text, hagitUrl })
+      return NextResponse.json({ reply: text, hagitUrl, wahaSent })
     }
 
     // ── שיחה רגילה ──
