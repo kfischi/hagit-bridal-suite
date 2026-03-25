@@ -9,21 +9,34 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'WAHA_URL not configured' }, { status: 500 })
   }
 
-  try {
-    const res = await fetch(`${wahaUrl}/api/${session}/auth/qr`, {
-      headers: {
-        ...(apiKey && { 'X-Api-Key': apiKey }),
-      },
-      cache: 'no-store',
-    })
-
-    if (!res.ok) {
-      return NextResponse.json({ error: 'Failed to fetch QR' }, { status: res.status })
-    }
-
-    const data = await res.json()
-    return NextResponse.json({ qr: data.value }) // WAHA returns { value: "data:image/png;base64,..." }
-  } catch {
-    return NextResponse.json({ error: 'Cannot reach WAHA server' }, { status: 503 })
+  const headers: Record<string, string> = {
+    ...(apiKey ? { 'X-Api-Key': apiKey } : {}),
   }
+
+  // Try both WAHA endpoint formats (new API first, then legacy)
+  const endpoints = [
+    `${wahaUrl}/api/sessions/${session}/auth/qr`,
+    `${wahaUrl}/api/${session}/auth/qr`,
+  ]
+
+  let lastError = ''
+  for (const endpoint of endpoints) {
+    try {
+      const res = await fetch(endpoint, { headers, cache: 'no-store' })
+      if (!res.ok) {
+        lastError = `${endpoint} → ${res.status}`
+        continue
+      }
+      const data = await res.json()
+      // WAHA returns { value: "data:image/png;base64,..." } or { qr: "..." }
+      const qr = data.value || data.qr || data.imageBase64 || null
+      if (qr) return NextResponse.json({ qr })
+      lastError = `${endpoint} → no QR field in response`
+    } catch (e) {
+      lastError = `${endpoint} → ${e instanceof Error ? e.message : 'fetch error'}`
+    }
+  }
+
+  console.error('QR fetch failed:', lastError)
+  return NextResponse.json({ error: `Failed to fetch QR: ${lastError}` }, { status: 502 })
 }

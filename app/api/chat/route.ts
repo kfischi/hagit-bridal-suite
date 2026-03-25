@@ -80,27 +80,46 @@ const SYSTEM_CUSTOM = `את חגית, בעלת סוויטת כלות יוקרת�
    אם לא תקין: "המספר לא נראה תקין. אפשר לנסות שוב? (לדוגמה: 0501234567)"
    אם תקין: "תודה! לחצי על הכפתור הירוק למטה ואנחנו בקשר 💚"`
 
-const WAHA_BASE   = process.env.WAHA_URL
-const WAHA_KEY    = process.env.WAHA_API_KEY
+const WAHA_BASE    = process.env.WAHA_URL
+const WAHA_KEY     = process.env.WAHA_API_KEY
 const WAHA_SESSION = process.env.WAHA_SESSION || 'default'
 
+/** שליחת הודעה דרך WAHA עם retry (עד 3 ניסיונות) */
 async function wahaPost(chatId: string, text: string): Promise<boolean> {
   if (!WAHA_BASE || !text) return false
-  try {
-    const res = await fetch(`${WAHA_BASE}/api/sendText`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(WAHA_KEY ? { 'X-Api-Key': WAHA_KEY } : {}),
-      },
-      body: JSON.stringify({ chatId, text, session: WAHA_SESSION }),
-    })
-    if (!res.ok) console.error('WAHA error', res.status, await res.text().catch(() => ''))
-    return res.ok
-  } catch (e) {
-    console.error('WAHA fetch error:', e)
-    return false
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    ...(WAHA_KEY ? { 'X-Api-Key': WAHA_KEY } : {}),
   }
+  const body = JSON.stringify({ chatId, text, session: WAHA_SESSION })
+
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const controller = new AbortController()
+      const timeout = setTimeout(() => controller.abort(), 10000)
+      const res = await fetch(`${WAHA_BASE}/api/sendText`, {
+        method: 'POST',
+        headers,
+        body,
+        signal: controller.signal,
+      })
+      clearTimeout(timeout)
+
+      if (res.ok) return true
+
+      const errText = await res.text().catch(() => '')
+      console.error(`WAHA attempt ${attempt} failed: ${res.status} ${errText.slice(0, 200)}`)
+
+      if (res.status === 401 || res.status === 403) break // no point retrying auth errors
+    } catch (e) {
+      console.error(`WAHA attempt ${attempt} error:`, e instanceof Error ? e.message : e)
+    }
+
+    if (attempt < 3) await new Promise(r => setTimeout(r, attempt * 1000))
+  }
+
+  return false
 }
 
 /** בניית תוספת לפרומפט לפי כוונת חיפוש */
@@ -161,8 +180,7 @@ export async function POST(req: Request) {
           role: m.role === 'user' ? 'user' : 'assistant',
           content: m.content,
         }))
-        .filter((m, i, arr) => {
-          // drop leading assistant messages
+        .filter((m: { role: string }, i: number, arr: { role: string }[]) => {
           const firstUserIdx = arr.findIndex(x => x.role === 'user')
           return i >= firstUserIdx
         })
@@ -209,7 +227,7 @@ export async function POST(req: Request) {
         role: m.role === 'user' ? 'user' : 'assistant',
         content: m.content,
       }))
-      .filter((m, i, arr) => {
+      .filter((m: { role: string }, i: number, arr: { role: string }[]) => {
         const firstUserIdx = arr.findIndex(x => x.role === 'user')
         return i >= firstUserIdx
       })

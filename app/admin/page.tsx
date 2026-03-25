@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { RefreshCw, CheckCircle, XCircle, Wifi, WifiOff, Lock, Play } from 'lucide-react'
+import { RefreshCw, CheckCircle, XCircle, Wifi, WifiOff, Lock, Play, AlertCircle, FlaskConical } from 'lucide-react'
 
 const SESSION = process.env.NEXT_PUBLIC_WAHA_SESSION || 'default'
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'admin123'
@@ -15,32 +15,43 @@ export default function AdminPage() {
 
   const [qr, setQr]                 = useState<string>('')
   const [status, setStatus]         = useState<Status>('loading')
+  const [statusError, setStatusError] = useState<string>('')
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
   const [loadingQr, setLoadingQr]   = useState(false)
+  const [qrError, setQrError]       = useState<string>('')
   const [starting, setStarting]     = useState(false)
   const [startError, setStartError] = useState('')
+  const [testResult, setTestResult] = useState<string>('')
+  const [testing, setTesting]       = useState(false)
 
   const fetchStatus = useCallback(async () => {
     try {
       const res  = await fetch(`/api/admin/status?session=${SESSION}`)
       const data = await res.json()
       setStatus(data.status)
+      setStatusError(data.error || '')
       return data.status as Status
     } catch {
       setStatus('error')
+      setStatusError('לא ניתן להגיע לשרת')
       return 'error'
     }
   }, [])
 
   const fetchQR = useCallback(async () => {
     setLoadingQr(true)
+    setQrError('')
     try {
       const res  = await fetch(`/api/admin/qr?session=${SESSION}`)
       const data = await res.json()
       if (data.qr) {
         setQr(data.qr)
         setLastUpdate(new Date())
+      } else if (data.error) {
+        setQrError(data.error)
       }
+    } catch {
+      setQrError('שגיאה בטעינת QR')
     } finally {
       setLoadingQr(false)
     }
@@ -59,11 +70,24 @@ export default function AdminPage() {
         const data = await res.json()
         setStartError(data.error || `שגיאה ${res.status}`)
       }
-      // status poll will pick up the new state automatically
     } catch {
       setStartError('לא ניתן להגיע לשרת WAHA')
     } finally {
       setStarting(false)
+    }
+  }
+
+  const runTest = async () => {
+    setTesting(true)
+    setTestResult('')
+    try {
+      const res = await fetch('/api/admin/test')
+      const data = await res.json()
+      setTestResult(JSON.stringify(data, null, 2))
+    } catch (e) {
+      setTestResult(`שגיאה: ${e instanceof Error ? e.message : 'unknown'}`)
+    } finally {
+      setTesting(false)
     }
   }
 
@@ -156,12 +180,20 @@ export default function AdminPage() {
         </div>
 
         {/* Status badge */}
-        <div className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full border text-sm font-medium mb-6 ${statusColor[status]}`}>
+        <div className={`flex items-center justify-center gap-2 px-4 py-2 rounded-full border text-sm font-medium mb-2 ${statusColor[status]}`}>
           {isConnected  ? <CheckCircle className="w-4 h-4" />
            : isStopped  ? <XCircle className="w-4 h-4" />
            : <Wifi className="w-4 h-4" />}
           {statusLabel[status]}
         </div>
+
+        {/* Error details */}
+        {statusError && (
+          <div className="flex items-start gap-2 bg-red-50 border border-red-200 rounded-xl px-4 py-2 mb-4 text-xs text-red-700 text-right">
+            <AlertCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+            <span className="font-mono break-all">{statusError}</span>
+          </div>
+        )}
 
         {/* ── CONNECTED ── */}
         {isConnected && (
@@ -192,7 +224,11 @@ export default function AdminPage() {
               }
               {starting ? 'מפעיל...' : 'הפעל סשן'}
             </button>
-            {startError && <p className="text-red-500 text-xs text-center">{startError}</p>}
+            {startError && (
+              <p className="text-red-500 text-xs text-center font-mono bg-red-50 px-3 py-2 rounded-lg border border-red-200 w-full break-all">
+                {startError}
+              </p>
+            )}
           </div>
         )}
 
@@ -215,6 +251,12 @@ export default function AdminPage() {
               )}
             </div>
 
+            {qrError && (
+              <p className="text-red-500 text-xs text-center font-mono bg-red-50 px-3 py-2 rounded-lg border border-red-200 w-full break-all">
+                {qrError}
+              </p>
+            )}
+
             <div className="text-center space-y-1">
               <p className="text-sm font-medium text-[#2C241A]">פתחי WhatsApp בטלפון</p>
               <p className="text-xs text-[#8a7560]">הגדרות ← מכשירים מקושרים ← קישור מכשיר</p>
@@ -235,7 +277,25 @@ export default function AdminPage() {
           </div>
         )}
 
-        <p className="text-center text-xs text-[#bbb] mt-6">מתעדכן אוטומטית כל 5 שניות</p>
+        {/* ── Test Connection ── */}
+        <div className="mt-6 pt-6 border-t border-[#E5D5C0]">
+          <button
+            onClick={runTest}
+            disabled={testing}
+            className="w-full flex items-center justify-center gap-2 bg-[#F5F0E8] hover:bg-[#EDE5D6] text-[#2C241A] py-2.5 rounded-xl text-sm font-medium transition-colors disabled:opacity-50"
+          >
+            {testing ? <RefreshCw className="w-4 h-4 animate-spin" /> : <FlaskConical className="w-4 h-4" />}
+            {testing ? 'בודק חיבור...' : 'בדיקת חיבור WAHA'}
+          </button>
+
+          {testResult && (
+            <pre className="mt-3 bg-gray-900 text-green-400 text-xs rounded-xl p-4 overflow-auto max-h-60 text-left ltr font-mono">
+              {testResult}
+            </pre>
+          )}
+        </div>
+
+        <p className="text-center text-xs text-[#bbb] mt-4">מתעדכן אוטומטית כל 5 שניות</p>
       </div>
     </div>
   )
