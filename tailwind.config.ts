@@ -19,6 +19,8 @@ const config: Config = {
       fontFamily: {
         crimson: ['var(--font-crimson)', 'serif'],
         montserrat: ['var(--font-montserrat)', 'sans-serif'],
+        cormorant: ['var(--font-cormorant)', 'serif'],
+        raleway: ['var(--font-raleway)', 'sans-serif'],
       },
       animation: {
         'float': 'float 6s ease-in-out infinite',
