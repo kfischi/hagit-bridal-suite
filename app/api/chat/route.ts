@@ -1,7 +1,7 @@
-import { Anthropic } from '@anthropic-ai/sdk'
+import { GoogleGenAI } from '@google/genai'
 import { NextResponse } from 'next/server'
 
-const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY || '' })
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' })
 
 const HAGIT_PHONE = '972522676718'
 
@@ -111,7 +111,7 @@ async function wahaPost(chatId: string, text: string): Promise<boolean> {
       const errText = await res.text().catch(() => '')
       console.error(`WAHA attempt ${attempt} failed: ${res.status} ${errText.slice(0, 200)}`)
 
-      if (res.status === 401 || res.status === 403) break // no point retrying auth errors
+      if (res.status === 401 || res.status === 403) break
     } catch (e) {
       console.error(`WAHA attempt ${attempt} error:`, e instanceof Error ? e.message : e)
     }
@@ -133,9 +133,36 @@ function buildIntentContext(searchIntent?: { keyword?: string | null; source?: s
   return `\n\n## הקשר כניסה:\n${parts.join('\n')}\nהתאימי את הגישה בהתאם — אם חיפשה מאפרת, שאלי על מאפרת בהתחלה. אם חיפשה שיער, שאלי על שיער. התנהגי כאילו אתה יודעת למה היא הגיעה.`
 }
 
+/** המרת הודעות לפורמט Gemini (role: user | model) */
+function toGeminiContents(messages: { role: string; content: string }[]) {
+  return messages
+    .filter(m => m.role === 'user' || m.role === 'assistant')
+    .map(m => ({
+      role: m.role === 'user' ? 'user' : 'model',
+      parts: [{ text: m.content }],
+    }))
+}
+
+/** קריאה ל-Gemini */
+async function callGemini(systemInstruction: string, messages: { role: string; content: string }[], maxTokens = 400): Promise<string> {
+  const contents = toGeminiContents(messages)
+  // Gemini requires starting with 'user' — add dummy if needed
+  if (contents.length === 0 || contents[0].role !== 'user') {
+    contents.unshift({ role: 'user', parts: [{ text: 'שלום' }] })
+  }
+
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.0-flash',
+    contents,
+    config: { systemInstruction, maxOutputTokens: maxTokens, temperature: 0.7 },
+  })
+
+  return response.text ?? ''
+}
+
 export async function POST(req: Request) {
   try {
-    if (!process.env.ANTHROPIC_API_KEY) {
+    if (!process.env.GEMINI_API_KEY) {
       return NextResponse.json({ reply: 'שגיאת מערכת: מפתח API חסר.' }, { status: 500 })
     }
 
@@ -174,32 +201,18 @@ export async function POST(req: Request) {
 
 ⭐ עדיפות: [גבוהה / רגילה]"`
 
-      // Claude API requires: starts with 'user', ends with 'user'
-      let apiMessages = messages
-        .map((m: { role: string; content: string }) => ({
-          role: m.role === 'user' ? 'user' : 'assistant',
-          content: m.content,
-        }))
-        .filter((_m: { role: string }, i: number, arr: { role: string }[]) => {
-          const firstUserIdx = arr.findIndex(x => x.role === 'user')
-          return i >= firstUserIdx
-        })
-      if (apiMessages.length === 0 || apiMessages[apiMessages.length - 1].role !== 'user') {
-        apiMessages = [...apiMessages, { role: 'user', content: 'אנא צרי סיכום מסודר של השיחה.' }]
+      // להכניס הודעת user בסוף אם אין
+      const summaryMessages = [...messages]
+      if (summaryMessages.length === 0 || summaryMessages[summaryMessages.length - 1].role !== 'user') {
+        summaryMessages.push({ role: 'user', content: 'אנא צרי סיכום מסודר של השיחה.' })
       }
 
-      const response = await anthropic.messages.create({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 500,
-        system: summarySystem,
-        messages: apiMessages,
-      })
-      const text = response.content[0].type === 'text' ? response.content[0].text : ''
+      const text = await callGemini(summarySystem, summaryMessages, 500)
 
       // ── שליחה לחגית ──
       const wahaSent = await wahaPost(`${HAGIT_PHONE}@c.us`, text)
 
-      // ── שליחת הודעה אישית למבקרת (אם יש טלפון) ──
+      // ── הודעה אישית למבקרת (אם יש טלפון) ──
       if (visitorPhone) {
         const kwLine = searchIntent?.keyword
           ? `ראיתי שהגעת מחיפוש על "${searchIntent.keyword}" 🔍\n`
@@ -222,31 +235,13 @@ export async function POST(req: Request) {
     const intentCtx = buildIntentContext(searchIntent)
     const systemPrompt = (isCustom ? SYSTEM_CUSTOM : SYSTEM_STANDARD) + intentCtx
 
-    const chatMessages = messages
-      .map((m: { role: string; content: string }) => ({
-        role: m.role === 'user' ? 'user' : 'assistant',
-        content: m.content,
-      }))
-      .filter((_m: { role: string }, i: number, arr: { role: string }[]) => {
-        const firstUserIdx = arr.findIndex(x => x.role === 'user')
-        return i >= firstUserIdx
-      })
-
-    const response = await anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 400,
-      system: systemPrompt,
-      messages: chatMessages,
-    })
-
-    const text = response.content[0].type === 'text' ? response.content[0].text : ''
+    const text = await callGemini(systemPrompt, messages, 400)
     return NextResponse.json({ reply: text })
 
   } catch (error: unknown) {
     const err = error as { status?: number; message?: string; type?: string }
     console.error('=== API ERROR ===')
     console.error('Status:', err.status)
-    console.error('Type:', err.type)
     console.error('Message:', err.message)
     console.error('Full error:', JSON.stringify(error, null, 2))
     console.error('=================')
