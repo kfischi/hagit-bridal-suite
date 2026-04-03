@@ -1,0 +1,143 @@
+{
+  "name": "Hagit Blog — Weekly Auto Post",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "daysOfWeek": [0],
+              "triggerAtHour": 9,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "node-schedule",
+      "name": "כל יום ראשון 9:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {},
+      "id": "node-manual",
+      "name": "הרצה ידנית לבדיקה",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 460]
+    },
+    {
+      "parameters": {
+        "jsCode": "// רשימת נושאים — הוסיפי / שני לפי רצונך\nconst TOPICS = [\n  'איך לבחור מאפרת לחתונה — 7 שאלות שחייבים לשאול',\n  'לוח זמנים מושלם לבוקר החתונה — שעה אחר שעה',\n  '5 דברים שכלות מתחרטות שלא עשו לפני החתונה',\n  'ספא לפני החתונה — מה כדאי ומה להימנע',\n  'מה לארוז לסוויטת הכלות — רשימה מלאה',\n  'הקשר בין אמא ובת ביום החתונה — רגעים שלא חוזרים',\n  'איך לנשום ביום החתונה — טכניקות הרגעה שעובדות',\n  'ליל לפני החתונה — מה לעשות ומה לא',\n  'בחירת שמלת כלה — טיפים מהשטח',\n  'כיצד לצלם תמונות מהממות בסוויטת הכלות',\n  'ניהול עצבים ביום החתונה — מה באמת עוזר',\n  'מה כוללת ארוחת בוקר מושלמת לכלה ולמלוות'\n];\n\n// בחירה רנדומלית עם הימנעות מחזרות (על בסיס השבוע)\nconst weekNumber = Math.floor(Date.now() / (7 * 24 * 60 * 60 * 1000));\nconst topic = TOPICS[weekNumber % TOPICS.length];\n\nconst today = new Date().toISOString().split('T')[0];\n\nreturn [{ json: { topic, today } }];"
+      },
+      "id": "node-pick-topic",
+      "name": "בחירת נושא שבועי",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 380]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={{ $vars.GEMINI_API_KEY }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Content-Type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={\n  \"system_instruction\": {\n    \"parts\": [{\n      \"text\": \"את חגית ארגמן, בעלת סוויטת כלות יוקרתית בהרי ירושלים. את כותבת בלוג אישי, חם ומקצועי, שעוזר לכלות להתארגן ולהגיע לחופה רגועות ומאושרות. הכתיבה שלך היא מניסיון אמיתי, בגוף ראשון, ללא שפה שיווקית מוגזמת.\"\n    }]\n  },\n  \"contents\": [{\n    \"role\": \"user\",\n    \"parts\": [{\n      \"text\": \"כתבי מאמר בלוג בעברית על הנושא: {{ $json.topic }}\\n\\nהחזירי JSON בדיוק בפורמט הזה (ורק JSON, ללא ```json``` wrappers):\\n{\\n  \\\"title\\\": \\\"כותרת המאמר\\\",\\n  \\\"metaTitle\\\": \\\"כותרת SEO עד 60 תווים\\\",\\n  \\\"metaDescription\\\": \\\"תיאור SEO עד 155 תווים\\\",\\n  \\\"keywords\\\": [\\\"מילת מפתח 1\\\", \\\"מילת מפתח 2\\\", \\\"מילת מפתח 3\\\", \\\"מילת מפתח 4\\\", \\\"מילת מפתח 5\\\"],\\n  \\\"excerpt\\\": \\\"תקציר 2 משפטים\\\",\\n  \\\"readTime\\\": \\\"X דקות קריאה\\\",\\n  \\\"category\\\": \\\"קטגוריה (טיפים / התארגנות / תזונה / רגשות / עיצוב)\\\",\\n  \\\"content\\\": \\\"<HTML של המאמר המלא>\\\"\\n}\\n\\nדרישות לתוכן HTML:\\n- 500-700 מילים\\n- לפחות 2 כותרות h2\\n- פסקאות p, רשימות ul, ציטוט blockquote אחד\\n- ציון טבעי של הסוויטה בהרי ירושלים ב-2-3 משפטים\\n- סיום בפסקת CTA לשריון בוואטסאפ 972522676718\\n- כתיבה אישית, חמה, מניסיון\"\n    }]\n  }],\n  \"generationConfig\": {\n    \"temperature\": 0.8,\n    \"maxOutputTokens\": 2048\n  }\n}"
+      },
+      "id": "node-gemini",
+      "name": "Gemini — יצירת מאמר",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [720, 380]
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.item.json.candidates?.[0]?.content?.parts?.[0]?.text || '';\n\n// נסיון לחלץ JSON מהתגובה\nlet article;\ntry {\n  // נקה backticks אם יש\n  const cleaned = raw.replace(/^```json\\s*/i, '').replace(/\\s*```\\s*$/, '').trim();\n  article = JSON.parse(cleaned);\n} catch (e) {\n  throw new Error('Gemini did not return valid JSON: ' + raw.substring(0, 200));\n}\n\nconst topic = $('בחירת נושא שבועי').item.json.topic;\nconst today = $('בחירת נושא שבועי').item.json.today;\n\n// יצירת slug מהתאריך והנושא\nconst slugDate = today.replace(/-/g, '');\nconst slugTopic = topic\n  .replace(/[^\\u05D0-\\u05EAa-zA-Z0-9\\s]/g, '')\n  .trim()\n  .split(' ')\n  .slice(0, 4)\n  .join('-')\n  .toLowerCase()\n  .replace(/[\\u05D0-\\u05EA]/g, c => c.charCodeAt(0).toString(16));\n\nconst slug = `hagit-${slugDate}-${slugTopic}`.substring(0, 80);\n\nconst postData = {\n  slug,\n  title: article.title,\n  metaTitle: article.metaTitle || article.title,\n  metaDescription: article.metaDescription || article.excerpt,\n  keywords: article.keywords || ['התארגנות כלה', 'סוויטת כלות'],\n  excerpt: article.excerpt,\n  readTime: article.readTime || '5 דקות קריאה',\n  category: article.category || 'טיפים',\n  date: today,\n  content: article.content\n};\n\n// יצירת payload לגיטהאב\nconst fileContent = Buffer.from(JSON.stringify(postData, null, 2)).toString('base64');\n\nreturn [{ json: { postData, slug, fileContent, today } }];"
+      },
+      "id": "node-parse",
+      "name": "עיבוד + הכנה לגיטהאב",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 380]
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "=https://api.github.com/repos/{{ $vars.GITHUB_REPO }}/contents/content/blog/{{ $json.slug }}.json",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "=Bearer {{ $vars.GITHUB_TOKEN }}" },
+            { "name": "Content-Type", "value": "application/json" },
+            { "name": "X-GitHub-Api-Version", "value": "2022-11-28" }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "json",
+        "jsonBody": "={\n  \"message\": \"blog: add auto post {{ $json.today }} — {{ $json.postData.title }}\",\n  \"content\": \"{{ $json.fileContent }}\",\n  \"branch\": \"main\"\n}"
+      },
+      "id": "node-github",
+      "name": "GitHub — שמירת מאמר",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1200, 380]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $vars.NETLIFY_BUILD_HOOK }}"
+      },
+      "id": "node-netlify",
+      "name": "Netlify — הפעלת Build",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1440, 380]
+    }
+  ],
+  "connections": {
+    "כל יום ראשון 9:00": {
+      "main": [[{ "node": "בחירת נושא שבועי", "type": "main", "index": 0 }]]
+    },
+    "הרצה ידנית לבדיקה": {
+      "main": [[{ "node": "בחירת נושא שבועי", "type": "main", "index": 0 }]]
+    },
+    "בחירת נושא שבועי": {
+      "main": [[{ "node": "Gemini — יצירת מאמר", "type": "main", "index": 0 }]]
+    },
+    "Gemini — יצירת מאמר": {
+      "main": [[{ "node": "עיבוד + הכנה לגיטהאב", "type": "main", "index": 0 }]]
+    },
+    "עיבוד + הכנה לגיטהאב": {
+      "main": [[{ "node": "GitHub — שמירת מאמר", "type": "main", "index": 0 }]]
+    },
+    "GitHub — שמירת מאמר": {
+      "main": [[{ "node": "Netlify — הפעלת Build", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "active": false,
+  "_readme": {
+    "setup": [
+      "1. ייבאי workflow זה ל-N8N",
+      "2. הגדירי Variables בסביבת N8N (Settings > Variables):",
+      "   GEMINI_API_KEY  — המפתח שלך מ-aistudio.google.com",
+      "   GITHUB_TOKEN    — Personal Access Token עם הרשאת 'repo'",
+      "   GITHUB_REPO     — שם הריפו: kfischi/hagit-bridal-suite",
+      "   NETLIFY_BUILD_HOOK — URL מ-Netlify > Site Settings > Build hooks",
+      "3. הפעילי את ה-Workflow (Toggle Active)",
+      "4. לבדיקה — לחצי על 'הרצה ידנית לבדיקה'"
+    ]
+  }
+}

@@ -1,47 +1,69 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import BlogLayout from '@/components/BlogLayout'
+import { getDynamicPosts } from '@/lib/blog'
 
 export const metadata: Metadata = {
-  title: 'בלוג סוויטת כלות | טיפים לכלות | חגית',
-  description: 'מדריכים וטיפים לכלות בדרך לחתונה — התארגנות, ארוחת בוקר ביום החתונה, סוויטת כלות בהרי ירושלים ועוד.',
+  title: 'בלוג התארגנות כלות | טיפים לחתונה | חגית סוויטת כלות הרי ירושלים',
+  description: 'מאמרים וטיפים מעשיים לכלות: התארגנות ביום החתונה, ארוחת בוקר, בחירת מאפרת, סוויטת כלות בהרי ירושלים ועוד — מניסיון חגית ארגמן.',
+  keywords: ['התארגנות כלה', 'בלוג חתונה', 'טיפים לכלה', 'בוקר חתונה', 'סוויטת כלות', 'הרי ירושלים'],
   alternates: { canonical: 'https://suite-hagit.co.il/blog' },
   openGraph: {
-    title: 'בלוג סוויטת כלות | טיפים לכלות | חגית',
-    description: 'מדריכים וטיפים לכלות בדרך לחתונה.',
+    title: 'בלוג התארגנות כלות | חגית סוויטת כלות',
+    description: 'מאמרים מעשיים לכלות מניסיון חגית ארגמן — בעלת סוויטת כלות בהרי ירושלים.',
     url: 'https://suite-hagit.co.il/blog',
     type: 'website',
   },
 }
 
-const ARTICLES = [
+const STATIC_ARTICLES = [
   {
     slug: 'hitargenut-kala-yom-chatuna',
     title: 'התארגנות כלה ביום החתונה — המדריך המלא',
     excerpt: 'כל מה שצריך לדעת על התארגנות ביום החתונה: לוח זמנים, רשימת ציוד ואיך בוחרים מקום שיגרום לך להגיע לחופה רגועה ומוכנה.',
     readTime: '5 דקות קריאה',
+    date: '2026-03-01',
   },
   {
     slug: 'suite-kalot-harei-yerushalayim',
     title: 'סוויטת כלות בהרי ירושלים — מה לצפות',
     excerpt: 'גילינו את הסוד הגלוי של הכלות שמגיעות לחופה זוהרות ורגועות — הן בוחרות להתארגן בסוויטה פרטית בהרי ירושלים.',
     readTime: '4 דקות קריאה',
+    date: '2026-03-10',
   },
   {
     slug: 'tips-boker-chatuna',
     title: '10 טיפים לבוקר חתונה מושלם',
     excerpt: 'בוקר החתונה יכול להיות כאוטי — או קסום. עם הכנה נכונה וסביבה מתאימה, הוא הופך לאחד הרגעים הכי יפים ביום שלך.',
     readTime: '4 דקות קריאה',
+    date: '2026-03-05',
   },
   {
     slug: 'aruchat-boker-kala',
     title: 'מה אוכלים ביום החתונה — ארוחת בוקר לכלה',
     excerpt: 'הכלה האחרונה שצריך לשכוח לאכול ביום החתונה היא... הכלה עצמה. איך מסדרים ארוחת בוקר שמזינה, קלה ומרגישה כמו טקס.',
     readTime: '3 דקות קריאה',
+    date: '2026-03-15',
   },
 ]
 
 export default function BlogIndex() {
+  const dynamicPosts = getDynamicPosts()
+
+  const dynamicItems = dynamicPosts.map(p => ({
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt,
+    readTime: p.readTime,
+    date: p.date,
+    isDynamic: true,
+  }))
+
+  const allArticles = [
+    ...dynamicItems,
+    ...STATIC_ARTICLES.map(a => ({ ...a, isDynamic: false })),
+  ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
   return (
     <BlogLayout>
       <div className="text-center mb-16">
@@ -55,7 +77,7 @@ export default function BlogIndex() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {ARTICLES.map((article) => (
+        {allArticles.map((article) => (
           <Link
             key={article.slug}
             href={`/blog/${article.slug}`}

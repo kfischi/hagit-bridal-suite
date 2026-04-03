@@ -2,6 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Blog dynamic content styles ── */
+.prose-hagit {
+  color: #594937;
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+.prose-hagit h2 {
+  font-family: var(--font-cormorant);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #2C241A;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+}
+.prose-hagit h3 {
+  font-family: var(--font-cormorant);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2C241A;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+.prose-hagit p {
+  margin-bottom: 1.25rem;
+}
+.prose-hagit ul {
+  list-style: disc;
+  padding-right: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.prose-hagit ul li {
+  margin-bottom: 0.4rem;
+}
+.prose-hagit ol {
+  list-style: decimal;
+  padding-right: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+.prose-hagit blockquote {
+  border-right: 3px solid #C9A86A;
+  padding: 0.75rem 1.25rem;
+  margin: 2rem 0;
+  background: #FAF6EE;
+  border-radius: 0 0.75rem 0.75rem 0;
+  font-style: italic;
+  color: #4a3e2f;
+}
+.prose-hagit a {
+  color: #C9A86A;
+  text-decoration: underline;
+}
+.prose-hagit strong {
+  font-weight: 600;
+  color: #2C241A;
+}
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 250, 250, 248;

@@ -1,22 +1,29 @@
 import { MetadataRoute } from 'next'
+import { getDynamicPosts } from '@/lib/blog'
 
-export const dynamic = 'force-static'
+export const dynamic = 'force-dynamic'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = 'https://suite-hagit.co.il'
 
+  const dynamicBlogUrls: MetadataRoute.Sitemap = getDynamicPosts().map(post => ({
+    url: `${base}/blog/${post.slug}`,
+    lastModified: new Date(post.date),
+    changeFrequency: 'monthly',
+    priority: 0.7,
+  }))
+
   return [
     {
       url: base,
-      lastModified: new Date('2026-03-24'),
+      lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 1.0,
     },
-    // ── בלוג ──
     {
       url: `${base}/blog`,
-      lastModified: new Date('2026-03-24'),
-      changeFrequency: 'monthly',
+      lastModified: new Date(),
+      changeFrequency: 'weekly',
       priority: 0.8,
     },
     {
@@ -43,7 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.7,
     },
-    // ── עמודי מידע ──
+    ...dynamicBlogUrls,
     {
       url: `${base}/privacy`,
       lastModified: new Date('2026-01-01'),
@@ -62,6 +69,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'yearly',
       priority: 0.2,
     },
-    // /hashaka — noindex בכוונה, לא בסייטמאפ
   ]
 }
