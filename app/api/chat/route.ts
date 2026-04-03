@@ -170,6 +170,15 @@ export async function POST(req: Request) {
     const { messages, purpose, mode, searchIntent, visitorPhone } = body
     const isCustom = mode === 'custom'
 
+    // ── שליחה ישירה (מהצ'אט הממוסד) ──
+    if (purpose === 'send') {
+      const text = body.text as string
+      if (!text) return NextResponse.json({ error: 'no text' }, { status: 400 })
+      const wahaSent = await wahaPost(`${HAGIT_PHONE}@c.us`, text)
+      const hagitUrl = `https://wa.me/${HAGIT_PHONE}?text=${encodeURIComponent(text)}`
+      return NextResponse.json({ wahaSent, hagitUrl })
+    }
+
     // ── סיכום לחגית ──
     if (purpose === 'summary') {
       const summarySystem = isCustom
